@@ -2,6 +2,10 @@
 
 Rust 단일 서버와 PostgreSQL/PostGIS로 위치 글 생성·조회 vertical slice를 검증합니다. 실행 경로에 외부 지도·라우팅·AI·번역 API 호출은 없습니다.
 
+## 구현 언어
+
+Mappa가 작성하는 서버, 클라이언트, UI, 지도 처리, 향후 AI/라우팅 코드는 Rust로 구현합니다. Web 클라이언트가 필요해지면 Rust/WASM을 사용하며 JavaScript/TypeScript 애플리케이션 코드를 추가하지 않습니다. PostgreSQL/PostGIS의 스키마 정의는 SQL migration으로 유지하고 Rust 서버가 실행합니다. 지도 데이터와 외부 서비스 API는 별개이며 외부 지도 API는 사용하지 않습니다.
+
 ## 요구 환경
 
 - Rust stable
