@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/mappa-domain", "crates/mappa-spatial", "crates/mappa-protocol", "crates/mappa-storage", "crates/mappa-client-core", "server/mappa-server", "crates/mappa-harness"]
+members = ["crates/mappa-domain", "crates/mappa-spatial", "crates/mappa-protocol", "crates/mappa-storage", "crates/mappa-client-core", "crates/mappa-device", "crates/mappa-client-transport", "crates/mappa-client-runtime", "crates/mappa-apple", "mobile/mappa-ios", "server/mappa-server", "crates/mappa-harness"]
 resolver = "2"
 
 [workspace.package]
@@ -12,4 +12,3 @@ thiserror = "2"
 uuid = { version = "1", features = ["v4"] }
 tokio = { version = "1", features = ["full"] }
 tracing = "0.1"
-

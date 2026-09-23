@@ -1,4 +1,6 @@
-use mappa_domain::{ActorId, CellId, Coordinate, Post, PostId, PostKind, Timestamp, validate_body};
+use mappa_domain::{
+    ActorId, CellId, ClientPostId, Coordinate, Post, PostId, PostKind, Timestamp, validate_body,
+};
 use mappa_spatial::{CONTENT_CELL_ZOOM, cell_to_xy, coordinate_to_cell};
 use thiserror::Error;
 use uuid::Uuid;
@@ -11,6 +13,15 @@ pub const HEADER_BYTES: usize = 16;
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct CreatePostRequest {
     pub actor_id: ActorId,
+    pub coordinate: Coordinate,
+    pub kind: PostKind,
+    pub body: String,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct CreatePostV2Request {
+    pub actor_id: ActorId,
+    pub client_post_id: ClientPostId,
     pub coordinate: Coordinate,
     pub kind: PostKind,
     pub body: String,
@@ -59,6 +70,7 @@ pub enum ErrorCode {
     InvalidRequest = 1,
     TooLarge = 2,
     Internal = 3,
+    Conflict = 4,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -73,6 +85,8 @@ pub enum Message {
     QueryCellsRequest(QueryCellsRequest),
     QueryCellsResponse(QueryCellsResponse),
     ErrorResponse(ErrorResponse),
+    CreatePostV2Request(CreatePostV2Request),
+    CreatePostV2Response(CreatePostResponse),
 }
 
 impl Message {
@@ -83,6 +97,8 @@ impl Message {
             Self::QueryCellsRequest(_) => 3,
             Self::QueryCellsResponse(_) => 4,
             Self::ErrorResponse(_) => 5,
+            Self::CreatePostV2Request(_) => 6,
+            Self::CreatePostV2Response(_) => 7,
         }
     }
 }
@@ -167,7 +183,17 @@ pub fn encode(frame: &Frame) -> Result<Vec<u8>, ProtocolError> {
             payload.extend_from_slice(&(m.body.len() as u16).to_le_bytes());
             payload.extend_from_slice(m.body.as_bytes());
         }
-        Message::CreatePostResponse(m) => {
+        Message::CreatePostV2Request(m) => {
+            valid_body(&m.body)?;
+            payload.extend_from_slice(m.actor_id.0.as_bytes());
+            payload.extend_from_slice(m.client_post_id.0.as_bytes());
+            payload.extend_from_slice(&m.coordinate.lat_e7.to_le_bytes());
+            payload.extend_from_slice(&m.coordinate.lon_e7.to_le_bytes());
+            payload.push(m.kind as u8);
+            payload.extend_from_slice(&(m.body.len() as u16).to_le_bytes());
+            payload.extend_from_slice(m.body.as_bytes());
+        }
+        Message::CreatePostResponse(m) | Message::CreatePostV2Response(m) => {
             valid_cell(m.cell_id)?;
             payload.extend_from_slice(m.post_id.0.as_bytes());
             payload.extend_from_slice(&m.cell_id.0.to_le_bytes());
@@ -350,12 +376,19 @@ pub fn decode(bytes: &[u8]) -> Result<Frame, ProtocolError> {
             kind: PostKind::try_from(r.u8()?).map_err(|_| ProtocolError::Invalid)?,
             body: r.string()?,
         }),
-        2 => Message::CreatePostResponse(CreatePostResponse {
-            post_id: PostId(r.uuid()?),
-            cell_id: r.cell()?,
-            cell_revision: r.u64()?,
-            created_at: Timestamp(r.i64()?),
-        }),
+        2 | 7 => {
+            let response = CreatePostResponse {
+                post_id: PostId(r.uuid()?),
+                cell_id: r.cell()?,
+                cell_revision: r.u64()?,
+                created_at: Timestamp(r.i64()?),
+            };
+            if kind == 2 {
+                Message::CreatePostResponse(response)
+            } else {
+                Message::CreatePostV2Response(response)
+            }
+        }
         3 => {
             let count = r.u8()? as usize;
             if count == 0 || count > MAX_QUERY_CELLS {
@@ -437,10 +470,18 @@ pub fn decode(bytes: &[u8]) -> Result<Frame, ProtocolError> {
                 1 => ErrorCode::InvalidRequest,
                 2 => ErrorCode::TooLarge,
                 3 => ErrorCode::Internal,
+                4 => ErrorCode::Conflict,
                 _ => return Err(ProtocolError::Invalid),
             };
             Message::ErrorResponse(ErrorResponse { code })
         }
+        6 => Message::CreatePostV2Request(CreatePostV2Request {
+            actor_id: ActorId(r.uuid()?),
+            client_post_id: ClientPostId(r.uuid()?),
+            coordinate: Coordinate::new(r.i32()?, r.i32()?).map_err(|_| ProtocolError::Invalid)?,
+            kind: PostKind::try_from(r.u8()?).map_err(|_| ProtocolError::Invalid)?,
+            body: r.string()?,
+        }),
         _ => return Err(ProtocolError::Invalid),
     };
     r.done()?;
@@ -488,6 +529,25 @@ mod tests {
                 }),
             },
             Frame {
+                request_id: 6,
+                message: Message::CreatePostV2Request(CreatePostV2Request {
+                    actor_id: ActorId(id),
+                    client_post_id: ClientPostId(Uuid::new_v4()),
+                    coordinate: post.coordinate,
+                    kind: PostKind::General,
+                    body: post.body.clone(),
+                }),
+            },
+            Frame {
+                request_id: 7,
+                message: Message::CreatePostV2Response(CreatePostResponse {
+                    post_id: post.id,
+                    cell_id: cell,
+                    cell_revision: 1,
+                    created_at: Timestamp(123),
+                }),
+            },
+            Frame {
                 request_id: 3,
                 message: Message::QueryCellsRequest(QueryCellsRequest {
                     cells: vec![CellQuery {
@@ -527,6 +587,25 @@ mod tests {
         }
     }
     #[test]
+    fn v1_create_golden_bytes_are_unchanged() {
+        let frame = Frame {
+            request_id: 1,
+            message: Message::CreatePostRequest(CreatePostRequest {
+                actor_id: ActorId(Uuid::nil()),
+                coordinate: Coordinate::new(0, 0).unwrap(),
+                kind: PostKind::General,
+                body: "a".into(),
+            }),
+        };
+        let mut expected = b"MPPA".to_vec();
+        expected.extend_from_slice(&[1, 1, 0, 0, 1, 0, 0, 0, 28, 0, 0, 0]);
+        expected.extend_from_slice(&[0; 16]);
+        expected.extend_from_slice(&[0; 8]);
+        expected.extend_from_slice(&[1, 1, 0, b'a']);
+        assert_eq!(encode(&frame).unwrap(), expected);
+        assert_eq!(decode(&expected).unwrap(), frame);
+    }
+    #[test]
     fn corrupt_frames_never_panic() {
         let mut good = encode(&sample()[0]).unwrap();
         for n in 0..good.len() {
@@ -549,7 +628,7 @@ mod tests {
         let mut bad_utf8 = encode(&sample()[0]).unwrap();
         bad_utf8[43] = 255;
         assert_eq!(decode(&bad_utf8), Err(ProtocolError::Invalid));
-        let mut duplicate = encode(&sample()[2]).unwrap();
+        let mut duplicate = encode(&sample()[4]).unwrap();
         let entry = duplicate[17..33].to_vec();
         duplicate[16] = 2;
         duplicate[12..16].copy_from_slice(&33_u32.to_le_bytes());

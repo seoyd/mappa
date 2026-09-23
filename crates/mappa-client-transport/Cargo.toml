@@ -1,0 +1,13 @@
+[package]
+name = "mappa-client-transport"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+mappa-protocol = { path = "../mappa-protocol" }
+reqwest = { version = "0.13", default-features = false, features = ["rustls"] }
+thiserror.workspace = true
+
+[dev-dependencies]
+tokio.workspace = true

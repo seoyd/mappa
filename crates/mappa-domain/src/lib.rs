@@ -6,6 +6,8 @@ pub const MAX_BODY_BYTES: usize = 8192;
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct PostId(pub Uuid);
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
+pub struct ClientPostId(pub Uuid);
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct ActorId(pub Uuid);
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct CellId(pub u64);

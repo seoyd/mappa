@@ -213,15 +213,14 @@ async fn main() -> Result<(), Box<dyn Error>> {
             .any(|post| post.id == created.post_id)
     );
     println!(
-        "E2E PASS create_request_bytes={} create_response_bytes={} query_response_bytes={} revision_before={} revision_after={} post_count_before={} post_count_after={} geometry={}",
+        "E2E PASS create_request_bytes={} create_response_bytes={} query_response_bytes={} revision_before={} revision_after={} post_count_before={} post_count_after={} geometry_verified=true",
         create_bytes.len(),
         created_bytes.len(),
         query_bytes.len(),
         before_revision,
         final_revision,
         before_count,
-        final_posts.len(),
-        geometry
+        final_posts.len()
     );
     benchmark(&fresh, cell, center, actor).await?;
     restarted_server.abort();

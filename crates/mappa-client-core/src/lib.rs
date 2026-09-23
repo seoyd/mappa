@@ -41,6 +41,9 @@ impl ClientCore {
     pub fn cache(&self) -> &HashMap<CellId, CellCacheEntry> {
         &self.cache
     }
+    pub fn invalidate_cell(&mut self, cell_id: CellId) {
+        self.cache.remove(&cell_id);
+    }
     pub fn camera_moving(&mut self) {
         self.pending_idle = None;
     }

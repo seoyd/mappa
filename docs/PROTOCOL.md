@@ -8,7 +8,7 @@
 |---:|---:|---|---|
 | 0 | 4 | ASCII `MPPA` | exact |
 | 4 | 1 | version | 1 |
-| 5 | 1 | kind | 1..5 |
+| 5 | 1 | kind | 1..7 |
 | 6 | 2 | flags | 0 |
 | 8 | 4 | request_id | echoed in response |
 | 12 | 4 | payload_len | exact remaining byte count, <= 2 MiB |
@@ -22,6 +22,10 @@
 | 3 | QueryCellsRequest | count(u8), repeated [cell_id(u64), known_revision(u64)] |
 | 4 | QueryCellsResponse | count(u8), repeated cell result below |
 | 5 | ErrorResponse | code(u16): 1 invalid request, 2 too large, 3 internal |
+| 6 | CreatePostV2Request | actor UUID(16), client_post_id UUID(16), lat_e7(i32), lon_e7(i32), kind(u8), body_len(u16), body(bytes) |
+| 7 | CreatePostV2Response | kind 2와 동일 payload; 요청 kind 6에 대한 응답 |
+
+ErrorResponse code 4 = conflicting replay. v1 kinds 1~5의 인코딩과 프레임 버전 1은 그대로다. v2 create의 첫 요청은 HTTP 201이며 동일 내용 재전송도 저장된 원래 응답과 HTTP 201을 반환한다. 동일 `(actor_id, client_post_id)`에 다른 coordinate/kind/body를 전송하면 HTTP 409와 code 4를 반환한다. `client_post_id`는 새 logical post마다 UUIDv4를 생성하고 미확정 응답 재시도에 재사용한다.
 
 Cell result: `cell_id(u64), revision(u64), status(u8)`. Status 0 = unchanged, no further bytes. Status 1 = complete snapshot, followed by `post_count(u16)` and that many post records. Post record: `post_id UUID(16), actor_id UUID(16), lat_e7(i32), lon_e7(i32), kind(u8), body_len(u16), body(bytes), created_at(i64 Unix ms), has_expiry(u8), [expires_at(i64 Unix ms) if has_expiry=1]`.
 

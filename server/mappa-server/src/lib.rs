@@ -79,20 +79,27 @@ async fn create_post(State(storage): State<Storage>, request: Request) -> Respon
         Err(response) => return *response,
     };
     let request_id = frame.request_id;
-    let Message::CreatePostRequest(create) = frame.message else {
-        return error(
-            StatusCode::BAD_REQUEST,
-            request_id,
-            ErrorCode::InvalidRequest,
-        );
-    };
     let db_started = Instant::now();
-    let result = storage.create_post(&create).await;
+    let (result, v2) = match frame.message {
+        Message::CreatePostRequest(create) => (storage.create_post(&create).await, false),
+        Message::CreatePostV2Request(create) => (storage.create_post_v2(&create).await, true),
+        _ => {
+            return error(
+                StatusCode::BAD_REQUEST,
+                request_id,
+                ErrorCode::InvalidRequest,
+            );
+        }
+    };
     let db_latency_ms = db_started.elapsed().as_millis();
     let response = match result {
         Ok(created) => match encode(&Frame {
             request_id,
-            message: Message::CreatePostResponse(created),
+            message: if v2 {
+                Message::CreatePostV2Response(created)
+            } else {
+                Message::CreatePostResponse(created)
+            },
         }) {
             Ok(bytes) => binary_response(StatusCode::CREATED, bytes),
             Err(_) => error(
@@ -106,8 +113,15 @@ async fn create_post(State(storage): State<Storage>, request: Request) -> Respon
             request_id,
             ErrorCode::InvalidRequest,
         ),
-        Err(db_error) => {
-            tracing::error!(request_id, error = %db_error, "create post failed");
+        Err(mappa_storage::StorageError::Conflict) => {
+            error(StatusCode::CONFLICT, request_id, ErrorCode::Conflict)
+        }
+        Err(_db_error) => {
+            tracing::error!(
+                request_id,
+                error_category = "database",
+                "create post failed"
+            );
             error(
                 StatusCode::INTERNAL_SERVER_ERROR,
                 request_id,
@@ -153,8 +167,12 @@ async fn query_cells(State(storage): State<Storage>, request: Request) -> Respon
             request_id,
             ErrorCode::InvalidRequest,
         ),
-        Err(db_error) => {
-            tracing::error!(request_id, error = %db_error, "query cells failed");
+        Err(_db_error) => {
+            tracing::error!(
+                request_id,
+                error_category = "database",
+                "query cells failed"
+            );
             error(
                 StatusCode::INTERNAL_SERVER_ERROR,
                 request_id,

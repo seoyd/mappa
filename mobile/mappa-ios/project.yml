@@ -1,0 +1,39 @@
+name: Mappa
+options:
+  bundleIdPrefix: com.seoyd
+settings:
+  ENABLE_USER_SCRIPT_SANDBOXING: NO
+  ARCHS: arm64
+targets:
+  Mappa:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: Mappa
+        NSLocationWhenInUseUsageDescription: "현재 위치에 게시글을 남기기 위해 위치가 필요합니다."
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Slint
+                UISceneDelegateClassName: SlintWindowSceneDelegate
+    entitlements:
+      path: Mappa.entitlements
+      properties:
+        application-identifier: "$(AppIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)"
+        keychain-access-groups:
+          - "$(AppIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)"
+    sources: []
+    postCompileScripts:
+      - name: Build Rust app
+        basedOnDependencyAnalysis: false
+        script: |
+          export PATH="$HOME/.cargo/bin:$PATH"
+          cd "$PROJECT_DIR/../.."
+          cargo run -p mappa-ios --bin ios-build
+        outputFiles:
+          - "$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)"

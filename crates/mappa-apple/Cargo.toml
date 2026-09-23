@@ -1,0 +1,17 @@
+[package]
+name = "mappa-apple"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+mappa-device = { path = "../mappa-device" }
+
+[target.'cfg(target_os = "ios")'.dependencies]
+objc2 = "0.6"
+objc2-foundation = { version = "0.3", features = ["NSArray", "NSDate", "NSObject", "NSError", "NSString"] }
+objc2-core-location = { version = "0.3", features = ["CLLocationManager", "CLLocation", "CLLocationManagerDelegate"] }
+security-framework = "3.7"
+security-framework-sys = "2.15"
+slint = { version = "1.18", default-features = false, features = ["std", "compat-1-18"] }
+tokio = { workspace = true, features = ["sync"] }
