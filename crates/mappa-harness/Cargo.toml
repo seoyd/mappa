@@ -1,0 +1,19 @@
+[package]
+name = "mappa-harness"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+mappa-client-core = { path = "../mappa-client-core" }
+mappa-domain = { path = "../mappa-domain" }
+mappa-protocol = { path = "../mappa-protocol" }
+mappa-spatial = { path = "../mappa-spatial" }
+mappa-storage = { path = "../mappa-storage" }
+mappa-server = { path = "../../server/mappa-server" }
+axum = "0.8"
+tokio.workspace = true
+uuid.workspace = true
+reqwest = { version = "0.13", default-features = false, features = ["rustls"] }
+serde_json = "1"
+tokio-postgres = { version = "0.7", features = ["with-uuid-1"] }

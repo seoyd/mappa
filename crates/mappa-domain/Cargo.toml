@@ -1,0 +1,10 @@
+[package]
+name = "mappa-domain"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+thiserror.workspace = true
+uuid.workspace = true
+

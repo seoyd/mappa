@@ -1,0 +1,10 @@
+[package]
+name = "mappa-spatial"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+mappa-domain = { path = "../mappa-domain" }
+thiserror.workspace = true
+

@@ -1,0 +1,15 @@
+[package]
+name = "mappa-storage"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+mappa-domain = { path = "../mappa-domain" }
+mappa-spatial = { path = "../mappa-spatial" }
+mappa-protocol = { path = "../mappa-protocol" }
+thiserror.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tokio-postgres = { version = "0.7", features = ["with-uuid-1"] }
+uuid.workspace = true

@@ -1,0 +1,12 @@
+[package]
+name = "mappa-protocol"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+mappa-domain = { path = "../mappa-domain" }
+mappa-spatial = { path = "../mappa-spatial" }
+thiserror.workspace = true
+uuid.workspace = true
+

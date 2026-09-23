@@ -1,0 +1,15 @@
+[package]
+name = "mappa-server"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+mappa-domain = { path = "../../crates/mappa-domain" }
+mappa-protocol = { path = "../../crates/mappa-protocol" }
+mappa-storage = { path = "../../crates/mappa-storage" }
+axum = "0.8"
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+

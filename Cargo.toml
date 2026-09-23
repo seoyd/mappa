@@ -1,0 +1,15 @@
+[workspace]
+members = ["crates/mappa-domain", "crates/mappa-spatial", "crates/mappa-protocol", "crates/mappa-storage", "crates/mappa-client-core", "server/mappa-server", "crates/mappa-harness"]
+resolver = "2"
+
+[workspace.package]
+edition = "2024"
+version = "0.1.0"
+license = "MIT"
+
+[workspace.dependencies]
+thiserror = "2"
+uuid = { version = "1", features = ["v4"] }
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+
