@@ -67,6 +67,9 @@
 /artifacts/world-roads/ms-state/state.mgeodb
 /artifacts/world-roads/ms-state/state.pmtiles
 /artifacts/world-water/ms-state/water.mgeodb
+/artifacts/world-roads/la-state/state.mgeodb
+/artifacts/world-roads/la-state/state.pmtiles
+/artifacts/world-water/la-state/water.mgeodb
 /artifacts/world-roads/gb/*.mgeodb
 /artifacts/world-roads/ca/*.mgeodb
 /artifacts/world-roads/ca/on.pmtiles
