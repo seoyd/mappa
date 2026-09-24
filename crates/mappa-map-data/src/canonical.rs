@@ -18,6 +18,9 @@ use std::{
 };
 use thiserror::Error;
 
+mod nrn;
+pub use nrn::adapt_ca_nrn_roads;
+
 const MAGIC: &[u8; 8] = b"MAPPAGEO";
 const SCHEMA_VERSION: u32 = 1;
 const HEADER_BYTES: u64 = 40;
@@ -183,6 +186,7 @@ impl SourceManifest {
                     | "us-census-tiger-roads"
                     | "us-census-tiger-areawater"
                     | "us-census-tiger-arealm-parks"
+                    | "ca-nrn-roadseg"
                     | "os-open-roads"
             ) || (source.adapter == "os-open-roads" && source.adapter_version != 2)
                 || (source.adapter != "os-open-roads" && source.adapter_version != 1)

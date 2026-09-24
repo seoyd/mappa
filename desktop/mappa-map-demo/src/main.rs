@@ -368,6 +368,10 @@ fn open_regional_packs() -> Result<Vec<RegionalPack>, DynError> {
         catalog_text.push_str(&std::fs::read_to_string(
             Path::new(env!("CARGO_MANIFEST_DIR")).join("../../assets/map/gb_regional_packs.toml"),
         )?);
+        catalog_text.push('\n');
+        catalog_text.push_str(&std::fs::read_to_string(
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("../../assets/map/ca_regional_packs.toml"),
+        )?);
     }
     let catalog: RegionalCatalog = toml::from_str(&catalog_text)?;
     let parent = catalog_path
@@ -385,13 +389,13 @@ fn open_regional_packs() -> Result<Vec<RegionalPack>, DynError> {
         }
         let manifest = SourceManifest::open(&parent.join(&entry.manifest))?;
         if manifest.source.iter().any(|source| {
-            source.adapter == "os-open-roads"
+            matches!(source.adapter.as_str(), "os-open-roads" | "ca-nrn-roadseg")
                 && source
                     .attribution_text
                     .as_deref()
                     .is_none_or(|credit| !entry.label.contains(credit))
         }) {
-            return Err("OS regional pack label omits its required copyright credit".into());
+            return Err("regional pack label omits its required source credit".into());
         }
         if entry.archive_min_zoom < 10
             || entry.archive_max_zoom > 15
@@ -426,6 +430,8 @@ fn merge_regional_labels<'a>(labels: impl IntoIterator<Item = &'a str>) -> Strin
     let mut other = Vec::new();
     let mut gb_grids = Vec::new();
     let mut gb_credits = BTreeSet::new();
+    let mut ca_provinces = Vec::new();
+    let mut ca_credits = BTreeSet::new();
     for label in labels {
         if let Some((grid, credit)) = label
             .strip_prefix("GB ")
@@ -433,6 +439,12 @@ fn merge_regional_labels<'a>(labels: impl IntoIterator<Item = &'a str>) -> Strin
         {
             gb_grids.push(grid);
             gb_credits.extend(credit.split(" · "));
+        } else if let Some((province, credit)) = label
+            .strip_prefix("CA ")
+            .and_then(|rest| rest.split_once(" · "))
+        {
+            ca_provinces.push(province);
+            ca_credits.extend(credit.split(" · "));
         } else {
             other.push(label.to_owned());
         }
@@ -444,6 +456,15 @@ fn merge_regional_labels<'a>(labels: impl IntoIterator<Item = &'a str>) -> Strin
             "GB {} · {}",
             gb_grids.join(","),
             gb_credits.into_iter().collect::<Vec<_>>().join(" · ")
+        ));
+    }
+    if !ca_provinces.is_empty() {
+        ca_provinces.sort_unstable();
+        ca_provinces.dedup();
+        other.push(format!(
+            "CA {} · {}",
+            ca_provinces.join(","),
+            ca_credits.into_iter().collect::<Vec<_>>().join(" · ")
         ));
     }
     other.join(" / ")
@@ -2447,6 +2468,16 @@ mod tests {
         assert_eq!(merged.matches(scotland).count(), 1);
     }
 
+    #[test]
+    fn nearby_ca_packs_show_licence_credit_once() {
+        let credit = "Contains information licensed under the Open Government Licence – Canada.";
+        let first = format!("CA NS · {credit}");
+        let second = format!("CA PE · {credit}");
+        let merged = merge_regional_labels([first.as_str(), second.as_str()]);
+        assert!(merged.contains("CA NS,PE"));
+        assert_eq!(merged.matches(credit).count(), 1);
+    }
+
     #[tokio::test]
     async fn world_catalog_reads_and_merges_observed_detail_layers() {
         if !world_mode() {
@@ -2457,10 +2488,13 @@ mod tests {
             .lines()
             .skip(1)
             .count();
-        assert_eq!(manager.regional.len(), 6 + audited_gb_grids);
+        assert_eq!(manager.regional.len(), 8 + audited_gb_grids);
         assert!(manager.regional.iter().any(|pack| {
             pack.label
                 .contains("Contains Ordnance Survey data © Crown copyright")
+        }));
+        assert!(manager.regional.iter().any(|pack| {
+            pack.label == "CA NS · Contains information licensed under the Open Government Licence – Canada."
         }));
         assert!(manager.regional_files.lock().unwrap().files.is_empty());
         for pack in &manager.regional {

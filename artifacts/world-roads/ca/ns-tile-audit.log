@@ -1,0 +1,1 @@
+artifacts/world-roads/ca/ns.pmtiles: decoded=68627, absent=306413, failures=0, layers (land, green, water, road_surface, building, boundary, waterway, major, collector, local, place)=[0, 0, 0, 0, 0, 0, 0, 86378, 44719, 538017, 0]
