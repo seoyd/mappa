@@ -1,0 +1,417 @@
+# Generated from audited OS Open Roads manifests and local PMTiles.
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/hp.pmtiles"
+manifest = "../../data/os_open_roads_hp.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB HP · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/ht.pmtiles"
+manifest = "../../data/os_open_roads_ht.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB HT · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/hu.pmtiles"
+manifest = "../../data/os_open_roads_hu.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB HU · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/hy.pmtiles"
+manifest = "../../data/os_open_roads_hy.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB HY · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/hz.pmtiles"
+manifest = "../../data/os_open_roads_hz.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB HZ · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/na.pmtiles"
+manifest = "../../data/os_open_roads_na.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NA · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/nb.pmtiles"
+manifest = "../../data/os_open_roads_nb.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NB · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/nc.pmtiles"
+manifest = "../../data/os_open_roads_nc.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NC · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/nd.pmtiles"
+manifest = "../../data/os_open_roads_nd.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB ND · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/nf.pmtiles"
+manifest = "../../data/os_open_roads_nf.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NF · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/ng.pmtiles"
+manifest = "../../data/os_open_roads_ng.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NG · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/nh.pmtiles"
+manifest = "../../data/os_open_roads_nh.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NH · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/nj.pmtiles"
+manifest = "../../data/os_open_roads_nj.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NJ · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/nk.pmtiles"
+manifest = "../../data/os_open_roads_nk.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NK · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/nl.pmtiles"
+manifest = "../../data/os_open_roads_nl.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NL · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/nm.pmtiles"
+manifest = "../../data/os_open_roads_nm.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NM · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/nn.pmtiles"
+manifest = "../../data/os_open_roads_nn.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NN · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/no.pmtiles"
+manifest = "../../data/os_open_roads_no.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NO · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/nr.pmtiles"
+manifest = "../../data/os_open_roads_nr.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NR · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/ns.pmtiles"
+manifest = "../../data/os_open_roads_ns.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NS · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/nt.pmtiles"
+manifest = "../../data/os_open_roads_nt.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NT · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/nu.pmtiles"
+manifest = "../../data/os_open_roads_nu.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NU · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/nw.pmtiles"
+manifest = "../../data/os_open_roads_nw.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NW · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/nx.pmtiles"
+manifest = "../../data/os_open_roads_nx.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NX · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/ny.pmtiles"
+manifest = "../../data/os_open_roads_ny.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NY · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/nz.pmtiles"
+manifest = "../../data/os_open_roads_nz.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB NZ · Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/sd.pmtiles"
+manifest = "../../data/os_open_roads_sd.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB SD · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/se.pmtiles"
+manifest = "../../data/os_open_roads_se.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB SE · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/sh.pmtiles"
+manifest = "../../data/os_open_roads_sh.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB SH · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/sj.pmtiles"
+manifest = "../../data/os_open_roads_sj.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB SJ · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/sk.pmtiles"
+manifest = "../../data/os_open_roads_sk.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB SK · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/sm.pmtiles"
+manifest = "../../data/os_open_roads_sm.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB SM · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/sn.pmtiles"
+manifest = "../../data/os_open_roads_sn.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB SN · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/so.pmtiles"
+manifest = "../../data/os_open_roads_so.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB SO · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/sp.pmtiles"
+manifest = "../../data/os_open_roads_sp.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB SP · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/sr.pmtiles"
+manifest = "../../data/os_open_roads_sr.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB SR · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/ss.pmtiles"
+manifest = "../../data/os_open_roads_ss.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB SS · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/st.pmtiles"
+manifest = "../../data/os_open_roads_st.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB ST · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/su.pmtiles"
+manifest = "../../data/os_open_roads_su.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB SU · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/sv.pmtiles"
+manifest = "../../data/os_open_roads_sv.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB SV · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/sw.pmtiles"
+manifest = "../../data/os_open_roads_sw.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB SW · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/sx.pmtiles"
+manifest = "../../data/os_open_roads_sx.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB SX · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/sy.pmtiles"
+manifest = "../../data/os_open_roads_sy.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB SY · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/sz.pmtiles"
+manifest = "../../data/os_open_roads_sz.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB SZ · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/ta.pmtiles"
+manifest = "../../data/os_open_roads_ta.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB TA · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/tf.pmtiles"
+manifest = "../../data/os_open_roads_tf.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB TF · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/tg.pmtiles"
+manifest = "../../data/os_open_roads_tg.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB TG · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/tl.pmtiles"
+manifest = "../../data/os_open_roads_tl.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB TL · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/tm.pmtiles"
+manifest = "../../data/os_open_roads_tm.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB TM · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/tq.pmtiles"
+manifest = "../../data/os_open_roads_tq.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB TQ · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/tr.pmtiles"
+manifest = "../../data/os_open_roads_tr.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB TR · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
+path = "../../artifacts/world-roads/gb/tv.pmtiles"
+manifest = "../../data/os_open_roads_tv.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB TV · Contains Ordnance Survey data © Crown copyright and database right 2026"

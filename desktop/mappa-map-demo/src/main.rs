@@ -8,7 +8,7 @@ use mappa_map_data::{
 use mappa_map_render::{MapRenderer, MapStyle, PreparedTile, STYLES, prepare};
 use serde::Deserialize;
 use std::{
-    collections::{HashMap, HashSet},
+    collections::{BTreeSet, HashMap, HashSet},
     error::Error,
     fs::File,
     io::BufReader,
@@ -358,20 +358,26 @@ impl RegionalPack {
 }
 
 fn open_regional_packs() -> Result<Vec<RegionalPack>, DynError> {
-    let catalog_path = std::env::var_os("MAPPA_REGIONAL_CATALOG")
-        .map(PathBuf::from)
-        .unwrap_or_else(|| {
-            Path::new(env!("CARGO_MANIFEST_DIR")).join("../../assets/map/regional_packs.toml")
-        });
-    let catalog: RegionalCatalog = toml::from_str(&std::fs::read_to_string(&catalog_path)?)?;
+    let custom_catalog = std::env::var_os("MAPPA_REGIONAL_CATALOG").map(PathBuf::from);
+    let catalog_path = custom_catalog.clone().unwrap_or_else(|| {
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("../../assets/map/regional_packs.toml")
+    });
+    let mut catalog_text = std::fs::read_to_string(&catalog_path)?;
+    if custom_catalog.is_none() {
+        catalog_text.push('\n');
+        catalog_text.push_str(&std::fs::read_to_string(
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("../../assets/map/gb_regional_packs.toml"),
+        )?);
+    }
+    let catalog: RegionalCatalog = toml::from_str(&catalog_text)?;
     let parent = catalog_path
         .parent()
         .ok_or("catalog has no parent directory")?;
     let mut packs = Vec::with_capacity(catalog.pack.len());
     let mut seen = HashSet::new();
     for entry in catalog.pack {
-        if entry.label.trim().is_empty() || entry.label.chars().count() > 80 {
-            return Err("regional pack label must contain 1–80 characters".into());
+        if entry.label.trim().is_empty() || entry.label.chars().count() > 180 {
+            return Err("regional pack label must contain 1–180 characters".into());
         }
         let archive_path = std::fs::canonicalize(parent.join(&entry.path))?;
         if !seen.insert(archive_path.clone()) {
@@ -414,6 +420,33 @@ fn open_regional_packs() -> Result<Vec<RegionalPack>, DynError> {
         });
     }
     Ok(packs)
+}
+
+fn merge_regional_labels<'a>(labels: impl IntoIterator<Item = &'a str>) -> String {
+    let mut other = Vec::new();
+    let mut gb_grids = Vec::new();
+    let mut gb_credits = BTreeSet::new();
+    for label in labels {
+        if let Some((grid, credit)) = label
+            .strip_prefix("GB ")
+            .and_then(|rest| rest.split_once(" · "))
+        {
+            gb_grids.push(grid);
+            gb_credits.extend(credit.split(" · "));
+        } else {
+            other.push(label.to_owned());
+        }
+    }
+    if !gb_grids.is_empty() {
+        gb_grids.sort_unstable();
+        gb_grids.dedup();
+        other.push(format!(
+            "GB {} · {}",
+            gb_grids.join(","),
+            gb_credits.into_iter().collect::<Vec<_>>().join(" · ")
+        ));
+    }
+    other.join(" / ")
 }
 
 fn append_tile(target: &mut DecodedTile, mut source: DecodedTile) {
@@ -850,7 +883,7 @@ impl TileManager {
                     if active.is_empty() {
                         "상세 자료 없음 · 미수집 지역".to_owned()
                     } else {
-                        format!("{} · 미수집 지역은 회색", active.join(" / "))
+                        format!("{} · 미수집 지역은 회색", merge_regional_labels(active))
                     }
                 } else if camera.zoom > f64::from(self.mid.max_zoom) {
                     "개략지도 확대 표시 · 상세 도로/건물 없음".to_owned()
@@ -2401,13 +2434,30 @@ fn main() -> Result<(), DynError> {
 mod tests {
     use super::*;
 
+    #[test]
+    fn adjacent_gb_packs_show_each_required_credit_once() {
+        let os = "Contains Ordnance Survey data © Crown copyright and database right 2026";
+        let scotland =
+            "This product contains data created and maintained by Scottish Local Government.";
+        let first = format!("GB NS · {os} · {scotland}");
+        let second = format!("GB NT · {os} · {scotland}");
+        let merged = merge_regional_labels([first.as_str(), second.as_str()]);
+        assert!(merged.contains("GB NS,NT"));
+        assert_eq!(merged.matches(os).count(), 1);
+        assert_eq!(merged.matches(scotland).count(), 1);
+    }
+
     #[tokio::test]
     async fn world_catalog_reads_and_merges_observed_detail_layers() {
         if !world_mode() {
             return;
         }
         let manager = TileManager::open().await.unwrap();
-        assert_eq!(manager.regional.len(), 7);
+        let audited_gb_grids = include_str!("../../../artifacts/world-roads/gb/roadlink-index.tsv")
+            .lines()
+            .skip(1)
+            .count();
+        assert_eq!(manager.regional.len(), 6 + audited_gb_grids);
         assert!(manager.regional.iter().any(|pack| {
             pack.label
                 .contains("Contains Ordnance Survey data © Crown copyright")

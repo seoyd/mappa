@@ -157,6 +157,8 @@ fn main() -> Result<(), Box<dyn Error>> {
             sha256,
             upstream_file: None,
             upstream_sha256: None,
+            dedup_file: None,
+            dedup_sha256: None,
             crs: "EPSG:4269 NAD83; numeric degrees retained; WGS84 datum transform and positional accuracy pending".into(),
             format: "ZIP Shapefile, county All Roads".into(),
             coverage: format!("County FIPS {county}, source header bounds {bounds:?}; selected road classes only"),

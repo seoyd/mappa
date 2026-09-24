@@ -1,0 +1,37 @@
+schema_version = 1
+proof_region = "os-open-roads-NH"
+proof_bbox_wgs84 = [
+    -5.374191683015867,
+    57.02716565990216,
+    -3.6380019552561547,
+    57.97388464549547,
+]
+
+[[source]]
+id = "os-open-roads-2026-04-gb"
+name = "OS Open Roads RoadLink"
+provider = "Ordnance Survey"
+source_version = "2026-04"
+download_date = "2026-09-24"
+official_url = "https://api.os.uk/downloads/v1/products/OpenRoads/downloads?area=GB&format=ESRI%C2%AE+Shapefile&redirect"
+download_page_url = "https://api.os.uk/downloads/v1/products/OpenRoads"
+file = "local/uk_open_roads/oproad_essh_gb.zip"
+sha256 = "bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791"
+dedup_file = "os_open_roads_2026_04_duplicate_owner.tsv"
+dedup_sha256 = "2bb93f47da0b6e90630bc82035e0261ae7d00abcdd685a0902f392b9cd61b7b4"
+crs = "EPSG:27700 (OSGB36); OSTN15 to ETRS89 geographic"
+format = "ESRI Shapefile ZIP / RoadLink PolylineZ"
+coverage = "Great Britain source; NH 100 km square selection"
+resolution = "OS Open Roads generalized 1:25,000"
+update_frequency = "Official product releases"
+license_id = "OGL-UK-3.0"
+license_url = "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "Contains Ordnance Survey data © Crown copyright and database right 2026 · This product contains data created and maintained by Scottish Local Government."
+share_alike = false
+adapter = "os-open-roads"
+adapter_version = 2

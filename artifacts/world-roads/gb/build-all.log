@@ -1,0 +1,100 @@
+grid=HP source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=363 duplicate_skipped=0 rejected=0 bounds=[-1.0742197219584833, 60.66802703431447, -0.7626008317074615, 60.82769741628491] geodb_bytes=140752
+region=os-open-roads-HP tiles=317 encoded_features=2209 pmtiles_bytes=103739
+grid=HT source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=20 duplicate_skipped=0 rejected=0 bounds=[-2.0778771763948027, 60.118249025667446, -2.047054173884865, 60.15559332796697] geodb_bytes=8104
+region=os-open-roads-HT tiles=33 encoded_features=118 pmtiles_bytes=23826
+grid=HU source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=5304 duplicate_skipped=3 rejected=0 bounds=[-1.6927527026177938, 59.85410487368435, -0.7493433771482637, 60.67932501170035] geodb_bytes=2040113
+region=os-open-roads-HU tiles=3000 encoded_features=29937 pmtiles_bytes=1003768
+grid=HY source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=4980 duplicate_skipped=0 rejected=0 bounds=[-3.386112731431199, 58.87899361479669, -2.376831070704672, 59.389788549053996] geodb_bytes=1859596
+region=os-open-roads-HY tiles=2532 encoded_features=28132 pmtiles_bytes=850646
+grid=HZ source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=20 duplicate_skipped=0 rejected=0 bounds=[-1.6525519507832394, 59.51370559609949, -1.6035992421009668, 59.551901142285494] geodb_bytes=9960
+region=os-open-roads-HZ tiles=35 encoded_features=132 pmtiles_bytes=25804
+grid=NA source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=10 duplicate_skipped=0 rejected=0 bounds=[-8.586167441874519, 57.810397114315414, -7.063826792019322, 58.151306750677335] geodb_bytes=5756
+region=os-open-roads-NA tiles=55 encoded_features=89 pmtiles_bytes=27124
+grid=NB source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=3415 duplicate_skipped=2 rejected=0 bounds=[-7.100362492882157, 57.897794460832515, -5.382851458789952, 58.51528871745294] geodb_bytes=1344385
+region=os-open-roads-NB tiles=2232 encoded_features=19722 pmtiles_bytes=720073
+grid=NC source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=4004 duplicate_skipped=3 rejected=0 bounds=[-5.402620824375112, 57.94171274760932, -3.6495571102836477, 58.62542054786096] geodb_bytes=1782869
+region=os-open-roads-NC tiles=5368 encoded_features=26425 pmtiles_bytes=1452197
+grid=ND source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=5819 duplicate_skipped=24 rejected=0 bounds=[-3.7200652878508347, 58.09721629403024, -2.8307810192519063, 58.884583004494814] geodb_bytes=2182558
+region=os-open-roads-ND tiles=3370 encoded_features=33221 pmtiles_bytes=1060466
+grid=NF source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=1736 duplicate_skipped=1 rejected=0 bounds=[-8.58381206954928, 56.966032459570016, -7.026836114681569, 57.825169534602345] geodb_bytes=678945
+region=os-open-roads-NF tiles=1430 encoded_features=10390 pmtiles_bytes=425707
+grid=NG source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=6607 duplicate_skipped=15 rejected=0 bounds=[-7.043811443217779, 56.97797140713451, -5.26434459024058, 57.91302346203447] geodb_bytes=2771987
+region=os-open-roads-NG tiles=5106 encoded_features=38952 pmtiles_bytes=1645852
+grid=NH source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=27261 duplicate_skipped=45 rejected=0 bounds=[-5.374191683015867, 57.02716565990216, -3.6380019552561547, 57.97388464549547] geodb_bytes=11162461
+region=os-open-roads-NH tiles=13184 encoded_features=151433 pmtiles_bytes=5047761
+grid=NJ source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=55085 duplicate_skipped=38 rejected=0 bounds=[-3.676334410893587, 57.062762253369165, -1.977480442288333, 57.724538719332266] geodb_bytes=21221805
+region=os-open-roads-NJ tiles=15659 encoded_features=293077 pmtiles_bytes=7375111
+grid=NK source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=4374 duplicate_skipped=70 rejected=0 bounds=[-2.001670043313742, 57.31335958118341, -1.7680800499737728, 57.6898074064798] geodb_bytes=1624534
+region=os-open-roads-NK tiles=1106 encoded_features=23133 pmtiles_bytes=540056
+grid=NL source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=358 duplicate_skipped=3 rejected=0 bounds=[-7.553458825493236, 56.44542327546886, -6.862470785206054, 56.97141539840668] geodb_bytes=137829
+region=os-open-roads-NL tiles=222 encoded_features=2056 pmtiles_bytes=87128
+grid=NM source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=6880 duplicate_skipped=9 rejected=0 bounds=[-6.875105293436126, 56.13467386128634, -5.188130269826183, 57.036212861313324] geodb_bytes=3106525
+region=os-open-roads-NM tiles=5716 encoded_features=40606 pmtiles_bytes=1902321
+grid=NN source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=17251 duplicate_skipped=73 rejected=0 bounds=[-5.280464972264354, 56.1306534388183, -3.5468729148392946, 57.075068369341835] geodb_bytes=7619188
+region=os-open-roads-NN tiles=12411 encoded_features=101497 pmtiles_bytes=4285841
+grid=NO source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=56698 duplicate_skipped=143 rejected=0 bounds=[-3.631916347584334, 56.171054945120865, -2.0874461659753663, 57.09084187851057] geodb_bytes=21869755
+region=os-open-roads-NO tiles=14469 encoded_features=296666 pmtiles_bytes=7191070
+grid=NR source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=6591 duplicate_skipped=10 rejected=0 bounds=[-6.520628876174856, 55.3005044364009, -5.138620632475502, 56.14540604490075] geodb_bytes=2894756
+region=os-open-roads-NR tiles=5314 encoded_features=39177 pmtiles_bytes=1748834
+grid=NS source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=158369 duplicate_skipped=123 rejected=0 bounds=[-5.214975270989152, 55.254028931131124, -3.5256427827322288, 56.182096682337395] geodb_bytes=61112305
+region=os-open-roads-NS tiles=19406 encoded_features=785054 pmtiles_bytes=15401520
+grid=NT source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=82106 duplicate_skipped=235 rejected=0 bounds=[-3.611051271150398, 55.224939613379725, -1.9743513398508339, 56.189910927426496] geodb_bytes=31918640
+region=os-open-roads-NT tiles=17518 encoded_features=419506 pmtiles_bytes=9645557
+grid=NU source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=7411 duplicate_skipped=71 rejected=0 bounds=[-2.001578303329681, 55.28319143881383, -1.550251871499732, 55.781036504539436] geodb_bytes=2839571
+region=os-open-roads-NU tiles=2510 encoded_features=39657 pmtiles_bytes=1060574
+grid=NW source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=267 duplicate_skipped=0 rejected=0 bounds=[-5.179880717740336, 54.83884329771445, -5.10858391912609, 55.00728835161869] geodb_bytes=105581
+region=os-open-roads-NW tiles=158 encoded_features=1444 pmtiles_bytes=68536
+grid=NX source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=24669 duplicate_skipped=100 rejected=0 bounds=[-5.125784830995664, 54.43933791282006, -3.533568116175312, 55.28159105758282] geodb_bytes=10064362
+region=os-open-roads-NX tiles=10793 encoded_features=136723 pmtiles_bytes=4411759
+grid=NY source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=52655 duplicate_skipped=180 rejected=0 bounds=[-3.57415533474762, 54.333162824737826, -1.9519335660791002, 55.29392108298629] geodb_bytes=20577192
+region=os-open-roads-NY tiles=18853 encoded_features=287266 pmtiles_bytes=8079943
+grid=NZ source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=176894 duplicate_skipped=122 rejected=0 bounds=[-2.0014942354062732, 54.36275154542535, -0.4640143561794412, 55.2938807574156] geodb_bytes=66261897
+region=os-open-roads-NZ tiles=12692 encoded_features=849329 pmtiles_bytes=14012433
+grid=SD source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=236819 duplicate_skipped=74 rejected=0 bounds=[-3.4685600644460686, 53.485696299309446, -1.954237899745566, 54.39491735533591] geodb_bytes=88471443
+region=os-open-roads-SD tiles=15504 encoded_features=1134065 pmtiles_bytes=18164841
+grid=SE source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=240067 duplicate_skipped=237 rejected=0 bounds=[-2.001473474178704, 53.476368810401574, -0.42163382380073094, 54.39528773924145] geodb_bytes=90345199
+region=os-open-roads-SE tiles=22970 encoded_features=1178065 pmtiles_bytes=20501073
+grid=SH source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=46990 duplicate_skipped=0 rejected=0 bounds=[-4.760565475554774, 52.56783891362257, -3.462000729006498, 53.42468613957486] geodb_bytes=18471291
+region=os-open-roads-SH tiles=9855 encoded_features=245758 pmtiles_bytes=6024491
+grid=SJ source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=322769 duplicate_skipped=540 rejected=0 bounds=[-3.5025497764852633, 52.5782763297147, -1.8992179133898321, 53.496685661347236] geodb_bytes=121560379
+region=os-open-roads-SJ tiles=22614 encoded_features=1574319 pmtiles_bytes=26306187
+grid=SK source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=258242 duplicate_skipped=431 rejected=0 bounds=[-2.0014315475527185, 52.45473110950039, -0.4773529157575118, 53.496419088377614] geodb_bytes=97933081
+region=os-open-roads-SK tiles=23357 encoded_features=1270500 pmtiles_bytes=22373354
+grid=SM source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=9474 duplicate_skipped=0 rejected=0 bounds=[-5.308012972552523, 51.64936444982804, -4.879211215508833, 52.03015264368494] geodb_bytes=3623668
+region=os-open-roads-SM tiles=1720 encoded_features=49039 pmtiles_bytes=1090419
+grid=SN source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=58663 duplicate_skipped=88 rejected=0 bounds=[-4.913028066387511, 51.65560138800181, -3.4305466196488807, 52.587212213259384] geodb_bytes=23331939
+region=os-open-roads-SN tiles=15331 encoded_features=316903 pmtiles_bytes=8472465
+grid=SO source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=167519 duplicate_skipped=332 rejected=0 bounds=[-3.4739051281299687, 51.60370094307597, -1.9548505900929156, 52.59779063581773] geodb_bytes=64572822
+region=os-open-roads-SO tiles=22290 encoded_features=850202 pmtiles_bytes=17349730
+grid=SP source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=266220 duplicate_skipped=515 rejected=0 bounds=[-2.0042409469669935, 51.67267207619817, -0.5062539464443354, 52.59780758379115] geodb_bytes=100753447
+region=os-open-roads-SP tiles=22609 encoded_features=1304530 pmtiles_bytes=22628510
+grid=SR source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=505 duplicate_skipped=16 rejected=0 bounds=[-5.0533455998448025, 51.596639443204694, -4.88652349394902, 51.662005117908215] geodb_bytes=197289
+region=os-open-roads-SR tiles=162 encoded_features=2672 pmtiles_bytes=91660
+grid=SS source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=71072 duplicate_skipped=182 rejected=0 bounds=[-4.891181911636831, 50.73290682063383, -3.363386787553725, 51.689154890946455] geodb_bytes=27281628
+region=os-open-roads-SS tiles=9762 encoded_features=359265 pmtiles_bytes=7376992
+grid=ST source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=212338 duplicate_skipped=420 rejected=0 bounds=[-3.447140467470946, 50.7694973108355, -1.8598459421859528, 51.69855870268597] geodb_bytes=80889654
+region=os-open-roads-ST tiles=19880 encoded_features=1052381 pmtiles_bytes=19238231
+grid=SU source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=250691 duplicate_skipped=295 rejected=0 bounds=[-2.0013777805076063, 50.77796804951635, -0.5442494119222052, 51.698674591653734] geodb_bytes=95716834
+region=os-open-roads-SU tiles=21525 encoded_features=1230851 pmtiles_bytes=21964608
+grid=SV source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=349 duplicate_skipped=0 rejected=0 bounds=[-6.358799726955417, 49.89090583142887, -6.275370244217369, 49.966385499963636] geodb_bytes=139300
+region=os-open-roads-SV tiles=77 encoded_features=1771 pmtiles_bytes=60102
+grid=SW source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=39434 duplicate_skipped=0 rejected=0 bounds=[-5.715138947095855, 49.95893231444682, -4.79066433423167, 50.595261828097115] geodb_bytes=14965733
+region=os-open-roads-SW tiles=3958 encoded_features=197314 pmtiles_bytes=3790573
+grid=SX source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=84455 duplicate_skipped=199 rejected=0 bounds=[-4.826784886746726, 50.20538628300567, -3.337960915173348, 50.79083289177985] geodb_bytes=32559552
+region=os-open-roads-SX tiles=10073 encoded_features=428741 pmtiles_bytes=8637543
+grid=SY source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=27657 duplicate_skipped=170 rejected=0 bounds=[-3.418157823930665, 50.51456282128825, -1.9791886354156278, 50.799509370853904] geodb_bytes=10591453
+region=os-open-roads-SY tiles=3471 encoded_features=138069 pmtiles_bytes=2728831
+grid=SZ source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=39930 duplicate_skipped=339 rejected=0 bounds=[-2.0013428712836334, 50.57633153742981, -0.6128941671631138, 50.79953419315077] geodb_bytes=15029132
+region=os-open-roads-SZ tiles=2193 encoded_features=191455 pmtiles_bytes=3045083
+grid=TA source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=50009 duplicate_skipped=105 rejected=0 bounds=[-0.4926368201318633, 53.46151839258507, 0.14619908452807803, 54.36985112113892] geodb_bytes=18757797
+region=os-open-roads-TA tiles=5130 encoded_features=243361 pmtiles_bytes=4272783
+grid=TF source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=74966 duplicate_skipped=179 rejected=0 bounds=[-0.524118790271976, 52.554559069781526, 0.9820745851786331, 53.48586942865325] geodb_bytes=28386806
+region=os-open-roads-TF tiles=15862 encoded_features=390389 pmtiles_bytes=8486004
+grid=TG source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=41725 duplicate_skipped=55 rejected=0 bounds=[0.9502252381876997, 52.53670769210517, 1.7394690294977275, 52.965185944326564] geodb_bytes=15774036
+region=os-open-roads-TG tiles=4616 encoded_features=208314 pmtiles_bytes=3842588
+grid=TM source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=63584 duplicate_skipped=252 rejected=0 bounds=[0.8933189391944726, 51.658714638406366, 1.7623358925386232, 52.55859111145116] geodb_bytes=24242029
+region=os-open-roads-TM tiles=8369 encoded_features=321954 pmtiles_bytes=6311697
+grid=TR source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=36791 duplicate_skipped=115 rejected=0 bounds=[0.849178910318793, 50.911391436192766, 1.449354929389936, 51.66167544376117] geodb_bytes=14062205
+region=os-open-roads-TR tiles=3273 encoded_features=182325 pmtiles_bytes=3281173
+grid=TV source_sha256=bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791 accepted=2407 duplicate_skipped=89 rejected=0 bounds=[0.07728898358970834, 50.73685581882412, 0.3018154790718649, 50.78092329580233] geodb_bytes=901492
+region=os-open-roads-TV tiles=123 encoded_features=11268 pmtiles_bytes=187323

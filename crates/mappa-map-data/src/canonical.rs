@@ -72,6 +72,10 @@ pub struct SourceRecord {
     pub upstream_file: Option<String>,
     #[serde(default)]
     pub upstream_sha256: Option<String>,
+    #[serde(default)]
+    pub dedup_file: Option<String>,
+    #[serde(default)]
+    pub dedup_sha256: Option<String>,
     pub crs: String,
     pub format: String,
     pub coverage: String,
@@ -125,6 +129,16 @@ impl SourceManifest {
                     .to_string_lossy()
                     .into_owned();
             }
+            if let Some(dedup_file) = &mut source.dedup_file
+                && !Path::new(dedup_file).is_absolute()
+            {
+                *dedup_file = path
+                    .parent()
+                    .unwrap_or_else(|| Path::new("."))
+                    .join(&*dedup_file)
+                    .to_string_lossy()
+                    .into_owned();
+            }
             if source.id.is_empty() || !ids.insert(source.id.as_str()) {
                 return Err(CanonicalError::Corrupt("duplicate or empty source ID"));
             }
@@ -152,6 +166,12 @@ impl SourceManifest {
                     if hash.len() == 64 && hash.bytes().all(|byte| byte.is_ascii_hexdigit()) => {}
                 _ => return Err(CanonicalError::Corrupt("invalid upstream source SHA-256")),
             }
+            match (&source.dedup_file, &source.dedup_sha256) {
+                (None, None) if source.adapter != "os-open-roads" => {}
+                (Some(_), Some(hash))
+                    if hash.len() == 64 && hash.bytes().all(|byte| byte.is_ascii_hexdigit()) => {}
+                _ => return Err(CanonicalError::Corrupt("invalid deduplication index")),
+            }
             if !matches!(
                 source.adapter.as_str(),
                 "naju-road-centerline"
@@ -164,7 +184,8 @@ impl SourceManifest {
                     | "us-census-tiger-areawater"
                     | "us-census-tiger-arealm-parks"
                     | "os-open-roads"
-            ) || source.adapter_version != 1
+            ) || (source.adapter == "os-open-roads" && source.adapter_version != 2)
+                || (source.adapter != "os-open-roads" && source.adapter_version != 1)
             {
                 return Err(CanonicalError::Corrupt("unsupported source adapter"));
             }
@@ -626,7 +647,7 @@ pub fn adapt_us_census_roads(
 pub fn adapt_os_open_roads_grid(
     source: &SourceRecord,
     grid: &str,
-) -> Result<(AdaptedFeatures, Vec<RejectedFeature>), CanonicalError> {
+) -> Result<(AdaptedFeatures, Vec<RejectedFeature>, usize), CanonicalError> {
     if source.adapter != "os-open-roads"
         || grid.len() != 2
         || !grid.bytes().all(|byte| byte.is_ascii_uppercase())
@@ -638,6 +659,42 @@ pub fn adapt_os_open_roads_grid(
     if source_hash(Path::new(&source.file))? != source.sha256.to_lowercase() {
         return Err(CanonicalError::SourceChecksum(source.id.clone()));
     }
+    let dedup_path = source
+        .dedup_file
+        .as_deref()
+        .ok_or_else(|| CanonicalError::Feature("OS duplicate owner index is required".into()))?;
+    if source_hash(Path::new(dedup_path))?
+        != source
+            .dedup_sha256
+            .as_deref()
+            .ok_or_else(|| CanonicalError::Feature("OS duplicate index SHA-256 missing".into()))?
+    {
+        return Err(CanonicalError::SourceChecksum(dedup_path.into()));
+    }
+    let index_text = fs::read_to_string(dedup_path)?;
+    let mut index_lines = index_text.lines();
+    if index_lines.next() != Some(format!("# source_sha256={}", source.sha256).as_str())
+        || index_lines.next() != Some("identifier\towner_grid\tduplicate_grid")
+    {
+        return Err(CanonicalError::Feature(
+            "OS duplicate index does not match source ZIP".into(),
+        ));
+    }
+    let mut duplicate_ids = BTreeSet::new();
+    for line in index_lines {
+        let fields: Vec<_> = line.split('\t').collect();
+        if fields.len() != 3 || fields[0].is_empty() || fields[1] >= fields[2] {
+            return Err(CanonicalError::Feature(
+                "invalid OS duplicate index row".into(),
+            ));
+        }
+        if fields[2] == grid && !duplicate_ids.insert(fields[0].to_owned()) {
+            return Err(CanonicalError::Feature(
+                "repeated OS duplicate index ID".into(),
+            ));
+        }
+    }
+    let expected_duplicates = duplicate_ids.len();
     let mut archive = zip::ZipArchive::new(File::open(&source.file)?)
         .map_err(|error| CanonicalError::Feature(error.to_string()))?;
     let stem = format!("data/{grid}_RoadLink");
@@ -680,6 +737,9 @@ pub fn adapt_os_open_roads_grid(
             .filter(|id| !id.is_empty())
             .ok_or_else(|| CanonicalError::Feature("missing OS RoadLink identifier".into()))?
             .to_owned();
+        if duplicate_ids.remove(&source_feature_id) {
+            continue;
+        }
         if !raw_ids.insert(source_feature_id.clone()) {
             rejected.push(RejectedFeature {
                 source_id: source.id.clone(),
@@ -781,8 +841,13 @@ pub fn adapt_os_open_roads_grid(
             ));
         }
     }
+    if !duplicate_ids.is_empty() {
+        return Err(CanonicalError::Feature(
+            "OS duplicate index names IDs absent from selected grid".into(),
+        ));
+    }
     output.sort_by_key(|(feature, _)| feature.id);
-    Ok((output, rejected))
+    Ok((output, rejected, expected_duplicates))
 }
 
 /// Read selected polygon classes from an official TIGER/Line ZIP. Numeric NAD83

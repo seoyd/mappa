@@ -1,10 +1,10 @@
 schema_version = 1
 proof_region = "os-open-roads-TQ"
 proof_bbox_wgs84 = [
-    -0.6212911803963149,
+    -0.5815611066436284,
     50.77023482362841,
     0.8937973649076472,
-    51.7032767827252,
+    51.68906698440847,
 ]
 
 [[source]]
@@ -17,6 +17,8 @@ official_url = "https://api.os.uk/downloads/v1/products/OpenRoads/downloads?area
 download_page_url = "https://api.os.uk/downloads/v1/products/OpenRoads"
 file = "local/uk_open_roads/oproad_essh_gb.zip"
 sha256 = "bb2bbff8be3d637b38ed5d06277856c15f41ea262614edf974be8f4b96fdc791"
+dedup_file = "os_open_roads_2026_04_duplicate_owner.tsv"
+dedup_sha256 = "2bb93f47da0b6e90630bc82035e0261ae7d00abcdd685a0902f392b9cd61b7b4"
 crs = "EPSG:27700 (OSGB36); OSTN15 to ETRS89 geographic"
 format = "ESRI Shapefile ZIP / RoadLink PolylineZ"
 coverage = "Great Britain source; TQ 100 km square selection"
@@ -32,4 +34,4 @@ attribution_required = true
 attribution_text = "Contains Ordnance Survey data © Crown copyright and database right 2026"
 share_alike = false
 adapter = "os-open-roads"
-adapter_version = 1
+adapter_version = 2

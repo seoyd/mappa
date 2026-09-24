@@ -18,8 +18,8 @@ fn required<'a>(value: &'a Value, key: &str) -> Result<&'a str, Box<dyn Error>> 
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<_> = std::env::args().collect();
-    if args.len() != 8 {
-        return Err("usage: build_os_open_roads_grid SOURCE.zip GRID PRODUCT.json DOWNLOADS.json DOWNLOAD_DATE OUTPUT.mgeodb OUTPUT.toml".into());
+    if args.len() != 9 {
+        return Err("usage: build_os_open_roads_grid SOURCE.zip GRID PRODUCT.json DOWNLOADS.json DOWNLOAD_DATE OWNER.tsv OUTPUT.mgeodb OUTPUT.toml".into());
     }
     let source_path = Path::new(&args[1]);
     let grid = &args[2];
@@ -82,15 +82,30 @@ fn main() -> Result<(), Box<dyn Error>> {
     if !credit.ends_with(version.get(..4).ok_or("invalid OS release year")?) {
         return Err("OS embedded copyright year differs from product release".into());
     }
-    let output_manifest = Path::new(&args[7]);
+    // The official OS branding guide requires the additional Scottish Local
+    // Government statement for Scottish Open Roads. H/N grid families cover
+    // that area; applying it to every H/N pack errs on the side of credit.
+    let attribution = if grid.starts_with('H') || grid.starts_with('N') {
+        format!(
+            "{credit} · This product contains data created and maintained by Scottish Local Government."
+        )
+    } else {
+        credit.to_owned()
+    };
+    let output_manifest = Path::new(&args[8]);
     let manifest_dir = output_manifest.parent().unwrap_or_else(|| Path::new("."));
+    let manifest_dir = manifest_dir.canonicalize()?;
     let canonical_source = source_path.canonicalize()?;
-    let source_file = canonical_source
-        .strip_prefix(manifest_dir.canonicalize()?)
-        .map_or_else(
-            |_| canonical_source.to_string_lossy().into_owned(),
-            |relative| relative.to_string_lossy().into_owned(),
-        );
+    let source_file = canonical_source.strip_prefix(&manifest_dir).map_or_else(
+        |_| canonical_source.to_string_lossy().into_owned(),
+        |relative| relative.to_string_lossy().into_owned(),
+    );
+    let canonical_owner = Path::new(&args[6]).canonicalize()?;
+    let owner_file = canonical_owner.strip_prefix(&manifest_dir).map_or_else(
+        |_| canonical_owner.to_string_lossy().into_owned(),
+        |relative| relative.to_string_lossy().into_owned(),
+    );
+    let owner_sha256 = format!("{:x}", Sha256::digest(std::fs::read(&canonical_owner)?));
     let source = SourceRecord {
         id: format!("os-open-roads-{version}-gb"),
         name: "OS Open Roads RoadLink".into(),
@@ -103,6 +118,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         sha256: format!("{:x}", ShaDigest::finalize(sha)),
         upstream_file: None,
         upstream_sha256: None,
+        dedup_file: Some(canonical_owner.to_string_lossy().into_owned()),
+        dedup_sha256: Some(owner_sha256),
         crs: "EPSG:27700 (OSGB36); OSTN15 to ETRS89 geographic".into(),
         format: "ESRI Shapefile ZIP / RoadLink PolylineZ".into(),
         coverage: format!("Great Britain source; {grid} 100 km square selection"),
@@ -116,12 +133,12 @@ fn main() -> Result<(), Box<dyn Error>> {
         modification: true,
         redistribution: true,
         attribution_required: true,
-        attribution_text: Some(credit.to_owned()),
+        attribution_text: Some(attribution),
         share_alike: false,
         adapter: "os-open-roads".into(),
-        adapter_version: 1,
+        adapter_version: 2,
     };
-    let (records, rejected) = adapt_os_open_roads_grid(&source, grid)?;
+    let (records, rejected, duplicate_skipped) = adapt_os_open_roads_grid(&source, grid)?;
     if records.is_empty() {
         return Err("no OS roads accepted in selected grid".into());
     }
@@ -139,33 +156,35 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
     let mut source_for_manifest = source;
     source_for_manifest.file = source_file;
+    source_for_manifest.dedup_file = Some(owner_file);
     let manifest = SourceManifest {
         schema_version: 1,
         proof_region: format!("os-open-roads-{grid}"),
         proof_bbox_wgs84: bounds,
         source: vec![source_for_manifest],
     };
-    write_geodb(Path::new(&args[6]), &records)?;
+    write_geodb(Path::new(&args[7]), &records)?;
     std::fs::write(output_manifest, toml::to_string_pretty(&manifest)?)?;
     let writer = GzEncoder::new(
-        File::create(Path::new(&args[6]).with_extension("rejected.json.gz"))?,
+        File::create(Path::new(&args[7]).with_extension("rejected.json.gz"))?,
         Compression::default(),
     );
     let mut writer = writer;
     serde_json::to_writer(&mut writer, &rejected)?;
     writer.finish()?;
     let approved = SourceManifest::open(output_manifest)?;
-    let database = GeoDb::open(Path::new(&args[6]))?;
+    let database = GeoDb::open(Path::new(&args[7]))?;
     if approved.source.len() != database.sources.len() || database.feature_count() != records.len()
     {
         return Err("OS GeoDB source or feature count mismatch".into());
     }
     println!(
-        "grid={grid} source_sha256={} accepted={} rejected={} bounds={bounds:?} geodb_bytes={}",
+        "grid={grid} source_sha256={} accepted={} duplicate_skipped={} rejected={} bounds={bounds:?} geodb_bytes={}",
         manifest.source[0].sha256,
         records.len(),
+        duplicate_skipped,
         rejected.len(),
-        std::fs::metadata(&args[6])?.len(),
+        std::fs::metadata(&args[7])?.len(),
     );
     Ok(())
 }
