@@ -3,6 +3,38 @@
 # with observed features, not positional accuracy. Archives open on first use.
 # Adding a pack here does not certify its coverage or positional accuracy.
 [[pack]]
+path = "../../artifacts/world-water/oh-state/water.pmtiles"
+manifest = "../../data/us_tiger_oh_state_areawater.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 수면 · 오하이오주 88개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/oh-state/roads-west.pmtiles"
+manifest = "../../data/us_tiger_oh_state_roads_west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 서부 · 오하이오주 88개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/oh-state/roads-east-west.pmtiles"
+manifest = "../../data/us_tiger_oh_state_roads_east_west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 중부 · 오하이오주 88개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/oh-state/roads-east-east.pmtiles"
+manifest = "../../data/us_tiger_oh_state_roads_east_east.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 동부 · 오하이오주 88개 카운티 실증"
+
+[[pack]]
 path = "../../artifacts/world-water/wv-state/water.pmtiles"
 manifest = "../../data/us_tiger_wv_state_areawater.toml"
 min_visible_zoom = 10

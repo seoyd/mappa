@@ -31,6 +31,10 @@
 /artifacts/world-roads/wv-state/state.mgeodb
 /artifacts/world-roads/wv-state/state.pmtiles
 /artifacts/world-water/wv-state/water.mgeodb
+/artifacts/world-roads/oh-state/state.mgeodb
+/artifacts/world-roads/oh-state/state.pmtiles
+/artifacts/world-roads/oh-state/roads-east.pmtiles
+/artifacts/world-water/oh-state/water.mgeodb
 /artifacts/world-roads/gb/*.mgeodb
 /artifacts/world-roads/ca/*.mgeodb
 /artifacts/world-roads/ca/on.pmtiles
