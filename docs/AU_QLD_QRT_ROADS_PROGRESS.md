@@ -21,7 +21,7 @@
 ## 재현 절차
 
 ```sh
-cargo run --offline -p mappa-map-acquire --bin acquire_qld_roads -- data/local/au_qld/qrt-2026-09-25
+cargo run -p mappa-map-acquire --bin acquire_qld_roads -- data/local/au_qld/qrt-2026-09-25
 cargo run --release --offline -p mappa-map-data --bin build_au_qld_qrt_roads -- \
   data/local/au_qld/qrt-2026-09-25/snapshot.toml 2026-09-25 artifacts/world-roads/au-qld data
 ```

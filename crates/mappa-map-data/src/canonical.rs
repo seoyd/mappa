@@ -23,12 +23,14 @@ mod lambert93;
 mod nrn;
 mod qld_roads;
 mod vic_dtp_roads;
+mod vicmap_roads;
 mod wa_roads;
 pub use ign_bdtopo::{adapt_ign_bdtopo_roads, adapt_ign_bdtopo_stations, adapt_ign_bdtopo_water};
 pub use lambert93::inverse_lambert93;
 pub use nrn::adapt_ca_nrn_roads;
 pub use qld_roads::adapt_au_qld_qrt_roads;
 pub use vic_dtp_roads::adapt_au_vic_dtp_roads;
+pub use vicmap_roads::adapt_au_vic_vicmap_roads;
 pub use wa_roads::adapt_wa_road_network;
 
 const MAGIC: &[u8; 8] = b"MAPPAGEO";
@@ -199,6 +201,7 @@ impl SourceManifest {
                     | "ca-nrn-roadseg"
                     | "au-wa-road-network"
                     | "au-vic-dtp-managed-roads"
+                    | "au-vic-vicmap-roads"
                     | "au-qld-qrt-roads"
                     | "ign-bdtopo-road-segment"
                     | "ign-bdtopo-surface-water"

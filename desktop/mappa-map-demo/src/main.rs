@@ -448,6 +448,8 @@ fn merge_regional_labels<'a>(labels: impl IntoIterator<Item = &'a str>) -> Strin
     let mut ca_credits = BTreeSet::new();
     let mut qld_regions = Vec::new();
     let mut qld_credits = BTreeSet::new();
+    let mut vicmap_regions = Vec::new();
+    let mut vicmap_credits = BTreeSet::new();
     let mut ign_layers: BTreeMap<&str, BTreeSet<&str>> = BTreeMap::new();
     for label in labels {
         if let Some((grid, credit)) = label
@@ -468,6 +470,12 @@ fn merge_regional_labels<'a>(labels: impl IntoIterator<Item = &'a str>) -> Strin
         {
             qld_regions.push(region);
             qld_credits.insert(credit);
+        } else if let Some((region, credit)) = label
+            .strip_prefix("Vicmap · ")
+            .and_then(|rest| rest.split_once(" · "))
+        {
+            vicmap_regions.push(region);
+            vicmap_credits.insert(credit);
         } else if let Some((layer, region)) = label
             .strip_prefix("IGN BD TOPO ")
             .and_then(|rest| rest.split_once(" · "))
@@ -502,6 +510,15 @@ fn merge_regional_labels<'a>(labels: impl IntoIterator<Item = &'a str>) -> Strin
             "QRT · {} · {}",
             qld_regions.join(","),
             qld_credits.into_iter().collect::<Vec<_>>().join(" · ")
+        ));
+    }
+    if !vicmap_regions.is_empty() {
+        vicmap_regions.sort_unstable();
+        vicmap_regions.dedup();
+        other.push(format!(
+            "Vicmap · {} · {}",
+            vicmap_regions.join(","),
+            vicmap_credits.into_iter().collect::<Vec<_>>().join(" · ")
         ));
     }
     for (region, layers) in ign_layers {
