@@ -2,7 +2,7 @@
 
 ## 결정과 판정
 
-사용자 결정에 따라 **ODbL 원천을 현재 Mappa canonical GeoDB에 넣지 않는다.** 전 세계 도로의 국가별 공식·허용형 원천을 찾고, 같은 출처·품질 게이트로 지역별로 구축한다. 첫 실증인 미국 Census 뉴욕 카운티 한 파일을 뉴욕시 5개 카운티로 확장했다. **전 세계 상세 도로망은 아직 없다.**
+사용자 결정에 따라 **ODbL 원천을 현재 Mappa canonical GeoDB에 넣지 않는다.** 전 세계 도로의 국가별 공식·허용형 원천을 찾고, 같은 출처·품질 게이트로 지역별로 구축한다. 첫 실증인 미국 Census 뉴욕 카운티 한 파일을 뉴욕시 5개 카운티로, 이어 [뉴욕주 62개 카운티](NY_STATE_ROADS_PROGRESS.md)로 확장했다. 현재 기본 세계 모드는 뉴욕주 도로 팩을 사용한다. **전 세계 상세 도로망은 아직 없다.**
 
 ## 미국 공식 원천 실증
 
@@ -32,7 +32,7 @@ ZIP의 `.prj`는 **EPSG:4269 NAD83**다. 현재 어댑터는 숫자 좌표를 �
 | 타일 | [지역 PMTiles](../artifacts/world-roads/nyc-five-boroughs.pmtiles) 1,522개 비어 있지 않은 타일, 2,697,728바이트. 전체 파일 감사에서 해독 실패 0; 확대 단계별 중복 포함 주요 도로선 5,297개, 보조 1,794개, 생활 111,323개. |
 | 화면 | 기본 세계 모드 [Queens](../artifacts/world-roads/nyc-queens-world-z14.png), [Richmond](../artifacts/world-roads/nyc-richmond-world-z14.png), [Manhattan](../artifacts/world-integration/manhattan-world.png) z14.6 Metal 캡처 각각 실패 0. 건물·공원·해안 상세는 비어 있음. |
 
-기본 세계 모드의 지역 목록은 이전 맨해튼 한 카운티 팩을 이 5개 카운티 팩으로 **대체**한다. 도시 경계 안쪽의 도로 완전성, 경계 연결성, 명칭 중복 제거, 별도 기준점 위치 정확도와 iPhone 성능은 아직 통과하지 않았다. 기존 맨해튼 결과는 비교용으로 보관한다.
+당시 기본 세계 모드에서 맨해튼 한 카운티 팩을 이 5개 카운티 팩으로 대체했다. 현재는 [뉴욕주 62개 카운티 팩](NY_STATE_ROADS_PROGRESS.md)이 이를 대체하며, 두 이전 결과는 비교용으로 보관한다. 도시 경계 안쪽의 도로 완전성, 경계 연결성, 명칭 중복 제거, 별도 기준점 위치 정확도와 iPhone 성능은 아직 통과하지 않았다.
 
 이후 같은 기본 세계 모드에 [Census 수면](WORLD_WATER_PROGRESS.md), [뉴욕주 공원 경계](WORLD_PARKS_PROGRESS.md), [Queens 동부 Microsoft 건물](WORLD_BUILDINGS_PROGRESS.md)을 별도 출처 패키지로 추가했다. [네 레이어 합성 화면](../artifacts/world-integration/queens-four-layers-world.png)은 타일 오류 없이 표시됐지만, 이로써 도로 연결성이나 현장 위치 정확도가 검증된 것은 아니다.
 
@@ -41,7 +41,7 @@ ZIP의 `.prj`는 **EPSG:4269 NAD83**다. 현재 어댑터는 숫자 좌표를 �
 | 원천/지역 | 확보·판정 |
 |---|---|
 | 한국 나주 | 공식 도로 ZIP 실증은 기존 [지역 게이트](MAP_V0_3C_GATE_AUDIT.md)에 기록. 원본 CRS와 기준점 미확인으로 S16 `NO_GO`. |
-| 미국 | Census 2025 뉴욕시 5개 카운티를 실증. 나머지 미국 카운티는 미수집·미검증. 공식 배포 단위는 카운티별 All Roads 파일. |
+| 미국 | Census 2025 뉴욕주 62개 카운티를 실증. 다른 주 카운티는 미수집·미검증. 공식 배포 단위는 카운티별 All Roads 파일. |
 | 영국 | [OS Open Roads](https://www.ordnancesurvey.co.uk/products/os-open-roads)는 무료 [OGL v3](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/) 원천 후보. 공식 [문서](https://docs.os.uk/os-downloads/products/transport-network-portfolio/os-open-roads/os-open-roads-overview/os-open-roads-data)상 벡터 타일은 EPSG:3857. 2026-04 영국 전체 벡터 ZIP의 공식 범위 응답 크기 1,346,941,248바이트를 확인했으나 전체 파일은 미수집·미검증. 지역 패키지·위치 정확도도 미구축. |
 | 그 외 국가 | 공식 원천·배포 허용 조건·파일·좌표계·독립 정확도 조사 및 실증 필요. 빈 곳은 빈 곳으로 표시. |
 

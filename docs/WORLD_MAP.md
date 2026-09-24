@@ -4,8 +4,8 @@
 
 **세계 개략 지도는 표시된다. 전 세계 상세 지도는 완성되지 않았다.** 기본 화면은 Mappa의 Rust 타일 빌더·PMTiles 리더·Metal 렌더러가 로컬 파일만 읽는다. 해안·국경·도시·일부 주요 도로의 좌표 원본은 [Natural Earth 퍼블릭 도메인 자료](https://www.naturalearthdata.com/about/terms-of-use/)다. Mappa가 전 세계를 직접 측량했거나 독자적 원본 지형을 확보했다는 뜻은 아니다. 지도 서버와 유료 지도 API는 런타임에서 사용하지 않는다.
 
-상세 원천 확대는 [모나코·Queens 건물](WORLD_BUILDINGS_PROGRESS.md), [뉴욕시 5개 카운티 도로](WORLD_ROADS_PROGRESS.md), [같은 지역의 수면](WORLD_WATER_PROGRESS.md), [뉴욕시 주변 공원 경계](WORLD_PARKS_PROGRESS.md)에 실증했다. 다섯 지역 패키지가 기본 세계 모드에서 필요할 때 결합된다. 이 실증 구역 밖의 상세 지리는 구축되지 않았다.
-사용자가 선택한 기존 공유조건 금지 규칙에 따라 도로는 국가별 공식 원천으로 진행한다. 미국 뉴욕시 5개 카운티만 처리했으며 세계 상세 도로망은 아직 없다.
+상세 원천 확대는 [모나코·Queens 건물](WORLD_BUILDINGS_PROGRESS.md), [뉴욕주 62개 카운티 도로](NY_STATE_ROADS_PROGRESS.md), [뉴욕시 5개 카운티 수면](WORLD_WATER_PROGRESS.md), [뉴욕시 주변 공원 경계](WORLD_PARKS_PROGRESS.md)에 실증했다. 다섯 지역 패키지가 기본 세계 모드에서 필요할 때 결합된다. 이 실증 구역 밖의 상세 지리는 구축되지 않았다.
+사용자가 선택한 기존 공유조건 금지 규칙에 따라 도로는 국가별 공식 원천으로 진행한다. 미국 뉴욕주 62개 카운티 원천을 처리했으며 세계 상세 도로망은 아직 없다.
 
 ## 실제로 보이는 범위
 
@@ -15,7 +15,8 @@
 | z5–z7 | Web Mercator 세계 범위 | Natural Earth 1:10m 해안·호수·국경, z6부터 선별된 도시·주요 도로·큰 수계, z7에서 더 많은 수계 | 1:10m은 **축척 1:1,000만**이며 10m 위치 정확도가 아님 |
 | z8–z9 | 전 세계 | z7 개략 데이터를 확대 | 새 상세 객체가 추가되지 않음 |
 | z10–z13 | 모나코 | z7 개략 데이터를 확대 | 건물 파일에 실제 타일이 없는 배율; 위치·객체 상세는 증가하지 않음 |
-| z10–z15 | 뉴욕시 5개 카운티 | Census 2025 도로·수면 지역 PMTiles | 일부 레이어만 있고 독립 위치 정확도·완전성 미통과 |
+| z10–z15 | 뉴욕주 62개 카운티 원천 범위 | Census 2025 도로 지역 PMTiles | 도로 연결성·독립 위치 정확도·완전성 미통과 |
+| z10–z15 | 뉴욕시 5개 카운티 | Census 2025 수면 지역 PMTiles | 뉴욕주 전체 수면은 없음 |
 | z12–z15 | 뉴욕시 원천 범위 사각형 | Census 2025 공원·휴양 구역 경계 | 실제 수목 피복·공원 목록의 완전성은 아님 |
 | z14–z15 | 모나코 및 Queens 동부 한 z11 타일 범위 | Microsoft 건물 지역 PMTiles; Queens에서는 도로·수면과 합성 | 건물 자료의 시기·위치 정확도·완전성 미검증 |
 | z10 이상 | 미수집 지역 | 중립색 빈 화면 | 지리 정보를 추정해 채우지 않음 |
@@ -26,7 +27,11 @@ Web Mercator 표현 범위는 극점 밖 위도 약 ±85.05°까지다. z5–z7�
 
 ### 승인된 지역 패키지 결합 — 2026-09-24
 
-기본 세계 모드가 [지역 목록](../assets/map/regional_packs.toml)의 각 아카이브를 선택할 수 있다. 시작할 때 canonical 출처 manifest의 라이선스 게이트를 통과시키고, PMTiles는 해당 지역의 첫 타일 요청 시 열어 범위·출처 표기를 manifest와 대조한다. 고배율 타일과 겹치는 여러 지역 파일을 읽어 타입별 레이어를 합친다. 뉴욕시 도로·수면과 Queens 건물은 실제 같은 타일에서 합쳐진다. 같은 종류 자료의 중복 식별·병합은 아직 구현되지 않았다.
+기본 세계 모드가 [지역 목록](../assets/map/regional_packs.toml)의 각 아카이브를 선택할 수 있다. 시작할 때 canonical 출처 manifest의 라이선스 게이트를 통과시키고, PMTiles는 해당 지역의 첫 타일 요청 시 열어 범위·출처 표기를 manifest와 대조한다. 고배율 타일과 겹치는 여러 지역 파일을 읽어 타입별 레이어를 합친다. 뉴욕주 도로와 뉴욕시 수면·공원·Queens 건물은 실제 같은 타일에서 합쳐진다. 같은 종류 자료의 중복 식별·병합은 아직 구현되지 않았다.
+
+### 뉴욕주 도로 확장 — 2026-09-24
+
+[뉴욕주 62개 카운티 원천 감사](NY_STATE_ROADS_PROGRESS.md)에서 도로 340,381개를 채택하고 39,266개 레코드를 거절했다. 171,167개 비어 있지 않은 타일을 모두 해독했으며 오류는 0개였다. 기존 뉴욕시 도로 팩의 비어 있지 않은 1,522개 타일은 새 팩에도 있고, 기존 도로 선형이 빠진 타일은 0개였다. 기본 세계 모드 [Buffalo z14.4](../artifacts/world-roads/ny-state/buffalo-world-z14.png)와 [Queens 네 레이어 z14.4](../artifacts/world-roads/ny-state/queens-four-layers-world.png) 캡처에서 타일 실패가 각각 0개였다. 이는 파일·표시 검증이며 도로 연결성이나 현장 위치 정확도 검증은 아니다. 뉴욕시 5개 카운티 도로 팩은 [이전 실증](WORLD_ROADS_PROGRESS.md) 비교용으로 보관한다.
 
 Mac Metal 기본 세계 모드 캡처에서 [모나코 건물](../artifacts/world-integration/monaco-world.png), 뉴욕시 5개 카운티 팩의 [Manhattan](../artifacts/world-integration/manhattan-world.png)·[Queens](../artifacts/world-roads/nyc-queens-world-z14.png)·[Richmond](../artifacts/world-roads/nyc-richmond-world-z14.png) 도로가 실제 z14 타일로 표시됐다. [파리의 미수집 상세 영역](../artifacts/world-integration/unmapped-world.png)은 빈 중립색이다. [모나코 z12](../artifacts/world-integration/monaco-overview-z12.png)는 건물 타일이 시작되기 전이라 기존 z7 개략 자료를 확대하며 화면에 그 한계를 밝힌다. 여섯 캡처의 타일 실패는 각각 0개다. 최종 모나코의 동기·비동기 캡처 PNG는 SHA-256 `6477b6f1bb2cf1b12b861cdfce308e0de0a0b05e4db2aa7021989c6b73e074e2`로 일치했다. 이는 자료 선택·표시의 검증이며 현장 위치 정확도나 전 세계 커버리지 통과 판정이 아니다.
 

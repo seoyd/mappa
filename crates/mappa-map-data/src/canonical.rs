@@ -49,7 +49,7 @@ pub enum CanonicalError {
     Corrupt(&'static str),
 }
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct SourceManifest {
     pub schema_version: u32,
     pub proof_region: String,
@@ -57,7 +57,7 @@ pub struct SourceManifest {
     pub source: Vec<SourceRecord>,
 }
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct SourceRecord {
     pub id: String,
     pub name: String,
@@ -316,7 +316,7 @@ pub struct Provenance {
     pub source_feature_sha256: [u8; 32],
 }
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct RejectedFeature {
     pub source_id: String,
     pub source_feature_id: String,

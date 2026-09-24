@@ -1,3 +1,4 @@
+use flate2::{Compression, write::GzEncoder};
 use mappa_map_data::canonical::{
     BBox, GeoDb, SourceManifest, adapt_microsoft_buildings, adapt_naju_road_surfaces,
     adapt_naju_roads, adapt_sgis_districts, adapt_us_census_areawater, adapt_us_census_parks,
@@ -7,8 +8,11 @@ use std::{error::Error, path::Path};
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = std::env::args().collect();
-    if args.len() != 3 {
-        return Err("usage: build_canonical_proof data/sources.toml OUTPUT.mgeodb".into());
+    if args.len() != 3 && (args.len() != 4 || args[3] != "--gzip-rejections") {
+        return Err(
+            "usage: build_canonical_proof data/sources.toml OUTPUT.mgeodb [--gzip-rejections]"
+                .into(),
+        );
     }
     let manifest = SourceManifest::open(Path::new(&args[1]))?;
     let [west, south, east, north] = manifest.proof_bbox_wgs84;
@@ -58,10 +62,20 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     }
     records.sort_by_key(|(feature, _)| feature.id);
-    std::fs::write(
-        Path::new(&args[2]).with_extension("rejected.json"),
-        serde_json::to_vec_pretty(&rejected)?,
-    )?;
+    if args.len() == 4 {
+        let writer = GzEncoder::new(
+            std::fs::File::create(Path::new(&args[2]).with_extension("rejected.json.gz"))?,
+            Compression::default(),
+        );
+        let mut writer = writer;
+        serde_json::to_writer(&mut writer, &rejected)?;
+        writer.finish()?;
+    } else {
+        std::fs::write(
+            Path::new(&args[2]).with_extension("rejected.json"),
+            serde_json::to_vec_pretty(&rejected)?,
+        )?;
+    }
     write_geodb(Path::new(&args[2]), &records)?;
     let mut database = GeoDb::open(Path::new(&args[2]))?;
     let queried = database.query(region)?;

@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/mappa-domain", "crates/mappa-spatial", "crates/mappa-protocol", "crates/mappa-storage", "crates/mappa-client-core", "crates/mappa-device", "crates/mappa-client-transport", "crates/mappa-client-runtime", "crates/mappa-apple", "mobile/mappa-ios", "server/mappa-server", "crates/mappa-harness", "crates/mappa-map-core", "crates/mappa-map-data", "crates/mappa-map-render", "desktop/mappa-map-demo"]
+members = ["crates/mappa-domain", "crates/mappa-spatial", "crates/mappa-protocol", "crates/mappa-storage", "crates/mappa-client-core", "crates/mappa-device", "crates/mappa-client-transport", "crates/mappa-client-runtime", "crates/mappa-apple", "mobile/mappa-ios", "server/mappa-server", "crates/mappa-harness", "crates/mappa-map-core", "crates/mappa-map-data", "crates/mappa-map-acquire", "crates/mappa-map-render", "desktop/mappa-map-demo"]
 resolver = "2"
 
 [workspace.package]

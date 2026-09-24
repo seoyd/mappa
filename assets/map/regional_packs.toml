@@ -11,12 +11,12 @@ archive_max_zoom = 15
 label = "Microsoft 건물 · 모나코 실증"
 
 [[pack]]
-path = "../../artifacts/world-roads/nyc-five-boroughs.pmtiles"
-manifest = "../../data/us_tiger_nyc_roads.toml"
+path = "../../artifacts/world-roads/ny-state/state.pmtiles"
+manifest = "../../data/us_tiger_ny_state_roads.toml"
 min_visible_zoom = 10
 archive_min_zoom = 10
 archive_max_zoom = 15
-label = "US Census 도로 · 뉴욕시 5개 카운티 실증"
+label = "US Census 도로 · 뉴욕주 62개 카운티 실증"
 
 [[pack]]
 path = "../../artifacts/world-buildings/queens-z11.pmtiles"

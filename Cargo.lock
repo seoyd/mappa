@@ -3343,6 +3343,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "mappa-map-acquire"
+version = "0.1.0"
+dependencies = [
+ "reqwest",
+ "tokio",
+]
+
+[[package]]
 name = "mappa-map-core"
 version = "0.1.0"
 dependencies = [
