@@ -1,6 +1,6 @@
 # 상세 수면 원천 구축 현황 — 2026-09-25
 
-뉴욕시 5개 카운티 수면, [매사추세츠주 14개 카운티 수면](MA_STATE_WATER_PROGRESS.md), [뉴햄프셔주 10개 카운티 수면](NH_STATE_PROGRESS.md), [버몬트주 14개 카운티 수면](VT_STATE_PROGRESS.md), [메인주 16개 카운티 수면](ME_STATE_PROGRESS.md), [메릴랜드주 24개 카운티 상당 단위 수면](MD_STATE_PROGRESS.md), [프랑스 IGN 파리 D075 상세 수면](FR_PARIS_WATER_PROGRESS.md)을 기본 세계 모드에 연결했다. 나머지 세계의 상세 수면은 아직 구축하지 않았다.
+뉴욕시 5개 카운티 수면, [매사추세츠주 14개 카운티 수면](MA_STATE_WATER_PROGRESS.md), [뉴햄프셔주 10개 카운티 수면](NH_STATE_PROGRESS.md), [버몬트주 14개 카운티 수면](VT_STATE_PROGRESS.md), [메인주 16개 카운티 수면](ME_STATE_PROGRESS.md), [메릴랜드주 24개 카운티 상당 단위 수면](MD_STATE_PROGRESS.md), [워싱턴 DC 수면](DC_PROGRESS.md), [프랑스 IGN 파리 D075 상세 수면](FR_PARIS_WATER_PROGRESS.md)을 기본 세계 모드에 연결했다. 나머지 세계의 상세 수면은 아직 구축하지 않았다.
 
 ## 확인된 범위
 

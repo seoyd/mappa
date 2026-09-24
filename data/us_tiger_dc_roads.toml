@@ -1,0 +1,35 @@
+schema_version = 1
+proof_region = "us-tiger-2025-state-11-1-county-roads"
+proof_bbox_wgs84 = [
+    -77.116749,
+    38.79241,
+    -76.909561,
+    38.995251,
+]
+
+[[source]]
+id = "us-census-tiger-2025-roads-11001"
+name = "2025 TIGER/Line All Roads, county FIPS 11001"
+provider = "U.S. Census Bureau"
+source_version = "2025 TIGER/Line, legal boundaries as of 2025-01-01"
+download_date = "2026-09-25"
+official_url = "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_11001_roads.zip"
+download_page_url = "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html"
+file = "local/dc_roads/tl_2025_11001_roads.zip"
+sha256 = "41323c120e00aa7d6237095f6ea39eaad54be97aa8bc5a5b81ce0827a865f775"
+crs = "EPSG:4269 NAD83; numeric degrees retained; WGS84 datum transform and positional accuracy pending"
+format = "ZIP Shapefile, county All Roads"
+coverage = "County FIPS 11001, source header bounds [-77.116749, 38.79241, -76.909561, 38.995251]; selected road classes only"
+resolution = "official TIGER/Line linear feature geometry; source accuracy varies"
+update_frequency = "annual publication; pinned 2025 snapshot"
+license_id = "US-GOV-PUBLIC-DOMAIN"
+license_url = "https://www2.census.gov/geo/pdfs/maps-data/data/tiger/tgrshp2025/TGRSHP2025_TechDoc.pdf"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "U.S. Census Bureau, 2025 TIGER/Line All Roads; Mappa modifications"
+share_alike = false
+adapter = "us-census-tiger-roads"
+adapter_version = 1

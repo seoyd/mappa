@@ -1,0 +1,35 @@
+schema_version = 1
+proof_region = "us-tiger-2025-state-11-1-county-areawater"
+proof_bbox_wgs84 = [
+    -77.119759,
+    38.791645,
+    -76.913664,
+    38.986266,
+]
+
+[[source]]
+id = "us-census-tiger-2025-areawater-11001"
+name = "2025 TIGER/Line Area Hydrography, county FIPS 11001"
+provider = "U.S. Census Bureau"
+source_version = "2025 TIGER/Line, legal boundaries as of 2025-01-01"
+download_date = "2026-09-25"
+official_url = "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_11001_areawater.zip"
+download_page_url = "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html"
+file = "local/dc_areawater/tl_2025_11001_areawater.zip"
+sha256 = "258d5a8613e8b02746711592b3f228e360274b1ca83ce8c053fa560cd3aa46cf"
+crs = "EPSG:4269 NAD83; numeric degrees retained; WGS84 datum transform and positional accuracy pending"
+format = "ZIP Shapefile, county Area Hydrography"
+coverage = "County FIPS 11001, source header bounds [-77.119759, 38.791645, -76.913664, 38.986266]; source water polygons only"
+resolution = "official TIGER/Line area hydrography polygons; source accuracy varies"
+update_frequency = "annual publication; pinned 2025 snapshot"
+license_id = "US-GOV-PUBLIC-DOMAIN"
+license_url = "https://www2.census.gov/geo/pdfs/maps-data/data/tiger/tgrshp2025/TGRSHP2025_TechDoc.pdf"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "U.S. Census Bureau, 2025 TIGER/Line Area Hydrography; Mappa modifications"
+share_alike = false
+adapter = "us-census-tiger-areawater"
+adapter_version = 1
