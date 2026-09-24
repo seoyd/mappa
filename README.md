@@ -1,4 +1,28 @@
-# Mappa v0.2.1 (실기기 검증 진행 중)
+# Mappa (Rust 오프라인 세계지도 / 실기기 검증 진행 중)
+
+## 세계지도 (기본 모드)
+
+기본 지도는 Mappa의 Rust 타일 생성기·렌더러가 로컬 파일을 직접 읽어 그린다. 세계 z0–z4, 전 세계 z5–z7, 동아시아 z5–z7의 세 단계를 쓴다. 지형·국경·도시의 원본은 [퍼블릭 도메인 Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/)이고, 외부 지도 서버/API는 호출하지 않는다. 상세 단계와 실제 검증 결과는 [세계지도 보고서](docs/WORLD_MAP.md)에 있다.
+
+```bash
+cargo run -p mappa-map-demo
+cargo run -p mappa-map-demo -- --capture 0 15 1.3 artifacts/world-map/world.png
+cargo run -p mappa-map-data --bin build_world_50m
+```
+
+## 직접 기록만 보는 모드
+
+현장 조사 좌표만 확인하려면 `MAPPA_DATASET=first-party`를 명시한다. 현재 직접 기록은 0건이므로 이 모드는 빈 화면이다. 입력·검증 절차는 [자체 기록 지도 문서](docs/FIRST_PARTY_MAP.md)에 있다. 세계지도와 직접 기록 데이터는 현재 별도 모드이며 합쳐서 표시하지 않는다. iPhone의 GPS 직접 수집은 개발자 서명·실기기 검증이 진행되지 않아 아직 연결되지 않았다.
+
+```bash
+cargo run -p mappa-map-data --bin first_party_map -- inspect assets/map/first_party/survey.geojson
+cargo run -p mappa-map-data --bin first_party_map -- build assets/map/first_party/survey.geojson assets/map/first_party.pmtiles
+MAPPA_DATASET=first-party cargo run -p mappa-map-demo -- --street-demo
+```
+
+## 이전 비교 시안
+
+과거 비교용 `MAPPA_DATASET=legacy-osm`과 `MAPPA_DATASET=public-naju`는 각각 [OSM 시안](docs/MAP_DATA.md), [공공 도로 시안](docs/PUBLIC_ROADS_PILOT.md)의 외부 원본을 쓴다. 명시적으로 선택해야만 연다. 지도 렌더러의 조작과 성능 기록은 [지도 구조](docs/MAP_ARCHITECTURE.md), [화면 갱신 측정](docs/BENCHMARK_MAP_ASYNC.md)을 참고한다.
 
 Rust 단일 서버와 PostgreSQL/PostGIS로 위치 글 생성·조회 vertical slice를 검증합니다. 실행 경로에 외부 지도·라우팅·AI·번역 API 호출은 없습니다.
 

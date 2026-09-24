@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/mappa-domain", "crates/mappa-spatial", "crates/mappa-protocol", "crates/mappa-storage", "crates/mappa-client-core", "crates/mappa-device", "crates/mappa-client-transport", "crates/mappa-client-runtime", "crates/mappa-apple", "mobile/mappa-ios", "server/mappa-server", "crates/mappa-harness"]
+members = ["crates/mappa-domain", "crates/mappa-spatial", "crates/mappa-protocol", "crates/mappa-storage", "crates/mappa-client-core", "crates/mappa-device", "crates/mappa-client-transport", "crates/mappa-client-runtime", "crates/mappa-apple", "mobile/mappa-ios", "server/mappa-server", "crates/mappa-harness", "crates/mappa-map-core", "crates/mappa-map-data", "crates/mappa-map-render", "desktop/mappa-map-demo"]
 resolver = "2"
 
 [workspace.package]
@@ -12,3 +12,17 @@ thiserror = "2"
 uuid = { version = "1", features = ["v4"] }
 tokio = { version = "1", features = ["full"] }
 tracing = "0.1"
+
+# Tile geometry is built while the map is opening. Keep the desktop development
+# build responsive without requiring every run to use a full release build.
+[profile.dev.package.mappa-map-render]
+opt-level = 2
+
+[profile.dev.package.mappa-map-data]
+opt-level = 2
+
+[profile.dev.package.mvt-reader]
+opt-level = 2
+
+[profile.dev.package.lyon_tessellation]
+opt-level = 2

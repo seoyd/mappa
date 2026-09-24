@@ -18,3 +18,14 @@
 - ADR-016: 향후 세계 basemap은 Mappa 클라이언트가 보유·렌더링하는 데이터를 전제로 한다. 외부 지도 API에 의존하지 않는다. PMTiles/decoder/renderer 선택은 v0.2.1 실기기 closure 후 v0.3 feasibility harness에서 판정하며 이 ADR이 구현 기술을 확정하지 않는다.
 - ADR-017: Xcodegen의 Rust 빌드 단계는 매 빌드 실행한다. Cargo가 증분 재빌드 여부를 결정하며, Xcode가 출력 바이너리만 보고 Rust 소스 변경을 건너뛰면 오래된 앱을 배포할 수 있다.
 - ADR-018: Keychain 접근은 정상적인 Apple 앱 서명과 앱 식별자 권한이 전제다. 프로젝트에서 entitlements를 생성하지만, 팀 서명이 없는 개발 환경의 Simulator에서 `-34018`을 확인했다. 임의 서명으로 보안 검사를 우회하지 않는다.
+- ADR-019: Apple Personal Team 기기 등록 한도 때문에 G21~G25가 막힌 동안 지도 v0.3A를 독립 branch로 진행한다. 기존 iOS 상태를 PASS로 바꾸지 않는다. 이 결정은 ADR-016의 구현 순서를 사용자 지시에 따라 갱신한다.
+- ADR-020: basemap 데이터는 클라이언트의 불변 로컬 PMTiles에 둔다. map tile HTTP/DNS/API 경로를 추가하지 않는다.
+- ADR-021: 지도 커널은 Rust 카메라·데이터·geometry 준비와 wgpu/Metal을 작은 네 crate로 검증한다. screen-space 선 두께와 Retina 물리 픽셀을 사용한다.
+- ADR-022: maplibre-rs는 구조 참고 후보이며 이번 제품 렌더러의 hard dependency가 아니다.
+- ADR-023: MVT를 v0.3A 실행 경로로 유지하고 stable MLT tag-01은 동일 fixture 타일에서 선택적 CLI로 측정한다. v0.3B 전체 데이터의 크기/해독 측정 전에는 전환하지 않는다.
+- ADR-024: `mlt-core`의 `unstable-v2` feature를 켜지 않는다. 실험적인 MLT v2 tile을 제품 asset으로 쓰지 않는다.
+- ADR-025: 사용자가 제시한 하이퍼캐주얼 지도 이미지는 색면·굵은 둥근 해안선의 시각적 참고로 사용한다. 로컬 지형 폴리곤에서 실제 해안선을 추출하고 tile 절단선은 제외한다. 도로·공원·게임 노드를 가짜 지리 정보로 생성하지 않는다. 현재 네 팔레트는 선택 전 시안이다.
+- ADR-026: 확대 수준별 지도 시안은 같은 Web Mercator 좌표계의 두 로컬 PMTiles로 검증한다. 세계 z0–z4는 기존 1:110m, 동아시아 z5–z7은 고정 Natural Earth 1:10m 지형을 쓴다. 상세 파일의 header bounds 안에 화면 전체가 들어갈 때만 전환해 외부 지역의 빈 화면을 막는다. z6부터 원본 도로·도시 이름을 쓰며, 건물·동네 정확도나 전 세계 상세 지원은 주장하지 않는다.
+- ADR-027: 확대 상세를 위한 두 로컬 OSM PMTiles를 더한다. Geofabrik의 날짜 고정 한국 PBF에서 GDAL로 추출한 좌표를 Rust builder가 타일화한다. z8–z9는 한국 도시·간선도로, z10–z12는 서울 주변의 역·공공기관·세부 도로를 추가한다. 데이터 파일은 ODbL로 별도 고지하고 OSM 화면에 기여자 표시를 유지한다. z9에서 32MiB GPU cache가 화면 내 타일까지 밀어낸 실측 실패 때문에 데모 cache 상한을 CPU 64MiB/GPU 128MiB로 높이고 오프스크린 화면마다 타일 누락 검사를 넣는다. 이 범위 밖의 전국 상세·건물·기기 성능은 아직 검증하지 않았다.
+- ADR-028: 사용자의 자체 지도 결정에 따라 데모 기본값을 Mappa 현장 기록만 읽는 모드로 바꾼다. 미기록 지역은 지리 정보를 추정하지 않고 중립색으로 표시한다. OSM·Natural Earth·공공 원본은 기본 지도 경로에서 열지 않으며 이전 비교 시안은 명시적 `MAPPA_DATASET` 선택에만 남긴다. 실제 현장 측량 0건과 기기 GPS 미연결 상태를 진행 보고에 그대로 표시한다. [구현·검증](FIRST_PARTY_MAP.md).
+- ADR-029: 사용자의 세계지도 우선 지시로 ADR-028의 기본 모드 결정을 변경한다. Mappa Rust 타일·렌더러에 퍼블릭 도메인 Natural Earth 세계 원본을 사용한 오프라인 세계지도를 기본으로 둔다. 실제 지형을 임의로 생성하거나 타사 상용 지도 화면을 복제하지 않는다. 직접 현장 기록만 보는 경로는 `MAPPA_DATASET=first-party`로 유지한다. 전 세계 z5–z7 중간 상세와 동아시아 1:10m 상세를 분리해 범위에 따라 선택하고, 도로 수준 정확도를 주장하지 않는다. [원본·측정](WORLD_MAP.md).

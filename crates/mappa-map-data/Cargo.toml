@@ -1,0 +1,26 @@
+[package]
+name = "mappa-map-data"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+mappa-map-core = { path = "../mappa-map-core" }
+thiserror.workspace = true
+pmtiles = { version = "0.24.0", default-features = false, features = ["mmap-async-tokio", "write"] }
+mvt-reader = "2.5.0"
+geo = { version = "0.33.1", default-features = false }
+geojson = "1.0.0"
+serde_json = "1.0"
+mvt = "0.15.0"
+tokio.workspace = true
+mlt-core = { version = "0.14.5", optional = true, default-features = false }
+flate2 = { version = "1.1.10", optional = true }
+
+[features]
+mlt-eval = ["dep:mlt-core", "dep:flate2"]
+
+[[bin]]
+name = "compare_formats"
+path = "src/bin/compare_formats.rs"
+required-features = ["mlt-eval"]

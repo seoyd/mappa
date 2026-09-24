@@ -1,0 +1,19 @@
+[package]
+name = "mappa-map-demo"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+mappa-map-core = { path = "../../crates/mappa-map-core" }
+mappa-map-data = { path = "../../crates/mappa-map-data" }
+mappa-map-render = { path = "../../crates/mappa-map-render" }
+winit = { version = "0.30.13", default-features = false, features = ["rwh_06"] }
+tokio.workspace = true
+wgpu = { version = "30.0.1", default-features = false, features = ["std", "metal", "wgsl"] }
+png = "0.18.1"
+glyphon = "0.12.0"
+bytemuck = { version = "1.25.0", features = ["derive"] }
+
+[features]
+text-rnd = []
