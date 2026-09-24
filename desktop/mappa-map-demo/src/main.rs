@@ -1,9 +1,12 @@
 use mappa_map_core::{MapCamera, TileKey, VisibleTile, WorldPoint, project, unproject};
 use mappa_map_data::{
-    CountryLabel, DecodedTile, LocalPmTiles, PlaceKind, TileSource, canonical::BBox, decode_mvt,
-    load_country_labels, spatial_pack::SpatialPack,
+    CountryLabel, DecodedTile, LocalPmTiles, PlaceKind, TileSource,
+    canonical::{BBox, SourceManifest},
+    decode_mvt, load_country_labels,
+    spatial_pack::SpatialPack,
 };
 use mappa_map_render::{MapRenderer, MapStyle, PreparedTile, STYLES, prepare};
+use serde::Deserialize;
 use std::{
     collections::{HashMap, HashSet},
     error::Error,
@@ -75,6 +78,15 @@ fn map_style(index: usize) -> MapStyle {
     if isolated_mode() {
         // An unrecorded area has unknown geography, not ocean or land.
         style.ocean = [0.91, 0.93, 0.94, 1.0];
+    }
+    style
+}
+
+fn map_style_for_tiles(index: usize, visible: &[VisibleTile]) -> MapStyle {
+    let mut style = map_style(index);
+    if world_mode() && visible.first().is_some_and(|tile| tile.key.z >= 10) {
+        // Above the overview archive's resolution, unobserved ground is unknown.
+        style.ocean = [0.85, 0.88, 0.90, 1.0];
     }
     style
 }
@@ -179,6 +191,191 @@ fn tile_inside(key: TileKey, bounds: [f64; 4]) -> bool {
     west >= bounds[0] && east <= bounds[2] && south >= bounds[1] && north <= bounds[3]
 }
 
+fn tile_intersects(key: TileKey, bounds: [f64; 4]) -> bool {
+    let n = (1u32 << key.z) as f64;
+    let west = key.x as f64 / n * 360.0 - 180.0;
+    let east = (key.x + 1) as f64 / n * 360.0 - 180.0;
+    let north = unproject(WorldPoint {
+        x: 0.0,
+        y: key.y as f64 / n,
+    })
+    .expect("valid tile coordinate")
+    .1;
+    let south = unproject(WorldPoint {
+        x: 0.0,
+        y: (key.y + 1) as f64 / n,
+    })
+    .expect("valid tile coordinate")
+    .1;
+    west < bounds[2] && east > bounds[0] && south < bounds[3] && north > bounds[1]
+}
+
+fn camera_center_inside(camera: &MapCamera, bounds: [f64; 4]) -> bool {
+    let center = WorldPoint {
+        x: camera.center.x.rem_euclid(1.0),
+        y: camera.center.y,
+    };
+    unproject(center).is_ok_and(|(lon, lat)| {
+        lon >= bounds[0] && lon <= bounds[2] && lat >= bounds[1] && lat <= bounds[3]
+    })
+}
+
+#[derive(Deserialize)]
+struct RegionalCatalog {
+    pack: Vec<RegionalEntry>,
+}
+
+#[derive(Deserialize)]
+struct RegionalEntry {
+    path: PathBuf,
+    manifest: PathBuf,
+    min_visible_zoom: u8,
+    label: String,
+}
+
+#[derive(Clone)]
+struct RegionalPack {
+    source: Arc<LocalPmTiles>,
+    min_visible_zoom: u8,
+    label: String,
+}
+
+async fn open_regional_packs() -> Result<Vec<RegionalPack>, DynError> {
+    let catalog_path = std::env::var_os("MAPPA_REGIONAL_CATALOG")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| {
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("../../assets/map/regional_packs.toml")
+        });
+    let catalog: RegionalCatalog = toml::from_str(&std::fs::read_to_string(&catalog_path)?)?;
+    let parent = catalog_path
+        .parent()
+        .ok_or("catalog has no parent directory")?;
+    let mut packs = Vec::with_capacity(catalog.pack.len());
+    let mut seen = HashSet::new();
+    for entry in catalog.pack {
+        if entry.label.trim().is_empty() || entry.label.chars().count() > 80 {
+            return Err("regional pack label must contain 1–80 characters".into());
+        }
+        let archive_path = std::fs::canonicalize(parent.join(&entry.path))?;
+        if !seen.insert(archive_path.clone()) {
+            return Err(format!("duplicate regional pack: {}", entry.path.display()).into());
+        }
+        let manifest = SourceManifest::open(&parent.join(&entry.manifest))?;
+        let source = Arc::new(LocalPmTiles::open(archive_path).await?);
+        if source.attribution.is_none()
+            || source.min_zoom < 10
+            || source.max_zoom > 15
+            || source.max_zoom < source.min_zoom
+            || entry.min_visible_zoom < source.min_zoom
+            || entry.min_visible_zoom > source.max_zoom
+        {
+            return Err(format!(
+                "regional pack has invalid attribution or zoom: {}",
+                entry.path.display()
+            )
+            .into());
+        }
+        if source
+            .bounds
+            .iter()
+            .zip(manifest.proof_bbox_wgs84)
+            .any(|(actual, expected)| (actual - expected).abs() > 1e-6)
+        {
+            return Err(format!(
+                "regional pack bounds differ from manifest: {}",
+                entry.path.display()
+            )
+            .into());
+        }
+        let credit = source.attribution.as_deref().unwrap_or_default();
+        if manifest.source.iter().any(|record| {
+            !credit.contains(&record.provider)
+                || record
+                    .attribution_text
+                    .as_deref()
+                    .is_some_and(|text| !credit.contains(text))
+        }) {
+            return Err(format!(
+                "regional pack attribution differs from manifest: {}",
+                entry.path.display()
+            )
+            .into());
+        }
+        packs.push(RegionalPack {
+            source,
+            min_visible_zoom: entry.min_visible_zoom,
+            label: entry.label,
+        });
+    }
+    Ok(packs)
+}
+
+fn append_tile(target: &mut DecodedTile, mut source: DecodedTile) {
+    target.detailed |= source.detailed;
+    target.raw_bytes += source.raw_bytes;
+    target.land.append(&mut source.land);
+    target.green.append(&mut source.green);
+    target.water.append(&mut source.water);
+    target.road_surface.append(&mut source.road_surface);
+    target.building.append(&mut source.building);
+    target.boundary.append(&mut source.boundary);
+    target.waterway.append(&mut source.waterway);
+    target.road.append(&mut source.road);
+    target.road_major.append(&mut source.road_major);
+    target.road_collector.append(&mut source.road_collector);
+    target.road_local.append(&mut source.road_local);
+    target.place.append(&mut source.place);
+}
+
+struct DecodedLoad {
+    tile: Option<DecodedTile>,
+    lookup_ms: f64,
+    decode_ms: f64,
+}
+
+async fn read_decoded_tile(
+    key: TileKey,
+    sources: [&Arc<LocalPmTiles>; 4],
+    regional: &[RegionalPack],
+) -> Result<DecodedLoad, DynError> {
+    let regional_zoom = regional.iter().map(|pack| pack.min_visible_zoom).min();
+    let candidates: Vec<_> = if regional_zoom.is_some_and(|z| key.z >= z) {
+        regional
+            .iter()
+            .filter(|pack| {
+                key.z >= pack.min_visible_zoom
+                    && key.z <= pack.source.max_zoom
+                    && tile_intersects(key, pack.source.bounds)
+            })
+            .map(|pack| &pack.source)
+            .collect()
+    } else {
+        vec![source_for_key(key, sources)]
+    };
+    let mut tile = None;
+    let mut lookup_ms = 0.0;
+    let mut decode_ms = 0.0;
+    for source in candidates {
+        let start = Instant::now();
+        let raw = source.tile_bytes(key).await?;
+        lookup_ms += start.elapsed().as_secs_f64() * 1000.0;
+        let Some(raw) = raw else { continue };
+        let start = Instant::now();
+        let decoded = decode_mvt(raw)?;
+        decode_ms += start.elapsed().as_secs_f64() * 1000.0;
+        if let Some(target) = &mut tile {
+            append_tile(target, decoded);
+        } else {
+            tile = Some(decoded);
+        }
+    }
+    Ok(DecodedLoad {
+        tile,
+        lookup_ms,
+        decode_ms,
+    })
+}
+
 fn source_for_key(key: TileKey, sources: [&Arc<LocalPmTiles>; 4]) -> &Arc<LocalPmTiles> {
     if key.z >= sources[3].min_zoom && tile_inside(key, sources[3].bounds) {
         sources[3]
@@ -268,6 +465,7 @@ struct TileManager {
     detail: Arc<LocalPmTiles>,
     mid: Arc<LocalPmTiles>,
     street: Arc<LocalPmTiles>,
+    regional: Vec<RegionalPack>,
     countries: Vec<CountryLabel>,
     cache: HashMap<TileKey, CacheEntry>,
     missing: HashSet<TileKey>,
@@ -303,6 +501,7 @@ impl TileManager {
                 detail: survey.clone(),
                 mid: survey.clone(),
                 street: survey,
+                regional: Vec::new(),
                 countries: Vec::new(),
                 cache: HashMap::new(),
                 missing: HashSet::new(),
@@ -314,11 +513,13 @@ impl TileManager {
         if world_mode() {
             let source = Arc::new(LocalPmTiles::open(map_file()).await?);
             let detail = Arc::new(LocalPmTiles::open(world_detail_file()).await?);
+            let regional = open_regional_packs().await?;
             return Ok(Self {
                 source,
                 detail: detail.clone(),
                 mid: detail.clone(),
                 street: detail,
+                regional,
                 countries: load_country_labels(&country_label_file())?,
                 cache: HashMap::new(),
                 missing: HashSet::new(),
@@ -332,6 +533,7 @@ impl TileManager {
             detail: Arc::new(LocalPmTiles::open(detail_map_file()).await?),
             mid: Arc::new(LocalPmTiles::open(mid_map_file()).await?),
             street: Arc::new(LocalPmTiles::open(street_map_file()).await?),
+            regional: Vec::new(),
             countries: load_country_labels(&country_label_file())?,
             cache: HashMap::new(),
             missing: HashSet::new(),
@@ -342,6 +544,30 @@ impl TileManager {
     }
 
     fn max_zoom_for(&self, camera: &MapCamera) -> u8 {
+        if world_mode() {
+            if let Some(max_zoom) = self
+                .regional
+                .iter()
+                .filter(|pack| {
+                    camera.zoom >= f64::from(pack.min_visible_zoom)
+                        && camera_center_inside(camera, pack.source.bounds)
+                })
+                .map(|pack| pack.source.max_zoom)
+                .max()
+            {
+                return max_zoom;
+            }
+            if camera.zoom >= 10.0 {
+                if self
+                    .regional
+                    .iter()
+                    .any(|pack| camera_center_inside(camera, pack.source.bounds))
+                {
+                    return self.detail.max_zoom;
+                }
+                return 15;
+            }
+        }
         if camera.zoom >= self.street.min_zoom as f64 && viewport_inside(camera, self.street.bounds)
         {
             self.street.max_zoom
@@ -480,7 +706,22 @@ impl TileManager {
                 } else if canonical_proof_mode() {
                     self.source.attribution.clone().unwrap_or_default()
                 } else if world_mode() {
-                    if camera.zoom > f64::from(self.mid.max_zoom) {
+                    if visible.first().is_some_and(|tile| tile.key.z >= 10) {
+                        let active: Vec<_> = self
+                            .regional
+                            .iter()
+                            .filter(|pack| {
+                                camera.zoom >= f64::from(pack.min_visible_zoom)
+                                    && camera_center_inside(camera, pack.source.bounds)
+                            })
+                            .map(|pack| pack.label.as_str())
+                            .collect();
+                        if active.is_empty() {
+                            "상세 자료 없음 · 미수집 지역".to_owned()
+                        } else {
+                            format!("{} · 미수집 지역은 회색", active.join(" / "))
+                        }
+                    } else if camera.zoom > f64::from(self.mid.max_zoom) {
                         "개략지도 확대 표시 · 상세 도로/건물 없음".to_owned()
                     } else {
                         "지형·수계: Natural Earth · 도로/건물 미완성".to_owned()
@@ -537,48 +778,53 @@ impl TileManager {
                 continue;
             }
             new_requests += 1;
-            let start = Instant::now();
-            let source = source_for_key(key, [&self.source, &self.detail, &self.mid, &self.street]);
-            match source.tile_bytes(key).await {
-                Ok(Some(raw)) => {
-                    self.stats.lookup_ms += start.elapsed().as_secs_f64() * 1000.0;
+            match read_decoded_tile(
+                key,
+                [&self.source, &self.detail, &self.mid, &self.street],
+                &self.regional,
+            )
+            .await
+            {
+                Ok(DecodedLoad {
+                    tile: Some(decoded),
+                    lookup_ms,
+                    decode_ms,
+                }) => {
+                    self.stats.lookup_ms += lookup_ms;
+                    self.stats.decode_ms += decode_ms;
+                    let decoded = Arc::new(decoded);
                     let start = Instant::now();
-                    match decode_mvt(raw) {
-                        Ok(decoded) => {
-                            self.stats.decode_ms += start.elapsed().as_secs_f64() * 1000.0;
-                            let decoded = Arc::new(decoded);
+                    match prepare(&decoded) {
+                        Ok(prepared) => {
+                            self.stats.prepare_ms += start.elapsed().as_secs_f64() * 1000.0;
                             let start = Instant::now();
-                            match prepare(&decoded) {
-                                Ok(prepared) => {
-                                    self.stats.prepare_ms += start.elapsed().as_secs_f64() * 1000.0;
-                                    let start = Instant::now();
-                                    renderer.upload_tile(key, prepared);
-                                    self.stats.upload_ms += start.elapsed().as_secs_f64() * 1000.0;
-                                    let bytes = decoded.estimated_bytes();
-                                    self.bytes += bytes;
-                                    self.cache.insert(
-                                        key,
-                                        CacheEntry {
-                                            decoded,
-                                            touched: self.tick,
-                                            bytes,
-                                        },
-                                    );
-                                    self.evict();
-                                }
-                                Err(e) => {
-                                    self.stats.failures += 1;
-                                    eprintln!("tile {key:?} preparation: {e}");
-                                }
-                            }
+                            renderer.upload_tile(key, prepared);
+                            self.stats.upload_ms += start.elapsed().as_secs_f64() * 1000.0;
+                            let bytes = decoded.estimated_bytes();
+                            self.bytes += bytes;
+                            self.cache.insert(
+                                key,
+                                CacheEntry {
+                                    decoded,
+                                    touched: self.tick,
+                                    bytes,
+                                },
+                            );
+                            self.evict();
                         }
                         Err(e) => {
                             self.stats.failures += 1;
-                            eprintln!("tile {key:?} decode: {e}");
+                            eprintln!("tile {key:?} preparation: {e}");
                         }
                     }
                 }
-                Ok(None) => {
+                Ok(DecodedLoad {
+                    tile: None,
+                    lookup_ms,
+                    decode_ms,
+                }) => {
+                    self.stats.lookup_ms += lookup_ms;
+                    self.stats.decode_ms += decode_ms;
                     self.stats.missing += 1;
                     self.missing.insert(key);
                 }
@@ -649,6 +895,7 @@ impl LiveTileLoader {
         let detail = Arc::clone(&manager.detail);
         let mid = Arc::clone(&manager.mid);
         let street = Arc::clone(&manager.street);
+        let regional = manager.regional.clone();
         let wanted = Arc::clone(&desired);
         let worker_runtime = runtime()?;
         std::thread::Builder::new()
@@ -658,7 +905,12 @@ impl LiveTileLoader {
                     let key = request.key;
                     let still_wanted = wanted.lock().expect("wanted tiles lock").contains(&key);
                     let result = if still_wanted {
-                        load_tile(request, [&source, &detail, &mid, &street], &worker_runtime)
+                        load_tile(
+                            request,
+                            [&source, &detail, &mid, &street],
+                            &regional,
+                            &worker_runtime,
+                        )
                     } else {
                         TileResult {
                             key,
@@ -802,6 +1054,7 @@ impl LiveTileLoader {
 fn load_tile(
     request: TileRequest,
     sources: [&Arc<LocalPmTiles>; 4],
+    regional: &[RegionalPack],
     runtime: &tokio::runtime::Runtime,
 ) -> TileResult {
     let TileRequest { key, decoded } = request;
@@ -815,13 +1068,24 @@ fn load_tile(
     let decoded = if let Some(decoded) = decoded {
         decoded
     } else {
-        let source = source_for_key(key, sources);
-        let start = Instant::now();
-        let raw = runtime.block_on(source.tile_bytes(key));
-        result.lookup_ms = start.elapsed().as_secs_f64() * 1000.0;
-        let raw = match raw {
-            Ok(Some(raw)) => raw,
-            Ok(None) => {
+        let loaded = runtime.block_on(read_decoded_tile(key, sources, regional));
+        let decoded = match loaded {
+            Ok(DecodedLoad {
+                tile: Some(decoded),
+                lookup_ms,
+                decode_ms,
+            }) => {
+                result.lookup_ms = lookup_ms;
+                result.decode_ms = decode_ms;
+                decoded
+            }
+            Ok(DecodedLoad {
+                tile: None,
+                lookup_ms,
+                decode_ms,
+            }) => {
+                result.lookup_ms = lookup_ms;
+                result.decode_ms = decode_ms;
                 result.outcome = TileOutcome::Missing;
                 return result;
             }
@@ -830,16 +1094,7 @@ fn load_tile(
                 return result;
             }
         };
-        let start = Instant::now();
-        let decoded = decode_mvt(raw);
-        result.decode_ms = start.elapsed().as_secs_f64() * 1000.0;
-        match decoded {
-            Ok(decoded) => Arc::new(decoded),
-            Err(error) => {
-                result.outcome = TileOutcome::Failed(error.to_string());
-                return result;
-            }
-        }
+        Arc::new(decoded)
     };
     let start = Instant::now();
     let prepared = prepare(&decoded);
@@ -871,7 +1126,7 @@ fn screenshot(
         renderer,
         camera,
         visible,
-        map_style(style_idx),
+        map_style_for_tiles(style_idx, visible),
         path,
         |_, _| Ok(()),
     )
@@ -1023,7 +1278,12 @@ fn offscreen(benchmark: bool) -> Result<(), DynError> {
     });
     let probe_view = probe.create_view(&wgpu::TextureViewDescriptor::default());
     let start = Instant::now();
-    renderer.render(&probe_view, &camera, &visible, map_style(0));
+    renderer.render(
+        &probe_view,
+        &camera,
+        &visible,
+        map_style_for_tiles(0, &visible),
+    );
     renderer.device.poll(wgpu::PollType::wait_indefinitely())?;
     let cold_first_frame_ms = open_ms + cold_load_ms + start.elapsed().as_secs_f64() * 1000.0;
     std::fs::create_dir_all("artifacts/map-v0.3a")?;
@@ -1053,7 +1313,12 @@ fn offscreen(benchmark: bool) -> Result<(), DynError> {
         let mut samples = Vec::new();
         for _ in 0..120 {
             let start = Instant::now();
-            renderer.render(&probe_view, &camera, &visible, map_style(0));
+            renderer.render(
+                &probe_view,
+                &camera,
+                &visible,
+                map_style_for_tiles(0, &visible),
+            );
             renderer.device.poll(wgpu::PollType::wait_indefinitely())?;
             samples.push(start.elapsed().as_secs_f64() * 1000.0);
         }
@@ -1079,7 +1344,7 @@ fn offscreen(benchmark: bool) -> Result<(), DynError> {
             pan.pan_physical(-95.0, 0.0)?;
             let tiles = pan.visible_tiles(manager.max_zoom_for(&pan), 1);
             runtime.block_on(manager.ensure(&mut renderer, &tiles, 4));
-            renderer.render(&probe_view, &pan, &tiles, map_style(0));
+            renderer.render(&probe_view, &pan, &tiles, map_style_for_tiles(0, &tiles));
             renderer.device.poll(wgpu::PollType::wait_indefinitely())?;
             pan_samples.push(start.elapsed().as_secs_f64() * 1000.0);
         }
@@ -1098,7 +1363,7 @@ fn offscreen(benchmark: bool) -> Result<(), DynError> {
             zoom.zoom_at(0.14, 600.0, 360.0)?;
             let tiles = zoom.visible_tiles(manager.max_zoom_for(&zoom), 1);
             runtime.block_on(manager.ensure(&mut renderer, &tiles, 4));
-            renderer.render(&probe_view, &zoom, &tiles, map_style(0));
+            renderer.render(&probe_view, &zoom, &tiles, map_style_for_tiles(0, &tiles));
             renderer.device.poll(wgpu::PollType::wait_indefinitely())?;
             zoom_samples.push(start.elapsed().as_secs_f64() * 1000.0);
         }
@@ -1229,7 +1494,7 @@ fn zoom_comparison() -> Result<(), DynError> {
             &mut renderer,
             &camera,
             &visible,
-            map_style(0),
+            map_style_for_tiles(0, &visible),
             Path::new(&path),
             |view, renderer| labels.draw(renderer, view, &camera, &visible_labels),
         )?;
@@ -1279,7 +1544,7 @@ fn street_benchmark() -> Result<(), DynError> {
     let mut warm = Vec::new();
     for _ in 0..120 {
         let start = Instant::now();
-        renderer.render(&view, &camera, &visible, map_style(0));
+        renderer.render(&view, &camera, &visible, map_style_for_tiles(0, &visible));
         labels.draw(
             &renderer,
             &view,
@@ -1300,7 +1565,7 @@ fn street_benchmark() -> Result<(), DynError> {
         camera.pan_physical(-24.0, 0.0)?;
         let visible = camera.visible_tiles(manager.max_zoom_for(&camera), 1);
         runtime.block_on(manager.ensure(&mut renderer, &visible, 4));
-        renderer.render(&view, &camera, &visible, map_style(0));
+        renderer.render(&view, &camera, &visible, map_style_for_tiles(0, &visible));
         labels.draw(
             &renderer,
             &view,
@@ -1367,7 +1632,7 @@ fn async_street_benchmark(lon: f64, lat: f64, zoom: f64) -> Result<(), DynError>
         }) {
             frames_with_unresolved += 1;
         }
-        renderer.render(&view, &camera, &visible, map_style(0));
+        renderer.render(&view, &camera, &visible, map_style_for_tiles(0, &visible));
         labels.draw(
             &renderer,
             &view,
@@ -1430,7 +1695,7 @@ fn capture_location(
         &mut renderer,
         &camera,
         &visible,
-        map_style(0),
+        map_style_for_tiles(0, &visible),
         path,
         |view, renderer| labels.draw(renderer, view, &camera, &visible_labels),
     )?;
@@ -1645,7 +1910,12 @@ impl App {
                 let view = frame
                     .texture
                     .create_view(&wgpu::TextureViewDescriptor::default());
-                renderer.render(&view, camera, &visible, map_style(self.style));
+                renderer.render(
+                    &view,
+                    camera,
+                    &visible,
+                    map_style_for_tiles(self.style, &visible),
+                );
                 if let Err(error) = labels.draw(renderer, &view, camera, &visible_labels) {
                     eprintln!("labels: {error}");
                 }
@@ -1979,6 +2249,76 @@ fn main() -> Result<(), DynError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn world_catalog_reads_both_observed_detail_layers() {
+        if !world_mode() {
+            return;
+        }
+        let manager = TileManager::open().await.unwrap();
+        assert_eq!(manager.regional.len(), 2);
+        for pack in &manager.regional {
+            let [lon, lat] = pack.source.center;
+            let before = MapCamera::new(
+                lon,
+                lat,
+                f64::from(pack.min_visible_zoom) - 0.1,
+                1200,
+                720,
+                1.0,
+            )
+            .unwrap();
+            let at =
+                MapCamera::new(lon, lat, f64::from(pack.min_visible_zoom), 1200, 720, 1.0).unwrap();
+            assert_eq!(manager.max_zoom_for(&before), manager.detail.max_zoom);
+            assert_eq!(manager.max_zoom_for(&at), pack.source.max_zoom);
+        }
+        let mut buildings = 0;
+        let mut roads = 0;
+        for pack in &manager.regional {
+            let bounds = pack.source.bounds;
+            let northwest = project(bounds[0], bounds[3]).unwrap();
+            let southeast = project(bounds[2], bounds[1]).unwrap();
+            let n = 1u32 << 14;
+            let x0 = (northwest.x * f64::from(n)).floor() as u32;
+            let x1 = (southeast.x * f64::from(n)).floor() as u32;
+            let y0 = (northwest.y * f64::from(n)).floor() as u32;
+            let y1 = (southeast.y * f64::from(n)).floor() as u32;
+            let mut found = false;
+            'tiles: for y in y0..=y1 {
+                for x in x0..=x1 {
+                    let key = TileKey::new(14, x, y).unwrap();
+                    let decoded = read_decoded_tile(
+                        key,
+                        [
+                            &manager.source,
+                            &manager.detail,
+                            &manager.mid,
+                            &manager.street,
+                        ],
+                        &manager.regional,
+                    )
+                    .await
+                    .unwrap();
+                    if let Some(tile) = decoded.tile {
+                        buildings += tile.building.len();
+                        roads += tile.road_major.len()
+                            + tile.road_collector.len()
+                            + tile.road_local.len();
+                        found = true;
+                        break 'tiles;
+                    }
+                }
+            }
+            assert!(
+                found,
+                "regional pack has no readable z14 tile: {}",
+                pack.label
+            );
+        }
+        assert!(buildings > 0, "building layer missing in world mode");
+        assert!(roads > 0, "road layer missing in world mode");
+    }
 
     #[test]
     fn detail_region_requires_the_whole_viewport() {

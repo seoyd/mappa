@@ -14,6 +14,8 @@ wgpu = { version = "30.0.1", default-features = false, features = ["std", "metal
 png = "0.18.1"
 glyphon = "0.12.0"
 bytemuck = { version = "1.25.0", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.9.12"
 
 [features]
 text-rnd = []

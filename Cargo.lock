@@ -3384,7 +3384,9 @@ dependencies = [
  "mappa-map-data",
  "mappa-map-render",
  "png",
+ "serde",
  "tokio",
+ "toml 0.9.12+spec-1.1.0",
  "wgpu",
  "winit",
 ]
