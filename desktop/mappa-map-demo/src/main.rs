@@ -357,24 +357,38 @@ impl RegionalPack {
     }
 }
 
+fn regional_catalog_files(directory: &Path) -> Result<Vec<PathBuf>, DynError> {
+    let mut files = Vec::new();
+    for item in std::fs::read_dir(directory)? {
+        let item = item?;
+        let name = item.file_name();
+        let name = name.to_string_lossy();
+        if item.file_type()?.is_file()
+            && (name == "regional_packs.toml" || name.ends_with("_regional_packs.toml"))
+        {
+            files.push(item.path());
+        }
+    }
+    files.sort();
+    if files.is_empty() {
+        return Err(format!("no regional pack catalogs in {}", directory.display()).into());
+    }
+    Ok(files)
+}
+
 fn open_regional_packs() -> Result<Vec<RegionalPack>, DynError> {
-    let custom_catalog = std::env::var_os("MAPPA_REGIONAL_CATALOG").map(PathBuf::from);
-    let catalog_path = custom_catalog.clone().unwrap_or_else(|| {
-        Path::new(env!("CARGO_MANIFEST_DIR")).join("../../assets/map/regional_packs.toml")
-    });
-    let mut catalog_text = std::fs::read_to_string(&catalog_path)?;
-    if custom_catalog.is_none() {
+    let catalog_files = if let Some(custom) = std::env::var_os("MAPPA_REGIONAL_CATALOG") {
+        vec![PathBuf::from(custom)]
+    } else {
+        regional_catalog_files(&Path::new(env!("CARGO_MANIFEST_DIR")).join("../../assets/map"))?
+    };
+    let mut catalog_text = String::new();
+    for path in &catalog_files {
+        catalog_text.push_str(&std::fs::read_to_string(path)?);
         catalog_text.push('\n');
-        catalog_text.push_str(&std::fs::read_to_string(
-            Path::new(env!("CARGO_MANIFEST_DIR")).join("../../assets/map/gb_regional_packs.toml"),
-        )?);
-        catalog_text.push('\n');
-        catalog_text.push_str(&std::fs::read_to_string(
-            Path::new(env!("CARGO_MANIFEST_DIR")).join("../../assets/map/ca_regional_packs.toml"),
-        )?);
     }
     let catalog: RegionalCatalog = toml::from_str(&catalog_text)?;
-    let parent = catalog_path
+    let parent = catalog_files[0]
         .parent()
         .ok_or("catalog has no parent directory")?;
     let mut packs = Vec::with_capacity(catalog.pack.len());
@@ -2496,6 +2510,24 @@ mod tests {
     use super::*;
 
     #[test]
+    fn discovers_new_country_catalog_without_code_change() {
+        let directory = tempfile::tempdir().unwrap();
+        for name in [
+            "regional_packs.toml",
+            "zz_regional_packs.toml",
+            "notes.toml",
+        ] {
+            std::fs::write(directory.path().join(name), "pack = []\n").unwrap();
+        }
+        let names: Vec<_> = regional_catalog_files(directory.path())
+            .unwrap()
+            .iter()
+            .map(|path| path.file_name().unwrap().to_string_lossy().into_owned())
+            .collect();
+        assert_eq!(names, ["regional_packs.toml", "zz_regional_packs.toml"]);
+    }
+
+    #[test]
     fn overlapping_packs_draw_identical_roads_once() {
         let line = geo::LineString::from(vec![(0.0_f32, 0.0_f32), (1.0, 1.0)]);
         let reversed = geo::LineString::from(vec![(1.0_f32, 1.0_f32), (0.0, 0.0)]);
@@ -2552,14 +2584,20 @@ mod tests {
             .lines()
             .skip(1)
             .count();
-        let local: RegionalCatalog =
-            toml::from_str(include_str!("../../../assets/map/regional_packs.toml")).unwrap();
-        let canada: RegionalCatalog =
-            toml::from_str(include_str!("../../../assets/map/ca_regional_packs.toml")).unwrap();
-        assert_eq!(
-            manager.regional.len(),
-            local.pack.len() + canada.pack.len() + audited_gb_grids
-        );
+        let gb: RegionalCatalog =
+            toml::from_str(include_str!("../../../assets/map/gb_regional_packs.toml")).unwrap();
+        assert_eq!(gb.pack.len(), audited_gb_grids);
+        let catalog_total: usize =
+            regional_catalog_files(&Path::new(env!("CARGO_MANIFEST_DIR")).join("../../assets/map"))
+                .unwrap()
+                .iter()
+                .map(|path| {
+                    let catalog: RegionalCatalog =
+                        toml::from_str(&std::fs::read_to_string(path).unwrap()).unwrap();
+                    catalog.pack.len()
+                })
+                .sum();
+        assert_eq!(manager.regional.len(), catalog_total);
         assert!(manager.regional.iter().any(|pack| {
             pack.label
                 .contains("Contains Ordnance Survey data © Crown copyright")

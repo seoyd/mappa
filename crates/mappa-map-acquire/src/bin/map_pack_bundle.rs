@@ -12,12 +12,6 @@ use std::{
 };
 
 type Result<T> = std::result::Result<T, Box<dyn Error>>;
-const CATALOGS: [&str; 3] = [
-    "assets/map/regional_packs.toml",
-    "assets/map/gb_regional_packs.toml",
-    "assets/map/ca_regional_packs.toml",
-];
-
 #[derive(Deserialize)]
 struct Catalog {
     pack: Vec<CatalogPack>,
@@ -69,10 +63,29 @@ fn relative_path(base: &Path, raw: &Path) -> Result<String> {
     Ok(parts.join("/"))
 }
 
+fn regional_catalog_files(directory: &Path) -> Result<Vec<PathBuf>> {
+    let mut files = Vec::new();
+    for item in fs::read_dir(directory)? {
+        let item = item?;
+        let name = item.file_name();
+        let name = name.to_string_lossy();
+        if item.file_type()?.is_file()
+            && (name == "regional_packs.toml" || name.ends_with("_regional_packs.toml"))
+        {
+            files.push(item.path());
+        }
+    }
+    files.sort();
+    if files.is_empty() {
+        return Err(format!("no regional pack catalogs in {}", directory.display()).into());
+    }
+    Ok(files)
+}
+
 fn catalog_paths(root: &Path) -> Result<BTreeMap<String, String>> {
     let mut entries = BTreeMap::new();
-    for catalog in CATALOGS {
-        let value: Catalog = toml::from_str(&fs::read_to_string(root.join(catalog))?)?;
+    for catalog in regional_catalog_files(&root.join("assets/map"))? {
+        let value: Catalog = toml::from_str(&fs::read_to_string(catalog)?)?;
         for pack in value.pack {
             let archive = relative_path(Path::new("assets/map"), &pack.path)?;
             let manifest = relative_path(Path::new("assets/map"), &pack.manifest)?;
@@ -469,6 +482,32 @@ mod tests {
     }
 
     #[test]
+    fn catalog_discovery_includes_new_region_without_code_change() {
+        let temporary = tempfile::tempdir().unwrap();
+        for name in [
+            "regional_packs.toml",
+            "gb_regional_packs.toml",
+            "fr_regional_packs.toml",
+            "unrelated.toml",
+        ] {
+            fs::write(temporary.path().join(name), "pack = []\n").unwrap();
+        }
+        let files = regional_catalog_files(temporary.path()).unwrap();
+        let names: Vec<_> = files
+            .iter()
+            .map(|path| path.file_name().unwrap().to_string_lossy().into_owned())
+            .collect();
+        assert_eq!(
+            names,
+            [
+                "fr_regional_packs.toml",
+                "gb_regional_packs.toml",
+                "regional_packs.toml"
+            ]
+        );
+    }
+
+    #[test]
     fn installer_rejects_corrupted_source_without_writing_destination() {
         let temporary = tempfile::tempdir().unwrap();
         let root = temporary.path().join("repo");
@@ -583,13 +622,15 @@ mod tests {
         fs::create_dir_all(root.join("artifacts")).unwrap();
         fs::create_dir_all(root.join("data")).unwrap();
         fs::write(
-            root.join(CATALOGS[0]),
+            root.join("assets/map/regional_packs.toml"),
             "[[pack]]\npath = '../../artifacts/a.pmtiles'\nmanifest = '../../data/a.toml'\n",
         )
         .unwrap();
-        for catalog in &CATALOGS[1..] {
-            fs::write(root.join(catalog), "pack = []\n").unwrap();
-        }
+        fs::write(
+            root.join("assets/map/gb_regional_packs.toml"),
+            "pack = []\n",
+        )
+        .unwrap();
         fs::write(root.join("data/a.toml"), "source = []\n").unwrap();
         fs::write(root.join("artifacts/a.pmtiles"), vec![7; 128]).unwrap();
         let mut first = build_inventory(root, None).unwrap();

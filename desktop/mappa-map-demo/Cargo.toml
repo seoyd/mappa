@@ -20,3 +20,6 @@ geo = { version = "0.33.1", default-features = false }
 
 [features]
 text-rnd = []
+
+[dev-dependencies]
+tempfile = "3"

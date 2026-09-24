@@ -48,7 +48,7 @@ Web Mercator 표현 범위는 극점 밖 위도 약 ±85.05°까지다. z5–z7�
 
 ### 승인된 지역 패키지 결합 — 2026-09-24
 
-기본 세계 모드가 [기존 지역 목록](../assets/map/regional_packs.toml), [GB 도로 목록](../assets/map/gb_regional_packs.toml), [캐나다 도로 목록](../assets/map/ca_regional_packs.toml)의 아카이브를 선택할 수 있다. 시작할 때 canonical 출처 manifest의 라이선스 게이트를 통과시키고, PMTiles는 해당 지역의 첫 타일 요청 시 열어 범위·출처 표기를 manifest와 대조한다. 고배율 타일과 겹치는 여러 지역 파일을 읽어 타입별 레이어를 합친다. 뉴욕주 도로와 뉴욕시 수면·공원·Queens 건물은 실제 같은 타일에서 합쳐진다. GB 원천 격자의 동일 도로 ID는 빌드 중 한 격자에 귀속한다. 다른 원천 간 같은 종류 자료의 중복 식별·병합은 아직 구현되지 않았다.
+기본 세계 모드가 [기존 지역 목록](../assets/map/regional_packs.toml), [GB 도로 목록](../assets/map/gb_regional_packs.toml), [캐나다 도로 목록](../assets/map/ca_regional_packs.toml)의 아카이브를 선택할 수 있다. `assets/map/`의 `regional_packs.toml`과 `*_regional_packs.toml`을 자동 검색하므로 새 국가 카탈로그를 코드에 다시 적지 않아도 된다. 시작할 때 canonical 출처 manifest의 라이선스 게이트를 통과시키고, PMTiles는 해당 지역의 첫 타일 요청 시 열어 범위·출처 표기를 manifest와 대조한다. 고배율 타일과 겹치는 여러 지역 파일을 읽어 타입별 레이어를 합친다. 뉴욕주 도로와 뉴욕시 수면·공원·Queens 건물은 실제 같은 타일에서 합쳐진다. GB 원천 격자의 동일 도로 ID는 빌드 중 한 격자에 귀속한다. 겹치는 지역 팩의 완전히 같은 또는 역순인 도로 좌표열은 화면 병합 중 한 번만 그린다. 부분 중복과 서로 다른 원천의 의미상 동일 도로는 아직 식별하지 못한다.
 
 ### 뉴욕주 도로 확장 — 2026-09-24
 
