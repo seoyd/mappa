@@ -22,18 +22,35 @@ struct EdgePorts {
     right_through: BTreeSet<Port>,
     top_through: BTreeSet<Port>,
     bottom_through: BTreeSet<Port>,
+    left_uncertainty: BTreeMap<Port, u16>,
+    right_uncertainty: BTreeMap<Port, u16>,
+    top_uncertainty: BTreeMap<Port, u16>,
+    bottom_uncertainty: BTreeMap<Port, u16>,
 }
 
 fn edge_ports(tile: &mappa_map_data::DecodedTile) -> EdgePorts {
-    fn crossing(a: f32, b: f32, along_a: f32, along_b: f32, edge: f32) -> Option<(u16, bool)> {
+    fn crossing(a: f32, b: f32, along_a: f32, along_b: f32, edge: f32) -> Option<(u16, bool, u16)> {
         if a == b || edge < a.min(b) || edge > a.max(b) {
             return None;
         }
         let along = along_a + (edge - a) * (along_b - along_a) / (b - a);
         // A corner may belong to four tiles, so it is not a two-tile seam.
         let snapped = along.round();
-        (0.0 < snapped && snapped < 4096.0)
-            .then_some((snapped as u16, edge > a.min(b) && edge < a.max(b)))
+        // Each encoded endpoint can move by half a unit in both axes. A
+        // nearly parallel segment therefore has a wide *inferred* crossing
+        // interval. This is uncertainty, not evidence of a matching road.
+        let normal_span = (b - a).abs();
+        let along_span = (along_b - along_a).abs();
+        let uncertainty = if normal_span <= 1.0 {
+            4096
+        } else {
+            (1.0 + along_span / (normal_span - 1.0)).ceil().min(4096.0) as u16
+        };
+        (0.0 < snapped && snapped < 4096.0).then_some((
+            snapped as u16,
+            edge > a.min(b) && edge < a.max(b),
+            uncertainty,
+        ))
     }
     let mut ports = EdgePorts::default();
     for (layer, lines) in [
@@ -44,25 +61,55 @@ fn edge_ports(tile: &mappa_map_data::DecodedTile) -> EdgePorts {
         for line in lines {
             for segment in line.0.windows(2) {
                 let (a, b) = (segment[0], segment[1]);
-                for (edge, output, through) in [
-                    (0.0, &mut ports.left, &mut ports.left_through),
-                    (4096.0, &mut ports.right, &mut ports.right_through),
+                for (edge, output, through, uncertainty) in [
+                    (
+                        0.0,
+                        &mut ports.left,
+                        &mut ports.left_through,
+                        &mut ports.left_uncertainty,
+                    ),
+                    (
+                        4096.0,
+                        &mut ports.right,
+                        &mut ports.right_through,
+                        &mut ports.right_uncertainty,
+                    ),
                 ] {
-                    if let Some((along, crosses)) = crossing(a.x, b.x, a.y, b.y, edge) {
-                        output.insert((layer, along));
+                    if let Some((along, crosses, radius)) = crossing(a.x, b.x, a.y, b.y, edge) {
+                        let port = (layer, along);
+                        output.insert(port);
                         if crosses {
-                            through.insert((layer, along));
+                            through.insert(port);
+                            uncertainty
+                                .entry(port)
+                                .and_modify(|r: &mut u16| *r = (*r).min(radius))
+                                .or_insert(radius);
                         }
                     }
                 }
-                for (edge, output, through) in [
-                    (0.0, &mut ports.top, &mut ports.top_through),
-                    (4096.0, &mut ports.bottom, &mut ports.bottom_through),
+                for (edge, output, through, uncertainty) in [
+                    (
+                        0.0,
+                        &mut ports.top,
+                        &mut ports.top_through,
+                        &mut ports.top_uncertainty,
+                    ),
+                    (
+                        4096.0,
+                        &mut ports.bottom,
+                        &mut ports.bottom_through,
+                        &mut ports.bottom_uncertainty,
+                    ),
                 ] {
-                    if let Some((along, crosses)) = crossing(a.y, b.y, a.x, b.x, edge) {
-                        output.insert((layer, along));
+                    if let Some((along, crosses, radius)) = crossing(a.y, b.y, a.x, b.x, edge) {
+                        let port = (layer, along);
+                        output.insert(port);
                         if crosses {
-                            through.insert((layer, along));
+                            through.insert(port);
+                            uncertainty
+                                .entry(port)
+                                .and_modify(|r: &mut u16| *r = (*r).min(radius))
+                                .or_insert(radius);
                         }
                     }
                 }
@@ -71,9 +118,13 @@ fn edge_ports(tile: &mappa_map_data::DecodedTile) -> EdgePorts {
             // when the line continues on opposite sides of that boundary.
             for triple in line.0.windows(3) {
                 let (before, middle, after) = (triple[0], triple[1], triple[2]);
-                for (edge, output) in [
-                    (0.0, &mut ports.left_through),
-                    (4096.0, &mut ports.right_through),
+                for (edge, output, uncertainty) in [
+                    (0.0, &mut ports.left_through, &mut ports.left_uncertainty),
+                    (
+                        4096.0,
+                        &mut ports.right_through,
+                        &mut ports.right_uncertainty,
+                    ),
                 ] {
                     if middle.x == edge
                         && ((before.x < edge && after.x > edge)
@@ -81,13 +132,19 @@ fn edge_ports(tile: &mappa_map_data::DecodedTile) -> EdgePorts {
                     {
                         let along = middle.y.round();
                         if 0.0 < along && along < 4096.0 {
-                            output.insert((layer, along as u16));
+                            let port = (layer, along as u16);
+                            output.insert(port);
+                            uncertainty.insert(port, 0);
                         }
                     }
                 }
-                for (edge, output) in [
-                    (0.0, &mut ports.top_through),
-                    (4096.0, &mut ports.bottom_through),
+                for (edge, output, uncertainty) in [
+                    (0.0, &mut ports.top_through, &mut ports.top_uncertainty),
+                    (
+                        4096.0,
+                        &mut ports.bottom_through,
+                        &mut ports.bottom_uncertainty,
+                    ),
                 ] {
                     if middle.y == edge
                         && ((before.y < edge && after.y > edge)
@@ -95,7 +152,9 @@ fn edge_ports(tile: &mappa_map_data::DecodedTile) -> EdgePorts {
                     {
                         let along = middle.x.round();
                         if 0.0 < along && along < 4096.0 {
-                            output.insert((layer, along as u16));
+                            let port = (layer, along as u16);
+                            output.insert(port);
+                            uncertainty.insert(port, 0);
                         }
                     }
                 }
@@ -110,16 +169,20 @@ fn compare_ports(
     b_present: &BTreeSet<Port>,
     a_through: &BTreeSet<Port>,
     b_through: &BTreeSet<Port>,
-) -> (usize, usize, usize, usize, u16) {
+    a_uncertainty: &BTreeMap<Port, u16>,
+    b_uncertainty: &BTreeMap<Port, u16>,
+) -> (usize, usize, usize, usize, usize, u16) {
     fn match_required(
         required: &BTreeSet<Port>,
         offered: &BTreeSet<Port>,
-    ) -> (usize, usize, usize, usize, u16) {
+        uncertainty: &BTreeMap<Port, u16>,
+    ) -> (usize, usize, usize, usize, usize, u16) {
         let mut available = offered.clone();
         let mut exact = 0;
         let mut one_unit = 0;
         let mut unmatched = 0;
         let mut corner_ambiguous = 0;
+        let mut quantization_ambiguous = 0;
         let mut max_corner_distance = 0;
         for &port in required {
             if available.remove(&port) {
@@ -134,6 +197,11 @@ fn compare_ports(
                 let distance = port.1.min(4096 - port.1);
                 if distance <= CORNER_AMBIGUITY_UNITS {
                     corner_ambiguous += 1;
+                } else if uncertainty
+                    .get(&port)
+                    .is_some_and(|radius| distance <= *radius)
+                {
+                    quantization_ambiguous += 1;
                 } else {
                     unmatched += 1;
                     max_corner_distance = max_corner_distance.max(distance);
@@ -145,17 +213,19 @@ fn compare_ports(
             one_unit,
             unmatched,
             corner_ambiguous,
+            quantization_ambiguous,
             max_corner_distance,
         )
     }
-    let forward = match_required(a_through, b_present);
-    let backward = match_required(b_through, a_present);
+    let forward = match_required(a_through, b_present, a_uncertainty);
+    let backward = match_required(b_through, a_present, b_uncertainty);
     (
         forward.0 + backward.0,
         forward.1 + backward.1,
         forward.2 + backward.2,
         forward.3 + backward.3,
-        forward.4.max(backward.4),
+        forward.4 + backward.4,
+        forward.5.max(backward.5),
     )
 }
 
@@ -222,6 +292,7 @@ async fn audit(
         let mut one_unit = 0;
         let mut unmatched = 0;
         let mut corner_ambiguous = 0;
+        let mut quantization_ambiguous = 0;
         let mut max_corner_distance = 0;
         let empty = EdgePorts::default();
         for y in y0..=y1 {
@@ -234,6 +305,8 @@ async fn audit(
                         &next.left,
                         &edge.right_through,
                         &next.left_through,
+                        &edge.right_uncertainty,
+                        &next.left_uncertainty,
                     );
                     if result.2 > 0 && unmatched_samples.len() < 24 {
                         unmatched_samples.push(format!(
@@ -242,9 +315,9 @@ async fn audit(
                             next.left.iter().take(20).collect::<Vec<_>>()
                         ));
                     }
-                    if result.4 > worst_unmatched.0 {
+                    if result.5 > worst_unmatched.0 {
                         worst_unmatched = (
-                            result.4,
+                            result.5,
                             format!(
                                 "z{z}/{x}/{y} right: this={:?} next={:?} this_through={:?} next_through={:?}",
                                 edge.right, next.left, edge.right_through, next.left_through
@@ -255,7 +328,8 @@ async fn audit(
                     one_unit += result.1;
                     unmatched += result.2;
                     corner_ambiguous += result.3;
-                    max_corner_distance = max_corner_distance.max(result.4);
+                    quantization_ambiguous += result.4;
+                    max_corner_distance = max_corner_distance.max(result.5);
                 }
                 if y < y1 {
                     let next = edges.get(&(x, y + 1)).unwrap_or(&empty);
@@ -264,6 +338,8 @@ async fn audit(
                         &next.top,
                         &edge.bottom_through,
                         &next.top_through,
+                        &edge.bottom_uncertainty,
+                        &next.top_uncertainty,
                     );
                     if result.2 > 0 && unmatched_samples.len() < 24 {
                         unmatched_samples.push(format!(
@@ -272,9 +348,9 @@ async fn audit(
                             next.top.iter().take(20).collect::<Vec<_>>()
                         ));
                     }
-                    if result.4 > worst_unmatched.0 {
+                    if result.5 > worst_unmatched.0 {
                         worst_unmatched = (
-                            result.4,
+                            result.5,
                             format!(
                                 "z{z}/{x}/{y} bottom: this={:?} next={:?} this_through={:?} next_through={:?}",
                                 edge.bottom, next.top, edge.bottom_through, next.top_through
@@ -285,13 +361,14 @@ async fn audit(
                     one_unit += result.1;
                     unmatched += result.2;
                     corner_ambiguous += result.3;
-                    max_corner_distance = max_corner_distance.max(result.4);
+                    quantization_ambiguous += result.4;
+                    max_corner_distance = max_corner_distance.max(result.5);
                 }
             }
         }
         total_unmatched += unmatched;
         println!(
-            "z={z} tiles={tiles} decoded_mvt_bytes={bytes} road_lines={roads} road_surfaces={surfaces} water={water} tree_cover={vegetation} district_labels={districts} seam_exact={exact} seam_within_1_unit={one_unit} seam_unmatched={unmatched} seam_corner_ambiguous={corner_ambiguous} seam_unmatched_max_corner_distance={max_corner_distance}"
+            "z={z} tiles={tiles} decoded_mvt_bytes={bytes} road_lines={roads} road_surfaces={surfaces} water={water} tree_cover={vegetation} district_labels={districts} seam_exact={exact} seam_within_1_unit={one_unit} seam_unmatched={unmatched} seam_corner_ambiguous={corner_ambiguous} seam_quantization_ambiguous={quantization_ambiguous} seam_unmatched_max_corner_distance={max_corner_distance}"
         );
         if manifest
             .source
@@ -351,11 +428,27 @@ mod tests {
         assert!(!edge.left_through.contains(&(2, 52)));
         let required = BTreeSet::from([(2, 52)]);
         assert_eq!(
-            compare_ports(&required, &edge.left, &required, &edge.left_through).2,
+            compare_ports(
+                &required,
+                &edge.left,
+                &required,
+                &edge.left_through,
+                &BTreeMap::new(),
+                &edge.left_uncertainty,
+            )
+            .2,
             0
         );
         assert_eq!(
-            compare_ports(&required, &BTreeSet::new(), &required, &BTreeSet::new()).2,
+            compare_ports(
+                &required,
+                &BTreeSet::new(),
+                &required,
+                &BTreeSet::new(),
+                &BTreeMap::new(),
+                &BTreeMap::new(),
+            )
+            .2,
             1
         );
     }
@@ -363,13 +456,60 @@ mod tests {
     #[test]
     fn unresolved_four_tile_corner_is_reported_separately() {
         let required = BTreeSet::from([(2, 4089)]);
-        let result = compare_ports(&required, &BTreeSet::new(), &required, &BTreeSet::new());
+        let result = compare_ports(
+            &required,
+            &BTreeSet::new(),
+            &required,
+            &BTreeSet::new(),
+            &BTreeMap::new(),
+            &BTreeMap::new(),
+        );
         assert_eq!(result.2, 0);
         assert_eq!(result.3, 1);
         let interior = BTreeSet::from([(2, 4087)]);
-        let result = compare_ports(&interior, &BTreeSet::new(), &interior, &BTreeSet::new());
+        let result = compare_ports(
+            &interior,
+            &BTreeSet::new(),
+            &interior,
+            &BTreeSet::new(),
+            &BTreeMap::new(),
+            &BTreeMap::new(),
+        );
         assert_eq!(result.2, 1);
         assert_eq!(result.3, 0);
+    }
+
+    #[test]
+    fn shallow_quantized_crossing_is_uncertain_but_explicit_vertex_is_not() {
+        let mut tile = mappa_map_data::DecodedTile::default();
+        tile.road_local.push(geo::LineString::from(vec![
+            (4128.0_f32, 1.0_f32),
+            (3775.0, -6.0),
+        ]));
+        let ports = edge_ports(&tile);
+        let crossing = BTreeSet::from([(2, 4078)]);
+        assert!(ports.top_through.contains(&(2, 4078)));
+        let ambiguous = compare_ports(
+            &crossing,
+            &BTreeSet::new(),
+            &crossing,
+            &BTreeSet::new(),
+            &ports.top_uncertainty,
+            &BTreeMap::new(),
+        );
+        assert_eq!(ambiguous.2, 0);
+        assert_eq!(ambiguous.4, 1);
+        let explicit = BTreeMap::from([((2, 4078), 0)]);
+        let unmatched = compare_ports(
+            &crossing,
+            &BTreeSet::new(),
+            &crossing,
+            &BTreeSet::new(),
+            &explicit,
+            &BTreeMap::new(),
+        );
+        assert_eq!(unmatched.2, 1);
+        assert_eq!(unmatched.4, 0);
     }
 
     #[tokio::test]
