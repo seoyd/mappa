@@ -4,8 +4,8 @@
 
 **세계 개략 지도는 표시된다. 전 세계 상세 지도는 완성되지 않았다.** 기본 화면은 Mappa의 Rust 타일 빌더·PMTiles 리더·Metal 렌더러가 로컬 파일만 읽는다. 해안·국경·도시·일부 주요 도로의 좌표 원본은 [Natural Earth 퍼블릭 도메인 자료](https://www.naturalearthdata.com/about/terms-of-use/)다. Mappa가 전 세계를 직접 측량했거나 독자적 원본 지형을 확보했다는 뜻은 아니다. 지도 서버와 유료 지도 API는 런타임에서 사용하지 않는다.
 
-상세 원천 확대는 [모나코·Queens 건물](WORLD_BUILDINGS_PROGRESS.md), [뉴욕주 62개 카운티 도로](NY_STATE_ROADS_PROGRESS.md), [뉴저지주 21개 카운티 도로](NJ_STATE_ROADS_PROGRESS.md), [델라웨어주 3개 카운티 도로](DE_STATE_ROADS_PROGRESS.md), [코네티컷주 9개 계획지역 도로](CT_STATE_ROADS_PROGRESS.md), [로드아일랜드주 5개 카운티 도로](RI_STATE_ROADS_PROGRESS.md), [매사추세츠주 14개 카운티 도로](MA_STATE_ROADS_PROGRESS.md)·[수면](MA_STATE_WATER_PROGRESS.md), [뉴햄프셔주 10개 카운티 도로·수면](NH_STATE_PROGRESS.md), [버몬트주 14개 카운티 도로·수면](VT_STATE_PROGRESS.md), [메인주 16개 카운티 도로·수면](ME_STATE_PROGRESS.md), [프랑스 IGN 파리 도로](FR_PARIS_ROADS_PROGRESS.md)·[수면](FR_PARIS_WATER_PROGRESS.md)·[여객역](FR_PARIS_STATIONS_PROGRESS.md), [GB 공식 RoadLink 52개 격자](GB_ROADS_PROGRESS.md), [캐나다 13개 지역 NRN 도로](CA_ROADS_PROGRESS.md), [뉴욕시 5개 카운티 수면](WORLD_WATER_PROGRESS.md), [뉴욕시 주변 공원 경계](WORLD_PARKS_PROGRESS.md)에 실증했다. 기본 세계 모드는 기존 20개, GB 52개, 캐나다 15개, 총 87개 지역 패키지를 필요할 때 결합한다. 이 지역 밖의 상세 지리는 구축되지 않았다.
-사용자가 선택한 기존 공유조건 금지 규칙에 따라 도로는 국가별 공식 원천으로 진행한다. 미국 뉴욕주·뉴저지주·델라웨어주·코네티컷주·로드아일랜드주·매사추세츠주·뉴햄프셔주·버몬트주·메인주 154개 카운티 상당 단위, 프랑스 IGN 파리 원천 범위, Great Britain의 OS Open Roads RoadLink, 캐나다 13개 지역의 NRN Road Segment 원천을 처리했으며 세계 상세 도로망은 아직 없다.
+상세 원천 확대는 [모나코·Queens 건물](WORLD_BUILDINGS_PROGRESS.md), [뉴욕주 62개 카운티 도로](NY_STATE_ROADS_PROGRESS.md), [뉴저지주 21개 카운티 도로](NJ_STATE_ROADS_PROGRESS.md), [델라웨어주 3개 카운티 도로](DE_STATE_ROADS_PROGRESS.md), [코네티컷주 9개 계획지역 도로](CT_STATE_ROADS_PROGRESS.md), [로드아일랜드주 5개 카운티 도로](RI_STATE_ROADS_PROGRESS.md), [매사추세츠주 14개 카운티 도로](MA_STATE_ROADS_PROGRESS.md)·[수면](MA_STATE_WATER_PROGRESS.md), [뉴햄프셔주 10개 카운티 도로·수면](NH_STATE_PROGRESS.md), [버몬트주 14개 카운티 도로·수면](VT_STATE_PROGRESS.md), [메인주 16개 카운티 도로·수면](ME_STATE_PROGRESS.md), [메릴랜드주 24개 카운티 상당 단위 도로·수면](MD_STATE_PROGRESS.md), [프랑스 IGN 파리 도로](FR_PARIS_ROADS_PROGRESS.md)·[수면](FR_PARIS_WATER_PROGRESS.md)·[여객역](FR_PARIS_STATIONS_PROGRESS.md), [GB 공식 RoadLink 52개 격자](GB_ROADS_PROGRESS.md), [캐나다 13개 지역 NRN 도로](CA_ROADS_PROGRESS.md), [뉴욕시 5개 카운티 수면](WORLD_WATER_PROGRESS.md), [뉴욕시 주변 공원 경계](WORLD_PARKS_PROGRESS.md)에 실증했다. 기본 세계 모드는 기존 22개, GB 52개, 캐나다 15개, 총 89개 지역 패키지를 필요할 때 결합한다. 이 지역 밖의 상세 지리는 구축되지 않았다.
+사용자가 선택한 기존 공유조건 금지 규칙에 따라 도로는 국가별 공식 원천으로 진행한다. 미국 뉴욕주·뉴저지주·델라웨어주·코네티컷주·로드아일랜드주·매사추세츠주·뉴햄프셔주·버몬트주·메인주·메릴랜드주 178개 카운티 상당 단위, 프랑스 IGN 파리 원천 범위, Great Britain의 OS Open Roads RoadLink, 캐나다 13개 지역의 NRN Road Segment 원천을 처리했으며 세계 상세 도로망은 아직 없다.
 
 ## 실제로 보이는 범위
 
@@ -24,6 +24,7 @@
 | z10–z15 | 뉴햄프셔주 10개 카운티 원천 범위 | Census 2025 도로·수면 지역 PMTiles | 주 경계 연결성·독립 위치 정확도 미검증 |
 | z10–z15 | 버몬트주 14개 카운티 원천 범위 | Census 2025 도로·수면 지역 PMTiles | 주 경계 연결성·독립 위치 정확도 미검증 |
 | z10–z15 | 메인주 16개 카운티 원천 범위 | Census 2025 도로·수면 지역 PMTiles | 주 경계 연결성·독립 위치 정확도 미검증 |
+| z10–z15 | 메릴랜드주 24개 카운티 상당 단위 원천 범위 | Census 2025 도로·수면 지역 PMTiles | 주 경계 연결성·독립 위치 정확도 미검증 |
 | z10–z15 | 프랑스 IGN BD TOPO 파리 D075 원천 범위 | 2026-06-15 도로 중심선·내륙 수면과 z13부터 `FICTIF=Non` 여객역 지역 PMTiles | 연결성·RGF93/WGS84 독립 위치 정확도 미검증; 건물·공공시설 미구축 |
 | z10–z15 | Great Britain의 OS RoadLink 52개 격자 | OS Open Roads 2026-04 일반화 도로 지역 PMTiles | 북아일랜드 제외; 연결성·현장 위치 정확도·모든 실제 도로의 완전성 미검증 |
 | z10–z15 | 캐나다 13개 주·준주 | 공식 NRN Road Segment 지역 PMTiles 15개 | 주 경계 연결성·현장 위치 정확도 미검증 |
@@ -80,6 +81,10 @@ Web Mercator 표현 범위는 극점 밖 위도 약 ±85.05°까지다. z5–z7�
 
 [Census 공식 ZIP 32개 감사](ME_STATE_PROGRESS.md)에서 도로 118,918개와 수면 8,665개를 채택하고 각각 16,270개·14개를 제외했다. Rust가 공식 배포 목록을 직접 읽어 16개 카운티 파일 이름과 목록 해시를 고정했다. 도로 102,440개와 수면 57,555개 실제 타일을 전수 해독해 실패 0개였다. 기본 세계 모드 [Portland 도로·수면 z14](../artifacts/world-water/me-state/portland-road-water-z14.png)의 타일 실패도 0개였다. 현장 위치 정확도와 카운티·주 경계 연결성은 미검증이다.
 
+### 메릴랜드주 도로·수면 확장 — 2026-09-25
+
+[Census 공식 ZIP 48개 감사](MD_STATE_PROGRESS.md)에서 도로 212,347개와 수면 14,888개를 채택하고 각각 11,655개·17개를 제외했다. Rust가 공식 디렉터리에서 도로·수면의 일치하는 24개 카운티 상당 단위 목록을 고정했다. 도로 38,627개와 수면 29,258개 실제 타일을 전수 해독해 실패 0개였다. 기본 세계 모드 [Baltimore 도로·수면 z14](../artifacts/world-water/md-state/baltimore-road-water-z14.png)의 타일 실패도 0개였다. 독립 위치 정확도와 경계 연결성은 미검증이다.
+
 ### 프랑스 IGN 파리 도로 실증 — 2026-09-25
 
 [BD TOPO 3.5 파리 D075 원본 감사](FR_PARIS_ROADS_PROGRESS.md)에서 차량 도로 115,758개를 채택하고 36,375개를 제외했다. 공식 7z의 내부 CRC와 원본·파생본 SHA-256, Lambert-93 좌표계, 991개 실제 타일 전수 해독에서 오류 0개를 확인했다. 기본 세계 모드 [파리 z14](../artifacts/world-roads/fr-paris/paris-world-z14.png) 캡처도 타일 실패 0개였다. 이는 파리 원천의 도로 표시 검증이며 프랑스 전국의 상세 지도나 도로의 독립 위치 정확도는 아니다.
@@ -102,7 +107,7 @@ Web Mercator 표현 범위는 극점 밖 위도 약 ±85.05°까지다. z5–z7�
 
 Mac Metal 기본 세계 모드 캡처에서 [모나코 건물](../artifacts/world-integration/monaco-world.png), 뉴욕시 5개 카운티 팩의 [Manhattan](../artifacts/world-integration/manhattan-world.png)·[Queens](../artifacts/world-roads/nyc-queens-world-z14.png)·[Richmond](../artifacts/world-roads/nyc-richmond-world-z14.png) 도로가 실제 z14 타일로 표시됐다. 과거 [파리의 미수집 상세 영역](../artifacts/world-integration/unmapped-world.png)은 빈 중립색이었고, 현재는 [IGN 도로 팩 화면](../artifacts/world-roads/fr-paris/paris-world-z14.png)이 표시된다. [모나코 z12](../artifacts/world-integration/monaco-overview-z12.png)는 건물 타일이 시작되기 전이라 기존 z7 개략 자료를 확대하며 화면에 그 한계를 밝힌다. 여섯 캡처의 타일 실패는 각각 0개다. 최종 모나코의 동기·비동기 캡처 PNG는 SHA-256 `6477b6f1bb2cf1b12b861cdfce308e0de0a0b05e4db2aa7021989c6b73e074e2`로 일치했다. 이는 자료 선택·표시의 검증이며 현장 위치 정확도나 전 세계 커버리지 통과 판정이 아니다.
 
-현재 목록은 파일 87개의 manifest를 시작 시 검증하고, PMTiles는 각 파일이 처음 필요할 때 연다. manifest 범위를 z5 공간 셀에 등록해 카메라·타일의 셀에 걸친 패키지만 검사하고, 실제 타일과 원천 범위의 교차를 다시 확인한다. 열린 PMTiles는 최근 사용 순서로 최대 16개를 유지하며 축출된 파일은 필요하면 다시 연다. 코드 테스트에서 매니저 생성 직후 열린 지역 PMTiles 수는 0이고, 최근 사용 파일을 제외한 축출 결과가 확인됐다. 인덱스·파일 상한 적용 전후 모나코 동기·Queens 비동기 Metal PNG는 각각 바이트 단위로 같았고 두 캡처 모두 실패 0이었다. 이 성능 검증은 당시 파일 2개에 대한 것이다. 이후 5개 파일의 세계 모드 테스트와 당시 6개 파일의 지역 목록 로드 검사, [Queens 도로·건물·수면·공원](../artifacts/world-integration/queens-four-layers-world.png) Metal 캡처에서 타일 실패 0을 확인했다. 현재 87개 목록은 로드 테스트와 GB 네 지역·캐나다 13개 지역·Delaware·Connecticut·Rhode Island·Massachusetts·New Hampshire·Vermont·Maine·Paris 화면 캡처까지 검증했지만 iPhone 성능·갱신은 아직 측정되지 않았다.
+현재 목록은 파일 89개의 manifest를 시작 시 검증하고, PMTiles는 각 파일이 처음 필요할 때 연다. manifest 범위를 z5 공간 셀에 등록해 카메라·타일의 셀에 걸친 패키지만 검사하고, 실제 타일과 원천 범위의 교차를 다시 확인한다. 열린 PMTiles는 최근 사용 순서로 최대 16개를 유지하며 축출된 파일은 필요하면 다시 연다. 코드 테스트에서 매니저 생성 직후 열린 지역 PMTiles 수는 0이고, 최근 사용 파일을 제외한 축출 결과가 확인됐다. 인덱스·파일 상한 적용 전후 모나코 동기·Queens 비동기 Metal PNG는 각각 바이트 단위로 같았고 두 캡처 모두 실패 0이었다. 이 성능 검증은 당시 파일 2개에 대한 것이다. 이후 5개 파일의 세계 모드 테스트와 당시 6개 파일의 지역 목록 로드 검사, [Queens 도로·건물·수면·공원](../artifacts/world-integration/queens-four-layers-world.png) Metal 캡처에서 타일 실패 0을 확인했다. 현재 89개 목록은 로드 테스트와 GB 네 지역·캐나다 13개 지역·Delaware·Connecticut·Rhode Island·Massachusetts·New Hampshire·Vermont·Maine·Maryland·Paris 화면 캡처까지 검증했지만 iPhone 성능·갱신은 아직 측정되지 않았다.
 
 Queens 건물은 정확한 z11 타일 경계를 구축 범위로 쓴다. 타일 빌더의 경계 상한을 반열린 구간으로 수정해 경계 밖 이웃 타일에 면적 없는 도형이 새지 않도록 했다. 수정 후 생성된 비어 있지 않은 건물 타일 303개와 전체 아카이브 감사에서 해독한 303개가 일치했고 실패는 0개였다. 도로·건물 중첩은 같은 z14 타일의 두 레이어가 모두 비어 있지 않음을 Rust 테스트로 확인했다. 이는 화면 결합 검증이며 서로 다른 원천의 독립 측량 정확도 증명은 아니다.
 
@@ -121,7 +126,7 @@ Queens 건물은 정확한 z11 타일 경계를 구축 범위로 쓴다. 타일 
 | 수계 화면 | [아마존 z6](../artifacts/world-10m/amazon-rivers-z6.png), [나일강 z7](../artifacts/world-10m/nile-rivers-z7.png), [동아시아 세계 파일 z7](../artifacts/world-10m/east-asia-world-file-z7.png) Mac Metal 캡처, 타일 오류 0 |
 | 레이어 존재 현황 | [z7 타일의 z3 구역별 CSV](../artifacts/world-10m/tile-presence-z7-by-z3.csv): 64구역 중 육지 타일 61, 수계선 타일 29, 도로선 타일 25, 육지는 있지만 도로선 타일은 없는 구역 36. 이는 자료 **존재 여부**이며 국가별 완성률이 아님 |
 
-이 감사는 파일 해독과 표시 확인이다. 실제 현장 정확도, 도로·수계 완전성, 국가별 건물 커버리지의 독립 검증은 아니다. 원본 선이 없는 지역을 새 선으로 채우지 않는다. 기존 50m와 동아시아 10m 파일은 비교·회귀용으로 보관한다. 기본 세계 모드는 세계 110m·10m 파일을 열고 기존 20개·GB 52개·캐나다 15개, 총 87개 승인 지역 PMTiles를 필요할 때 연다. 목록의 출처 manifest는 시작 시 비공유조건 권리 판정을 통과하며, 아카이브의 지리 범위·출처 표기는 첫 사용 시 대조한다.
+이 감사는 파일 해독과 표시 확인이다. 실제 현장 정확도, 도로·수계 완전성, 국가별 건물 커버리지의 독립 검증은 아니다. 원본 선이 없는 지역을 새 선으로 채우지 않는다. 기존 50m와 동아시아 10m 파일은 비교·회귀용으로 보관한다. 기본 세계 모드는 세계 110m·10m 파일을 열고 기존 22개·GB 52개·캐나다 15개, 총 89개 승인 지역 PMTiles를 필요할 때 연다. 목록의 출처 manifest는 시작 시 비공유조건 권리 판정을 통과하며, 아카이브의 지리 범위·출처 표기는 첫 사용 시 대조한다.
 
 동일한 Mac Metal 1200×720, 파리 중심 z6.4의 비동기 팬 40프레임을 기존 5개 원본 세계 파일과 이번 6개 원본 세계 파일에서 각각 3회 실행했다. 각 실행의 프레임 중앙값은 기존 **3.433/3.615/3.545ms**, 이번 **3.871/3.939/3.740ms**로, 실행별 중앙값의 중앙값은 **3.545 → 3.871ms**였다. 초기 로딩은 기존 **43.388/45.908/45.944ms**, 이번 **48.093/46.988/44.677ms**로 중앙값 **45.908 → 46.988ms**였다. 양쪽 모두 미해결 화면 타일과 실패 0. 수계선 추가의 비용이 이 장면에서 관측됐다. 단일 Mac·장면 측정이며 iPhone GPU/메모리 성능은 측정되지 않았다.
 

@@ -21,6 +21,8 @@
 /artifacts/world-water/vt-state/water.mgeodb
 /artifacts/world-roads/me-state/state.mgeodb
 /artifacts/world-water/me-state/water.mgeodb
+/artifacts/world-roads/md-state/state.mgeodb
+/artifacts/world-water/md-state/water.mgeodb
 /artifacts/world-roads/gb/*.mgeodb
 /artifacts/world-roads/ca/*.mgeodb
 /artifacts/world-roads/ca/on.pmtiles

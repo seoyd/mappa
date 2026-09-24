@@ -1,0 +1,26 @@
+# Official Census TIGER2025/ROADS directory; observed 2026-09-25; listing SHA-256 6f91c3d2e64baeaaa6552d800a5a9af95d75d6959a77252e1372eb48dcef6ba0.
+# https://www2.census.gov/geo/tiger/TIGER2025/ROADS/
+tl_2025_24001_roads.zip
+tl_2025_24003_roads.zip
+tl_2025_24005_roads.zip
+tl_2025_24009_roads.zip
+tl_2025_24011_roads.zip
+tl_2025_24013_roads.zip
+tl_2025_24015_roads.zip
+tl_2025_24017_roads.zip
+tl_2025_24019_roads.zip
+tl_2025_24021_roads.zip
+tl_2025_24023_roads.zip
+tl_2025_24025_roads.zip
+tl_2025_24027_roads.zip
+tl_2025_24029_roads.zip
+tl_2025_24031_roads.zip
+tl_2025_24033_roads.zip
+tl_2025_24035_roads.zip
+tl_2025_24037_roads.zip
+tl_2025_24039_roads.zip
+tl_2025_24041_roads.zip
+tl_2025_24043_roads.zip
+tl_2025_24045_roads.zip
+tl_2025_24047_roads.zip
+tl_2025_24510_roads.zip

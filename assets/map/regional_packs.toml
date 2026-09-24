@@ -3,6 +3,22 @@
 # with observed features, not positional accuracy. Archives open on first use.
 # Adding a pack here does not certify its coverage or positional accuracy.
 [[pack]]
+path = "../../artifacts/world-water/md-state/water.pmtiles"
+manifest = "../../data/us_tiger_md_state_areawater.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 수면 · 메릴랜드주 24개 카운티 상당 단위 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/md-state/state.pmtiles"
+manifest = "../../data/us_tiger_md_state_roads.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 · 메릴랜드주 24개 카운티 상당 단위 실증"
+
+[[pack]]
 path = "../../artifacts/world-water/me-state/water.pmtiles"
 manifest = "../../data/us_tiger_me_state_areawater.toml"
 min_visible_zoom = 10
