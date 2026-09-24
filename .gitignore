@@ -40,6 +40,11 @@
 /artifacts/world-roads/va-state/roads-east.pmtiles
 /artifacts/world-roads/va-state/roads-east-west.pmtiles
 /artifacts/world-water/va-state/water.mgeodb
+/artifacts/world-roads/nc-state/state.mgeodb
+/artifacts/world-roads/nc-state/state.pmtiles
+/artifacts/world-roads/nc-state/roads-west.pmtiles
+/artifacts/world-roads/nc-state/roads-east.pmtiles
+/artifacts/world-water/nc-state/water.mgeodb
 /artifacts/world-roads/gb/*.mgeodb
 /artifacts/world-roads/ca/*.mgeodb
 /artifacts/world-roads/ca/on.pmtiles

@@ -493,10 +493,38 @@ fn append_tile(target: &mut DecodedTile, mut source: DecodedTile) {
     target.boundary.append(&mut source.boundary);
     target.waterway.append(&mut source.waterway);
     target.road.append(&mut source.road);
-    target.road_major.append(&mut source.road_major);
-    target.road_collector.append(&mut source.road_collector);
-    target.road_local.append(&mut source.road_local);
+    append_distinct_roads(&mut target.road_major, source.road_major);
+    append_distinct_roads(&mut target.road_collector, source.road_collector);
+    append_distinct_roads(&mut target.road_local, source.road_local);
     target.place.append(&mut source.place);
+}
+
+fn road_key(line: &geo::LineString<f32>) -> Vec<(u32, u32)> {
+    let mut key: Vec<_> = line
+        .0
+        .iter()
+        .map(|point| (point.x.to_bits(), point.y.to_bits()))
+        .collect();
+    if key.iter().cmp(key.iter().rev()).is_gt() {
+        key.reverse();
+    }
+    key
+}
+
+fn append_distinct_roads(
+    target: &mut Vec<geo::LineString<f32>>,
+    source: Vec<geo::LineString<f32>>,
+) {
+    if target.is_empty() || source.is_empty() {
+        target.extend(source);
+        return;
+    }
+    let mut seen: HashSet<_> = target.iter().map(road_key).collect();
+    target.extend(
+        source
+            .into_iter()
+            .filter(|line| seen.insert(road_key(line))),
+    );
 }
 
 struct DecodedLoad {
@@ -2468,6 +2496,19 @@ mod tests {
     use super::*;
 
     #[test]
+    fn overlapping_packs_draw_identical_roads_once() {
+        let line = geo::LineString::from(vec![(0.0_f32, 0.0_f32), (1.0, 1.0)]);
+        let reversed = geo::LineString::from(vec![(1.0_f32, 1.0_f32), (0.0, 0.0)]);
+        let different = geo::LineString::from(vec![(0.0_f32, 0.0_f32), (1.0, 0.5)]);
+        let mut merged = DecodedTile::default();
+        merged.road_major.push(line.clone());
+        let mut overlapping = DecodedTile::default();
+        overlapping.road_major.extend([reversed, different.clone()]);
+        append_tile(&mut merged, overlapping);
+        assert_eq!(merged.road_major, vec![line, different]);
+    }
+
+    #[test]
     fn adjacent_gb_packs_show_each_required_credit_once() {
         let os = "Contains Ordnance Survey data © Crown copyright and database right 2026";
         let scotland =
@@ -2511,7 +2552,14 @@ mod tests {
             .lines()
             .skip(1)
             .count();
-        assert_eq!(manager.regional.len(), 54 + audited_gb_grids);
+        let local: RegionalCatalog =
+            toml::from_str(include_str!("../../../assets/map/regional_packs.toml")).unwrap();
+        let canada: RegionalCatalog =
+            toml::from_str(include_str!("../../../assets/map/ca_regional_packs.toml")).unwrap();
+        assert_eq!(
+            manager.regional.len(),
+            local.pack.len() + canada.pack.len() + audited_gb_grids
+        );
         assert!(manager.regional.iter().any(|pack| {
             pack.label
                 .contains("Contains Ordnance Survey data © Crown copyright")

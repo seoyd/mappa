@@ -1,0 +1,1 @@
+artifacts/world-roads/nc-state/roads-east-west.pmtiles: decoded=59857, absent=0, failures=0, layers (land, green, water, road_surface, building, boundary, waterway, major, collector, local, place)=[0, 0, 0, 0, 0, 0, 0, 12547, 60279, 958943, 0]

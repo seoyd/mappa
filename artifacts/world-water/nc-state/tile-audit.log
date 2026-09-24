@@ -1,0 +1,1 @@
+artifacts/world-water/nc-state/water.pmtiles: decoded=70852, absent=0, failures=0, layers (land, green, water, road_surface, building, boundary, waterway, major, collector, local, place)=[0, 0, 278537, 0, 0, 0, 0, 0, 0, 0, 0]

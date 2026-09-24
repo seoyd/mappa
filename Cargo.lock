@@ -3589,6 +3589,7 @@ name = "mappa-map-demo"
 version = "0.1.0"
 dependencies = [
  "bytemuck",
+ "geo",
  "glyphon",
  "mappa-map-core",
  "mappa-map-data",

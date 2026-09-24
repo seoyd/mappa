@@ -1,0 +1,4 @@
+   Compiling mappa-map-data v0.1.0 (/Users/seo/Projects/Mappa/crates/mappa-map-data)
+    Finished `release` profile [optimized] target(s) in 0.80s
+     Running `target/release/audit_pmtiles_road_overlap artifacts/world-roads/va-state/state.pmtiles artifacts/world-roads/nc-state/state.pmtiles`
+shared_nonempty_tiles=777 first_road_lines=16830 second_road_lines=11583 exact_duplicate_lines=108 first_duplicate_tile=Some((11, 575, 800))

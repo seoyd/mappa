@@ -540,6 +540,34 @@ bytes = 44434955
 sha256 = "9ba930517ffb8c0a443bb21a163dd2237ea89c568bb5f38852a44eada2cfcd50"
 
 [[pack]]
+path = "artifacts/world-roads/nc-state/roads-east-east.pmtiles"
+manifest = "data/us_tiger_nc_state_roads_east_east.toml"
+manifest_sha256 = "8818e26d96070fd2ee136c4631ea5a3d5894c91be5bf410cec7e1caa22a1e952"
+bytes = 14271257
+sha256 = "ea11eb2d4a19ff7d9e6673e2b39c37bd5198613022f4318dbcb52b47c98808d5"
+
+[[pack]]
+path = "artifacts/world-roads/nc-state/roads-east-west.pmtiles"
+manifest = "data/us_tiger_nc_state_roads_east_west.toml"
+manifest_sha256 = "b8798c3d9de19ff97564a1f739a3b48e7bff7ea1643a32ea6606fa8aa9767fb7"
+bytes = 40186594
+sha256 = "031408bddfbcff0e945deb2f0a1f4e8bfb8f0c8706cefab6462a8979edf98dd5"
+
+[[pack]]
+path = "artifacts/world-roads/nc-state/roads-west-east.pmtiles"
+manifest = "data/us_tiger_nc_state_roads_west_east.toml"
+manifest_sha256 = "11d0bdcd542339cf585ca994dd76157a952f364b02107f0c0924b710fd6c7cbe"
+bytes = 42245567
+sha256 = "89c8111a335c89fc38ac424d691b294d76659d760821f8bfb73fd4f190a2e1e2"
+
+[[pack]]
+path = "artifacts/world-roads/nc-state/roads-west-west.pmtiles"
+manifest = "data/us_tiger_nc_state_roads_west_west.toml"
+manifest_sha256 = "866c7e8be0d1971b80c32dd00cbf72915dc365954e3599cff5bca7d4d0afcfa6"
+bytes = 18466664
+sha256 = "e2223e8082ab8b7f473e162af6c55210a60075c96c95f6836085a7120de5dc86"
+
+[[pack]]
 path = "artifacts/world-roads/nh-state/state.pmtiles"
 manifest = "data/us_tiger_nh_state_roads.toml"
 manifest_sha256 = "4fe94e894b9d8e5195563797abcd57b4c174c7b963204098b97062e1bebf9522"
@@ -692,6 +720,13 @@ manifest = "data/us_tiger_me_state_areawater.toml"
 manifest_sha256 = "6d62ca92abe5d234ed54e0b8f07b0a0cc1322d51186374b6b8ce99cd1370ec9c"
 bytes = 20305722
 sha256 = "21def33c7ea380ea4690e293dd987333a1562e87eb968cfaf8fd433655bce7fd"
+
+[[pack]]
+path = "artifacts/world-water/nc-state/water.pmtiles"
+manifest = "data/us_tiger_nc_state_areawater.toml"
+manifest_sha256 = "5dbfac57a85955b7f1e352b03bf563dcd48f86150b18a2fe28a68fcd158ad189"
+bytes = 33220831
+sha256 = "04130dce4e9f8727059ec63d60b24014a2a527ed946487f47ecf97cc9d48f43d"
 
 [[pack]]
 path = "artifacts/world-water/nh-state/water.pmtiles"

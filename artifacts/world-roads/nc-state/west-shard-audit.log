@@ -1,0 +1,4 @@
+    Blocking waiting for file lock on build directory
+    Finished `release` profile [optimized] target(s) in 0.38s
+     Running `target/release/shard_canonical_pmtiles data/us_tiger_nc_state_roads_west.toml artifacts/world-roads/nc-state/roads-west.pmtiles artifacts/world-roads/nc-state/roads-west`
+split_lon=-82.265625 z10_split_x=278 west_tiles=14641 east_tiles=46420 byte_identical_tiles=61061 west_bytes=18466664 east_bytes=42245567

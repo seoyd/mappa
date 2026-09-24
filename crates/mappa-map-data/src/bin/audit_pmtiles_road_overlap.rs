@@ -44,6 +44,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let mut first_lines = 0usize;
     let mut second_lines = 0usize;
     let mut duplicates = 0usize;
+    let mut first_duplicate_tile = None;
     for z in first.min_zoom.max(second.min_zoom)..=first.max_zoom.min(second.max_zoom) {
         let n = (1u32 << z) as f64;
         let x0 = (project(west, 0.0)?.x * n).floor() as u32;
@@ -67,14 +68,18 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
                 shared_tiles += 1;
                 first_lines += a.road_major.len() + a.road_collector.len() + a.road_local.len();
                 second_lines += b.road_major.len() + b.road_collector.len() + b.road_local.len();
-                duplicates += matching_lines(&a.road_major, &b.road_major);
-                duplicates += matching_lines(&a.road_collector, &b.road_collector);
-                duplicates += matching_lines(&a.road_local, &b.road_local);
+                let tile_duplicates = matching_lines(&a.road_major, &b.road_major)
+                    + matching_lines(&a.road_collector, &b.road_collector)
+                    + matching_lines(&a.road_local, &b.road_local);
+                if tile_duplicates > 0 && first_duplicate_tile.is_none() {
+                    first_duplicate_tile = Some((z, x, y));
+                }
+                duplicates += tile_duplicates;
             }
         }
     }
     println!(
-        "shared_nonempty_tiles={shared_tiles} first_road_lines={first_lines} second_road_lines={second_lines} exact_duplicate_lines={duplicates}"
+        "shared_nonempty_tiles={shared_tiles} first_road_lines={first_lines} second_road_lines={second_lines} exact_duplicate_lines={duplicates} first_duplicate_tile={first_duplicate_tile:?}"
     );
     Ok(())
 }
