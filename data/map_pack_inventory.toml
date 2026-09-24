@@ -694,6 +694,7 @@ manifest = "data/us_tiger_ms_state_roads_east.toml"
 manifest_sha256 = "c3cc2e4954fd328525d5e2401759ff8ae7ea6ecfb0d3edcfa3e84e36d75b1387"
 bytes = 48637082
 sha256 = "7b787d8aba89e58fff53137d1e0591cccf221a79bc7c7a1fc93d1ab54cbd21c2"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-ms/7b787d8aba89e58fff53137d1e0591cccf221a79bc7c7a1fc93d1ab54cbd21c2.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/ms-state/roads-west.pmtiles"
@@ -701,6 +702,7 @@ manifest = "data/us_tiger_ms_state_roads_west.toml"
 manifest_sha256 = "5ac49870cd259f44cc9bd4547401d218d753a2b1c266fe5e7c56967ed4e0268e"
 bytes = 25264108
 sha256 = "41fe26ec5723b1bd5be054e2450ce551306401b594198141825bd713e2775e6a"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-ms/41fe26ec5723b1bd5be054e2450ce551306401b594198141825bd713e2775e6a.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/nc-state/roads-east-east.pmtiles"
@@ -980,6 +982,7 @@ manifest = "data/us_tiger_ms_state_areawater.toml"
 manifest_sha256 = "ab0ecfbb2de9e2500f1796a476c17f90dc9571f2176999a934db156ec91239af"
 bytes = 18177066
 sha256 = "b1f39b1c6e31e08da0be2eb004cc3af78586d0e28c7d73551a756384360de208"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-ms/b1f39b1c6e31e08da0be2eb004cc3af78586d0e28c7d73551a756384360de208.pmtiles"
 
 [[pack]]
 path = "artifacts/world-water/nc-state/water.pmtiles"
