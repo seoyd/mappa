@@ -46,6 +46,7 @@ manifest = "data/us_tiger_ar_state_roads_east.toml"
 manifest_sha256 = "4f62e2cb88e8a7dcfdd16a59106aefbd7cb9784d529b0ea01677641d4e388836"
 bytes = 37178316
 sha256 = "241ffbde679aea2d986db487dd3b9a9c42e6472d1d7c74cb52cfd95399b23088"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-ar/241ffbde679aea2d986db487dd3b9a9c42e6472d1d7c74cb52cfd95399b23088.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/ar-state/roads-west.pmtiles"
@@ -53,6 +54,7 @@ manifest = "data/us_tiger_ar_state_roads_west.toml"
 manifest_sha256 = "8ec5cc3ef97513446c695373fe37333291aea12be4bd23e02f3b4ba4ff8067c4"
 bytes = 44929325
 sha256 = "722de9df0cb03365f90a0778b69e5c51a2104c42e91dff8e047541f535ac271e"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-ar/722de9df0cb03365f90a0778b69e5c51a2104c42e91dff8e047541f535ac271e.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/ca/ab.pmtiles"
@@ -948,6 +950,7 @@ manifest = "data/us_tiger_ar_state_areawater.toml"
 manifest_sha256 = "6b7078025906c75401000ee17e62573093cf35b6c0e9f0a8e12d04680aa8f44e"
 bytes = 30417753
 sha256 = "c80dd18903573b20ba690c2bd8a84df357c07ecdc4d441f298a69e8d7fc2942b"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-ar/c80dd18903573b20ba690c2bd8a84df357c07ecdc4d441f298a69e8d7fc2942b.pmtiles"
 
 [[pack]]
 path = "artifacts/world-water/dc/water.pmtiles"
