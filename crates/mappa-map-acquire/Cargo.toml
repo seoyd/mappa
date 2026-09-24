@@ -1,5 +1,6 @@
 [package]
 name = "mappa-map-acquire"
+default-run = "mappa-map-acquire"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
