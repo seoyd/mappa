@@ -1,4 +1,4 @@
-//! Extract one IGN BD TOPO road class from a published 7z into a reproducible ZIP.
+//! Extract one IGN BD TOPO class from a published 7z into a reproducible ZIP.
 
 use sevenz_rust2::{ArchiveEntry, Error as SevenZError};
 use sha2::{Digest, Sha256};
@@ -97,7 +97,12 @@ fn main() -> Result<(), Box<dyn Error>> {
     let (class, output_stem) = match args.as_slice() {
         [_, _, _] => ("troncon_de_route", "road"),
         [_, _, _, mode] if mode == "--water" => ("surface_hydrographique", "water"),
-        _ => return Err("usage: extract_ign_roads PUBLISHED.7z SELECTED.zip [--water]".into()),
+        [_, _, _, mode] if mode == "--transport" => ("equipement_de_transport", "transport"),
+        _ => {
+            return Err(
+                "usage: extract_ign_roads PUBLISHED.7z SELECTED.zip [--water|--transport]".into(),
+            );
+        }
     };
     let archive = Path::new(&args[1]);
     let output = Path::new(&args[2]);
@@ -118,7 +123,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             };
             if !found.insert(extension) {
                 return Err(SevenZError::Other(
-                    format!("duplicate {extension} road member").into(),
+                    format!("duplicate {extension} {class} member").into(),
                 ));
             }
             let path = temporary.path().join(format!("{output_stem}.{extension}"));
@@ -126,7 +131,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             let bytes = std::io::copy(reader, &mut file)?;
             if bytes != entry.size() {
                 return Err(SevenZError::Other(
-                    format!("short {extension} road member").into(),
+                    format!("short {extension} {class} member").into(),
                 ));
             }
             Ok(true)
@@ -134,7 +139,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     )?;
     for required in ["shp", "shx", "dbf", "prj"] {
         if !found.contains(required) {
-            return Err(format!("missing {required} road member").into());
+            return Err(format!("missing {required} {class} member").into());
         }
     }
     let selected_fields: &[&str] = if output_stem == "road" {
@@ -148,7 +153,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             "ETAT",
             "ACCES_VL",
         ]
-    } else {
+    } else if output_stem == "water" {
         &[
             "ID",
             "NATURE",
@@ -157,11 +162,11 @@ fn main() -> Result<(), Box<dyn Error>> {
             "NOM_P_EAU",
             "NOM_C_EAU",
         ]
+    } else {
+        &["ID", "NATURE", "NAT_DETAIL", "TOPONYME", "FICTIF", "ETAT"]
     };
-    let records = compact_dbf(
-        &temporary.path().join(format!("{output_stem}.dbf")),
-        selected_fields,
-    )?;
+    let dbf = temporary.path().join(format!("{output_stem}.dbf"));
+    let records = compact_dbf(&dbf, selected_fields)?;
     fs::create_dir_all(output.parent().ok_or("output needs a parent directory")?)?;
     let temporary_zip = output.with_extension("part");
     let mut writer = ZipWriter::new(File::create(&temporary_zip)?);

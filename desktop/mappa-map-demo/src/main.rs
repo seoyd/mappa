@@ -8,7 +8,7 @@ use mappa_map_data::{
 use mappa_map_render::{MapRenderer, MapStyle, PreparedTile, STYLES, prepare};
 use serde::Deserialize;
 use std::{
-    collections::{BTreeSet, HashMap, HashSet},
+    collections::{BTreeMap, BTreeSet, HashMap, HashSet},
     error::Error,
     fs::File,
     io::BufReader,
@@ -432,6 +432,7 @@ fn merge_regional_labels<'a>(labels: impl IntoIterator<Item = &'a str>) -> Strin
     let mut gb_credits = BTreeSet::new();
     let mut ca_provinces = Vec::new();
     let mut ca_credits = BTreeSet::new();
+    let mut ign_layers: BTreeMap<&str, BTreeSet<&str>> = BTreeMap::new();
     for label in labels {
         if let Some((grid, credit)) = label
             .strip_prefix("GB ")
@@ -445,6 +446,11 @@ fn merge_regional_labels<'a>(labels: impl IntoIterator<Item = &'a str>) -> Strin
         {
             ca_provinces.push(province);
             ca_credits.extend(credit.split(" · "));
+        } else if let Some((layer, region)) = label
+            .strip_prefix("IGN BD TOPO ")
+            .and_then(|rest| rest.split_once(" · "))
+        {
+            ign_layers.entry(region).or_default().insert(layer);
         } else {
             other.push(label.to_owned());
         }
@@ -465,6 +471,12 @@ fn merge_regional_labels<'a>(labels: impl IntoIterator<Item = &'a str>) -> Strin
             "CA {} · {}",
             ca_provinces.join(","),
             ca_credits.into_iter().collect::<Vec<_>>().join(" · ")
+        ));
+    }
+    for (region, layers) in ign_layers {
+        other.push(format!(
+            "IGN BD TOPO {region} · {}",
+            layers.into_iter().collect::<Vec<_>>().join("·")
         ));
     }
     other.join(" / ")
@@ -2478,6 +2490,17 @@ mod tests {
         assert_eq!(merged.matches(credit).count(), 1);
     }
 
+    #[test]
+    fn paris_layers_share_one_source_label() {
+        let merged = merge_regional_labels([
+            "IGN BD TOPO 도로 · 파리 D075 실증",
+            "IGN BD TOPO 수면 · 파리 D075 실증",
+            "IGN BD TOPO 여객역 · 파리 D075 실증",
+        ]);
+        assert_eq!(merged.matches("IGN BD TOPO").count(), 1);
+        assert!(merged.contains("도로·수면·여객역"));
+    }
+
     #[tokio::test]
     async fn world_catalog_reads_and_merges_observed_detail_layers() {
         if !world_mode() {
@@ -2488,7 +2511,7 @@ mod tests {
             .lines()
             .skip(1)
             .count();
-        assert_eq!(manager.regional.len(), 28 + audited_gb_grids);
+        assert_eq!(manager.regional.len(), 29 + audited_gb_grids);
         assert!(manager.regional.iter().any(|pack| {
             pack.label
                 .contains("Contains Ordnance Survey data © Crown copyright")
@@ -2508,6 +2531,7 @@ mod tests {
         let mut roads = 0;
         let mut water = 0;
         let mut parks = 0;
+        let mut stations = 0;
         for pack in &manager.regional {
             let source = pack.source(&manager.regional_files).await.unwrap();
             let key = source
@@ -2535,12 +2559,18 @@ mod tests {
             buildings += tile.building.len();
             water += tile.water.len();
             parks += tile.green.len();
+            stations += tile
+                .place
+                .iter()
+                .filter(|place| place.kind == PlaceKind::Station)
+                .count();
             roads += tile.road_major.len() + tile.road_collector.len() + tile.road_local.len();
         }
         assert!(buildings > 0, "building layer missing in world mode");
         assert!(roads > 0, "road layer missing in world mode");
         assert!(water > 0, "water layer missing in world mode");
         assert!(parks > 0, "park layer missing in world mode");
+        assert!(stations > 0, "station layer missing in world mode");
         let queens = manager
             .regional
             .iter()

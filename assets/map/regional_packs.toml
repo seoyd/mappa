@@ -3,6 +3,14 @@
 # with observed features, not positional accuracy. Archives open on first use.
 # Adding a pack here does not certify its coverage or positional accuracy.
 [[pack]]
+path = "../../artifacts/world-stations/fr-paris/stations.pmtiles"
+manifest = "../../data/ign_bdtopo_paris_stations.toml"
+min_visible_zoom = 13
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "IGN BD TOPO 여객역 · 파리 D075 실증"
+
+[[pack]]
 path = "../../artifacts/world-water/ma-state/water.pmtiles"
 manifest = "../../data/us_tiger_ma_state_areawater.toml"
 min_visible_zoom = 10

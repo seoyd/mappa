@@ -1,7 +1,8 @@
-//! Pin an official IGN departmental road class and derive its actual road bounds.
+//! Pin an official IGN departmental class and derive its accepted geometry bounds.
 
 use mappa_map_data::canonical::{
-    BBox, SourceManifest, SourceRecord, adapt_ign_bdtopo_roads, adapt_ign_bdtopo_water,
+    BBox, SourceManifest, SourceRecord, adapt_ign_bdtopo_roads, adapt_ign_bdtopo_stations,
+    adapt_ign_bdtopo_water,
 };
 use sha2::{Digest, Sha256};
 use std::{error::Error, fs, path::Path};
@@ -15,12 +16,15 @@ fn sha256(path: &Path) -> Result<String, Box<dyn Error>> {
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<_> = std::env::args().collect();
-    if !(args.len() == 6 || (args.len() == 7 && args[6] == "--water"))
-        || !args[1].starts_with("https://data.geopf.fr/telechargement/download/BDTOPO/")
-    {
-        return Err("usage: make_ign_bdtopo_roads_manifest OFFICIAL_7Z_URL ARCHIVE.7z SELECTED.zip OUTPUT.toml DOWNLOAD_DATE [--water]".into());
+    let class = match args.get(6).map(String::as_str) {
+        None if args.len() == 6 => "road",
+        Some("--water") if args.len() == 7 => "water",
+        Some("--transport") if args.len() == 7 => "transport",
+        _ => return Err("usage: make_ign_bdtopo_roads_manifest OFFICIAL_7Z_URL ARCHIVE.7z SELECTED.zip OUTPUT.toml DOWNLOAD_DATE [--water|--transport]".into()),
+    };
+    if !args[1].starts_with("https://data.geopf.fr/telechargement/download/BDTOPO/") {
+        return Err("unexpected IGN download URL".into());
     }
-    let water = args.len() == 7;
     let archive = Path::new(&args[2]);
     let road_zip = Path::new(&args[3]);
     let output = Path::new(&args[4]);
@@ -51,16 +55,20 @@ fn main() -> Result<(), Box<dyn Error>> {
         .to_string_lossy()
         .into_owned();
     let relative_archive = archive.strip_prefix(parent)?.to_string_lossy().into_owned();
-    let source_id = if water {
-        format!("ign-bdtopo-water-{}", stem.to_lowercase())
-    } else {
-        format!("ign-bdtopo-{}", stem.to_lowercase())
+    let source_id = match class {
+        "water" => format!("ign-bdtopo-water-{}", stem.to_lowercase()),
+        "transport" => format!("ign-bdtopo-stations-{}", stem.to_lowercase()),
+        _ => format!("ign-bdtopo-{}", stem.to_lowercase()),
     };
     let mut source = SourceRecord {
         id: source_id,
         name: format!(
             "IGN BD TOPO 3.5 {}, {stem}",
-            if water { "Surface hydrographique" } else { "Tronçon de route" }
+            match class {
+                "water" => "Surface hydrographique",
+                "transport" => "Equipement de transport: passenger stations",
+                _ => "Tronçon de route",
+            }
         ),
         provider: "Institut national de l'information géographique et forestière (IGN)".into(),
         source_version: stem.into(),
@@ -76,13 +84,13 @@ fn main() -> Result<(), Box<dyn Error>> {
         crs: "EPSG:2154 RGF93 / Lambert-93; inverted to RGF93 geographic degrees; independent WGS84 datum and positional accuracy pending".into(),
         format: format!(
             "official 7z Shapefile; {}-only ZIP selected and repacked in Rust",
-            if water { "water" } else { "road" }
+            class
         ),
-        coverage: "departmental road segment source; observed selected-road bounds below".into(),
-        resolution: if water {
-            "IGN BD TOPO 3.5 surface hydrography polygons; source precision varies by acquisition method"
-        } else {
-            "IGN BD TOPO 3.5 road centerlines; source precision varies by acquisition method"
+        coverage: "departmental source; observed selected geometry bounds below".into(),
+        resolution: match class {
+            "water" => "IGN BD TOPO 3.5 surface hydrography polygons; source precision varies by acquisition method",
+            "transport" => "IGN BD TOPO 3.5 real passenger station footprints; source precision varies by acquisition method",
+            _ => "IGN BD TOPO 3.5 road centerlines; source precision varies by acquisition method",
         }.into(),
         update_frequency: "published quarterly snapshot; pinned edition".into(),
         license_id: "ETALAB-LICENCE-OUVERTE-2.0".into(),
@@ -94,7 +102,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         attribution_required: true,
         attribution_text: Some(format!("IGN, BD TOPO 3.5, {stem}; modifications Mappa")),
         share_alike: false,
-        adapter: if water { "ign-bdtopo-surface-water" } else { "ign-bdtopo-road-segment" }.into(),
+        adapter: match class {
+            "water" => "ign-bdtopo-surface-water",
+            "transport" => "ign-bdtopo-passenger-station",
+            _ => "ign-bdtopo-road-segment",
+        }.into(),
         adapter_version: 1,
     };
     let world = BBox {
@@ -103,10 +115,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         east: 180.0,
         north: 85.051_128_78,
     };
-    let (features, rejected) = if water {
-        adapt_ign_bdtopo_water(&source, world)?
-    } else {
-        adapt_ign_bdtopo_roads(&source, world)?
+    let (features, rejected) = match class {
+        "water" => adapt_ign_bdtopo_water(&source, world)?,
+        "transport" => adapt_ign_bdtopo_stations(&source, world)?,
+        _ => adapt_ign_bdtopo_roads(&source, world)?,
     };
     if features.is_empty() {
         for rejected in rejected.iter().take(8) {
@@ -115,7 +127,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 rejected.source_feature_id, rejected.reason
             );
         }
-        return Err("source yielded no eligible road geometry".into());
+        return Err("source yielded no eligible geometry".into());
     }
     let mut bounds = [
         f64::INFINITY,
@@ -133,10 +145,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     source.upstream_file = Some(relative_archive);
     source.coverage = format!(
         "selected in-service {} geometry bounds {bounds:?}",
-        if water {
-            "permanent surface-water"
-        } else {
-            "vehicle-road"
+        match class {
+            "water" => "permanent surface-water",
+            "transport" => "real named passenger-station",
+            _ => "vehicle-road",
         }
     );
     let manifest = SourceManifest {

@@ -70,6 +70,7 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             FeatureKind::Place => "place",
             FeatureKind::PlaceDistrict => "place_district",
             FeatureKind::Vegetation => "vegetation",
+            FeatureKind::PlaceStation => "place_station",
         };
         *kinds.entry(name).or_default() += 1;
         for (a, b) in points(&original.geometry)

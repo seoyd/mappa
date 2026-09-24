@@ -175,6 +175,7 @@ fn kind_byte(kind: FeatureKind) -> u8 {
         FeatureKind::Place => 8,
         FeatureKind::PlaceDistrict => 9,
         FeatureKind::Vegetation => 10,
+        FeatureKind::PlaceStation => 11,
     }
 }
 
@@ -191,6 +192,7 @@ fn byte_kind(value: u8) -> Result<FeatureKind> {
         8 => FeatureKind::Place,
         9 => FeatureKind::PlaceDistrict,
         10 => FeatureKind::Vegetation,
+        11 => FeatureKind::PlaceStation,
         _ => return Err(SpatialPackError::Corrupt("unknown feature kind")),
     })
 }
@@ -708,14 +710,22 @@ impl SpatialPack {
                         _ => unreachable!(),
                     }
                 }
-                (FeatureKind::PlaceDistrict, Geometry::Point(point)) => {
+                (
+                    FeatureKind::PlaceDistrict | FeatureKind::PlaceStation,
+                    Geometry::Point(point),
+                ) => {
+                    let (rank, kind) = if feature.kind == FeatureKind::PlaceStation {
+                        (3, PlaceKind::Station)
+                    } else {
+                        (4, PlaceKind::District)
+                    };
                     tile.place.push(MapPlace {
                         point: Point(local(point)?),
                         name: feature
                             .name
                             .ok_or(SpatialPackError::Corrupt("unnamed place"))?,
-                        rank: 4,
-                        kind: PlaceKind::District,
+                        rank,
+                        kind,
                     });
                 }
                 _ => return Err(SpatialPackError::Corrupt("unsupported proof geometry")),

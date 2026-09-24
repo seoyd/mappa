@@ -15,7 +15,7 @@ Rust 추출기는 7z 전체 CRC를 확인하면서 `HYDROGRAPHIE/SURFACE_HYDROGR
 | 지도 팩 | [수면 PMTiles](../artifacts/world-water/fr-paris/water.pmtiles) 337,880바이트, SHA-256 `3d8081a07c17d47d3f670dab40ba75650f4d613afd376fc0bb7bb7db9acb34e4`. 실제 타일 594개 전수 해독, 실패 0. 타일별 중복 포함 수면 1,797개. |
 | 화면 | [파리 도로·수면 합성 z14](../artifacts/world-water/fr-paris/paris-road-water-z14.png) Mac Metal 캡처에서 타일 실패 0. 센강 일부와 작은 수면이 표시된다. |
 
-일시 수면을 상시 파란 수면처럼 표시하지 않기 위해 `Permanent`만 채택했다. 현재 판정은 파일·타일·화면의 표시 검증이다. 수면 경계의 현장 위치 정확도, RGF93에서 WGS84로의 독립 기준점 비교, 원본의 모든 수면 완전성, iPhone 성능은 검증하지 않았다. 파리 건물·역·시설은 아직 없다.
+일시 수면을 상시 파란 수면처럼 표시하지 않기 위해 `Permanent`만 채택했다. 현재 판정은 파일·타일·화면의 표시 검증이다. 수면 경계의 현장 위치 정확도, RGF93에서 WGS84로의 독립 기준점 비교, 원본의 모든 수면 완전성, iPhone 성능은 검증하지 않았다. 여객역은 [별도 지역 팩](FR_PARIS_STATIONS_PROGRESS.md)에 있으며 파리 건물·공공시설은 아직 없다.
 
 ## 재현
 

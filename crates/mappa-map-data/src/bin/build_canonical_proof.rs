@@ -1,8 +1,8 @@
 use flate2::{Compression, write::GzEncoder};
 use mappa_map_data::canonical::{
-    BBox, GeoDb, SourceManifest, adapt_ign_bdtopo_roads, adapt_ign_bdtopo_water,
-    adapt_microsoft_buildings, adapt_naju_road_surfaces, adapt_naju_roads, adapt_sgis_districts,
-    adapt_us_census_areawater, adapt_us_census_parks, adapt_us_census_roads,
+    BBox, GeoDb, SourceManifest, adapt_ign_bdtopo_roads, adapt_ign_bdtopo_stations,
+    adapt_ign_bdtopo_water, adapt_microsoft_buildings, adapt_naju_road_surfaces, adapt_naju_roads,
+    adapt_sgis_districts, adapt_us_census_areawater, adapt_us_census_parks, adapt_us_census_roads,
     adapt_worldcover_polygons, write_geodb,
 };
 use std::{error::Error, path::Path};
@@ -66,6 +66,11 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
             "ign-bdtopo-surface-water" => {
                 let (accepted, invalid) = adapt_ign_bdtopo_water(source, region)?;
+                records.extend(accepted);
+                rejected.extend(invalid);
+            }
+            "ign-bdtopo-passenger-station" => {
+                let (accepted, invalid) = adapt_ign_bdtopo_stations(source, region)?;
                 records.extend(accepted);
                 rejected.extend(invalid);
             }

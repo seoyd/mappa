@@ -100,7 +100,12 @@ pub fn build_canonical_tiles(
                 let exterior = projected_rings.remove(0);
                 Geometry::Polygon(Polygon::new(exterior, projected_rings))
             }
-            CanonicalGeometry::Point([lon, lat]) if feature.kind == FeatureKind::PlaceDistrict => {
+            CanonicalGeometry::Point([lon, lat])
+                if matches!(
+                    feature.kind,
+                    FeatureKind::PlaceDistrict | FeatureKind::PlaceStation
+                ) =>
+            {
                 let point = project(lon, lat)?;
                 Geometry::Point(Point::new(point.x, point.y))
             }
@@ -267,17 +272,25 @@ pub fn build_canonical_tiles(
                 .iter()
                 .filter_map(|&index| {
                     let feature = &projected[index];
-                    if feature.kind != FeatureKind::PlaceDistrict {
+                    if !matches!(
+                        feature.kind,
+                        FeatureKind::PlaceDistrict | FeatureKind::PlaceStation
+                    ) {
                         return None;
                     }
                     let Geometry::Point(point) = &feature.geometry else {
                         return None;
                     };
+                    let (rank, kind) = if feature.kind == FeatureKind::PlaceStation {
+                        (3, PlaceKind::Station)
+                    } else {
+                        (4, PlaceKind::District)
+                    };
                     Some(PlaceSource {
                         point: point.0,
                         name: feature.name.clone()?,
-                        rank: 4,
-                        kind: PlaceKind::District,
+                        rank,
+                        kind,
                     })
                 })
                 .collect::<Vec<_>>();

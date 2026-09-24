@@ -1,4 +1,4 @@
-//! Official IGN BD TOPO roads and surface water.
+//! Official IGN BD TOPO roads, surface water, and real passenger stations.
 
 use super::*;
 
@@ -455,6 +455,244 @@ pub fn adapt_ign_bdtopo_water(
                 },
             ));
         }
+    }
+    accepted.sort_by_key(|(feature, _)| feature.id);
+    Ok((accepted, rejected))
+}
+
+pub fn adapt_ign_bdtopo_stations(
+    source: &SourceRecord,
+    region: BBox,
+) -> Result<(AdaptedFeatures, Vec<RejectedFeature>), CanonicalError> {
+    if source.adapter != "ign-bdtopo-passenger-station" {
+        return Err(CanonicalError::Feature("wrong IGN station adapter".into()));
+    }
+    if source_hash(Path::new(&source.file))? != source.sha256.to_lowercase() {
+        return Err(CanonicalError::SourceChecksum(source.id.clone()));
+    }
+    let (Some(upstream_file), Some(upstream_hash)) =
+        (&source.upstream_file, &source.upstream_sha256)
+    else {
+        return Err(CanonicalError::Feature(
+            "IGN published 7z provenance missing".into(),
+        ));
+    };
+    if source_hash(Path::new(upstream_file))? != upstream_hash.to_lowercase() {
+        return Err(CanonicalError::SourceChecksum(format!("{} 7z", source.id)));
+    }
+    let mut archive = zip::ZipArchive::new(File::open(&source.file)?)
+        .map_err(|error| CanonicalError::Feature(error.to_string()))?;
+    let temporary = tempfile::tempdir()?;
+    for extension in ["shp", "dbf", "prj"] {
+        member_to_file(
+            &mut archive,
+            "transport",
+            extension,
+            &temporary.path().join(format!("transport.{extension}")),
+        )?;
+    }
+    let prj = fs::read_to_string(temporary.path().join("transport.prj"))?;
+    if !prj.contains("Lambert_Conformal_Conic")
+        || !prj.contains("RGF_1993")
+        || !prj.contains("700000")
+        || !prj.contains("6600000")
+    {
+        return Err(CanonicalError::Feature(
+            "unexpected IGN Lambert-93 CRS".into(),
+        ));
+    }
+    let shape_reader =
+        shapefile::ShapeReader::new(File::open(temporary.path().join("transport.shp"))?)?;
+    let attribute_reader =
+        shapefile::dbase::Reader::new(File::open(temporary.path().join("transport.dbf"))?)?;
+    let mut reader = shapefile::Reader::new(shape_reader, attribute_reader);
+    let mut accepted = Vec::new();
+    let mut rejected = Vec::new();
+    let mut raw_ids = BTreeSet::new();
+    for (index, record) in reader.iter_shapes_and_records().enumerate() {
+        let (shape, attributes) = record?;
+        let string_field = |field: &str| -> Option<&str> {
+            match attributes.get(field) {
+                Some(shapefile::dbase::FieldValue::Character(Some(value))) => Some(value.trim()),
+                _ => None,
+            }
+        };
+        let id = string_field("ID")
+            .filter(|value| !value.is_empty())
+            .ok_or_else(|| CanonicalError::Feature("missing IGN transport ID".into()))?
+            .to_owned();
+        if !raw_ids.insert(id.clone()) {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id: id,
+                reason: "duplicate IGN transport ID".into(),
+            });
+            continue;
+        }
+        let nature = string_field("NATURE");
+        let station = matches!(
+            nature,
+            Some(
+                "Station de métro"
+                    | "Station de tramway"
+                    | "Gare voyageurs uniquement"
+                    | "Gare voyageurs et fret"
+                    | "Gare routière"
+                    | "Arrêt voyageurs"
+            )
+        );
+        let name = string_field("TOPONYME")
+            .filter(|value| !value.is_empty() && value.len() <= 128)
+            .map(str::to_owned);
+        let reason = if !station {
+            Some("not a passenger station".to_owned())
+        } else if string_field("ETAT") != Some("En service") {
+            Some(format!(
+                "station not in service: {:?}",
+                string_field("ETAT")
+            ))
+        } else if string_field("FICTIF") != Some("Non") {
+            Some(format!(
+                "station has fictitious geometry: {:?}",
+                string_field("FICTIF")
+            ))
+        } else if name.is_none() {
+            Some("station has no published name".to_owned())
+        } else {
+            None
+        };
+        if let Some(reason) = reason {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id: id,
+                reason,
+            });
+            continue;
+        }
+        let shapefile::Shape::PolygonZ(polygon) = shape else {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id: id,
+                reason: format!("row {}: expected PolygonZ", index + 1),
+            });
+            continue;
+        };
+        let mut outer = Vec::new();
+        let mut holes = Vec::new();
+        let mut hash = Sha256::new();
+        hash.update(id.as_bytes());
+        hash.update(nature.unwrap_or_default().as_bytes());
+        hash.update(name.as_deref().unwrap_or_default().as_bytes());
+        for ring in polygon.rings() {
+            let line: LineString<f64> = ring
+                .points()
+                .iter()
+                .map(|point| {
+                    hash.update(point.x.to_le_bytes());
+                    hash.update(point.y.to_le_bytes());
+                    hash.update(point.z.to_le_bytes());
+                    Coord {
+                        x: point.x,
+                        y: point.y,
+                    }
+                })
+                .collect();
+            match ring {
+                shapefile::PolygonRing::Outer(_) => outer.push(line),
+                shapefile::PolygonRing::Inner(_) => holes.push(line),
+            }
+        }
+        let mut groups: Vec<_> = outer.into_iter().map(|line| (line, Vec::new())).collect();
+        let mut invalid = groups.is_empty();
+        for hole in holes {
+            let Some(first) = hole.0.first() else {
+                invalid = true;
+                break;
+            };
+            let point = Point::new(first.x, first.y);
+            let matches = groups
+                .iter()
+                .enumerate()
+                .filter(|(_, (exterior, _))| {
+                    Polygon::new(exterior.clone(), vec![]).contains(&point)
+                })
+                .map(|(group_index, _)| group_index)
+                .collect::<Vec<_>>();
+            if let [group_index] = matches.as_slice() {
+                groups[*group_index].1.push(hole);
+            } else {
+                invalid = true;
+                break;
+            }
+        }
+        if invalid {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id: id,
+                reason: "station has ambiguous polygon rings".into(),
+            });
+            continue;
+        }
+        let polygons = MultiPolygon(
+            groups
+                .into_iter()
+                .map(|(exterior, interiors)| Polygon::new(exterior, interiors))
+                .collect(),
+        );
+        if polygons.check_validation().is_err() {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id: id,
+                reason: "station has invalid polygon topology".into(),
+            });
+            continue;
+        }
+        let Some(point) = polygons.interior_point() else {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id: id,
+                reason: "station has no interior point".into(),
+            });
+            continue;
+        };
+        let lonlat = match inverse_lambert93(point.x(), point.y()) {
+            Ok(point) => point,
+            Err(error) => {
+                rejected.push(RejectedFeature {
+                    source_id: source.id.clone(),
+                    source_feature_id: id,
+                    reason: error.to_string(),
+                });
+                continue;
+            }
+        };
+        let geometry = Geometry::Point(lonlat);
+        let bbox = geometry.bbox()?;
+        if !bbox.intersects(region) {
+            continue;
+        }
+        let feature_id = stable_id(&source.id, &id);
+        accepted.push((
+            CanonicalFeature {
+                id: feature_id,
+                kind: FeatureKind::PlaceStation,
+                geometry,
+                bbox,
+                importance: 600,
+                min_zoom: 13,
+                max_zoom: 15,
+                name,
+                revision: 1,
+            },
+            Provenance {
+                feature_id,
+                source_id: source.id.clone(),
+                source_feature_id: id,
+                source_revision: source.source_version.clone(),
+                adapter_version: source.adapter_version,
+                source_feature_sha256: hash.finalize().into(),
+            },
+        ));
     }
     accepted.sort_by_key(|(feature, _)| feature.id);
     Ok((accepted, rejected))
