@@ -2393,7 +2393,7 @@ mod tests {
             return;
         }
         let manager = TileManager::open().await.unwrap();
-        assert_eq!(manager.regional.len(), 5);
+        assert_eq!(manager.regional.len(), 6);
         assert!(manager.regional_files.lock().unwrap().files.is_empty());
         for pack in &manager.regional {
             let [west, south, east, north] = pack.bounds;

@@ -12,13 +12,13 @@ cargo run -p mappa-map-data --bin build_canonical_tiles -- data/sources.toml art
 MAPPA_DATASET=canonical-proof cargo run -p mappa-map-demo -- --street-demo 126.715 35.025 15.2
 ```
 
-기본 세계지도의 저배율은 Natural Earth 기반이다. 승인된 모나코 건물·뉴욕주 62개 카운티 도로·뉴욕시 5개 카운티 수면·Queens 동부 건물·뉴욕시 주변 공원 경계 지역 패키지도 고배율에서 연다. 나주 자체 GeoDB 시안은 S16 `NO_GO` 상태이므로 `canonical-proof`를 명시해야 연다.
+기본 세계지도의 저배율은 Natural Earth 기반이다. 승인된 모나코 건물·뉴욕주 62개 카운티 도로·뉴저지주 21개 카운티 도로·뉴욕시 5개 카운티 수면·Queens 동부 건물·뉴욕시 주변 공원 경계 지역 패키지도 고배율에서 연다. 나주 자체 GeoDB 시안은 S16 `NO_GO` 상태이므로 `canonical-proof`를 명시해야 연다.
 
 MVT/PMTiles 교체 가능성은 [MSP 실험 결과](docs/MAP_SPATIAL_PACK_EXPERIMENT.md)로 별도 검증 중이다. 같은 나주 GeoDB에서 geometry 1회 저장·공간 셀 참조·정수 delta 좌표를 구현해 Metal 화면까지 확인했다. 현재 MSP 파일은 기존 PMTiles의 1.499배여서 기본 지도 규격은 바꾸지 않았다.
 
 ## 세계지도 (기본 모드)
 
-기본 지도는 Mappa의 Rust 타일 생성기·렌더러가 로컬 파일을 직접 읽어 그린다. 세계 z0–z4는 Natural Earth 1:110m, 전 세계 z5–z7은 1:10m 개략 원본을 쓴다. z6부터 주요 강·하천 중심선과 선별된 도시·주요 도로를 표시한다. 지형·국경·수계·도시·일부 도로의 좌표 원본은 [퍼블릭 도메인 Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/)이고, 외부 지도 서버/API는 호출하지 않는다. 고배율에서는 [승인 원천 목록](assets/map/regional_packs.toml)의 모나코·Queens 건물, 뉴욕주 62개 카운티 도로, 뉴욕시 수면·공원 경계 지역 PMTiles를 읽고 미수집 지역을 빈 중립색으로 표시한다. 전 세계 건물·역·정밀 도로망은 여전히 없다. [건물 현황](docs/WORLD_BUILDINGS_PROGRESS.md), [뉴욕주 도로 확장](docs/NY_STATE_ROADS_PROGRESS.md), [국가별 도로 현황](docs/WORLD_ROADS_PROGRESS.md), [수면 현황](docs/WORLD_WATER_PROGRESS.md), [공원 현황](docs/WORLD_PARKS_PROGRESS.md), [지도 레이어·선택 구조](docs/MAP_LAYER_ARCHITECTURE.md), [세계지도 검증 결과](docs/WORLD_MAP.md)에 현재 상태를 구분해 기록했다.
+기본 지도는 Mappa의 Rust 타일 생성기·렌더러가 로컬 파일을 직접 읽어 그린다. 세계 z0–z4는 Natural Earth 1:110m, 전 세계 z5–z7은 1:10m 개략 원본을 쓴다. z6부터 주요 강·하천 중심선과 선별된 도시·주요 도로를 표시한다. 지형·국경·수계·도시·일부 도로의 좌표 원본은 [퍼블릭 도메인 Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/)이고, 외부 지도 서버/API는 호출하지 않는다. 고배율에서는 [승인 원천 목록](assets/map/regional_packs.toml)의 모나코·Queens 건물, 뉴욕주·뉴저지주 83개 카운티 도로, 뉴욕시 수면·공원 경계 지역 PMTiles를 읽고 미수집 지역을 빈 중립색으로 표시한다. 전 세계 건물·역·정밀 도로망은 여전히 없다. [건물 현황](docs/WORLD_BUILDINGS_PROGRESS.md), [뉴욕주 도로 확장](docs/NY_STATE_ROADS_PROGRESS.md), [뉴저지주 도로 확장](docs/NJ_STATE_ROADS_PROGRESS.md), [국가별 도로 현황](docs/WORLD_ROADS_PROGRESS.md), [수면 현황](docs/WORLD_WATER_PROGRESS.md), [공원 현황](docs/WORLD_PARKS_PROGRESS.md), [지도 레이어·선택 구조](docs/MAP_LAYER_ARCHITECTURE.md), [세계지도 검증 결과](docs/WORLD_MAP.md)에 현재 상태를 구분해 기록했다.
 
 ```bash
 cargo run -p mappa-map-demo

@@ -1,0 +1,24 @@
+# Published filename inventory: https://www2.census.gov/geo/tiger/TIGER2025/ROADS/
+# Downloaded directory snapshot SHA-256: da6d2cf6bff24f53cad8808cc19146d1433a24be7b2da5369483ebda49d186ef
+# Exact tl_2025_34???_roads.zip matches; 21 filenames. Completeness relative to the publisher index only.
+tl_2025_34001_roads.zip
+tl_2025_34003_roads.zip
+tl_2025_34005_roads.zip
+tl_2025_34007_roads.zip
+tl_2025_34009_roads.zip
+tl_2025_34011_roads.zip
+tl_2025_34013_roads.zip
+tl_2025_34015_roads.zip
+tl_2025_34017_roads.zip
+tl_2025_34019_roads.zip
+tl_2025_34021_roads.zip
+tl_2025_34023_roads.zip
+tl_2025_34025_roads.zip
+tl_2025_34027_roads.zip
+tl_2025_34029_roads.zip
+tl_2025_34031_roads.zip
+tl_2025_34033_roads.zip
+tl_2025_34035_roads.zip
+tl_2025_34037_roads.zip
+tl_2025_34039_roads.zip
+tl_2025_34041_roads.zip

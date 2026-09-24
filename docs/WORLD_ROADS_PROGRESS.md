@@ -2,7 +2,7 @@
 
 ## 결정과 판정
 
-사용자 결정에 따라 **ODbL 원천을 현재 Mappa canonical GeoDB에 넣지 않는다.** 전 세계 도로의 국가별 공식·허용형 원천을 찾고, 같은 출처·품질 게이트로 지역별로 구축한다. 첫 실증인 미국 Census 뉴욕 카운티 한 파일을 뉴욕시 5개 카운티로, 이어 [뉴욕주 62개 카운티](NY_STATE_ROADS_PROGRESS.md)로 확장했다. 현재 기본 세계 모드는 뉴욕주 도로 팩을 사용한다. **전 세계 상세 도로망은 아직 없다.**
+사용자 결정에 따라 **ODbL 원천을 현재 Mappa canonical GeoDB에 넣지 않는다.** 전 세계 도로의 국가별 공식·허용형 원천을 찾고, 같은 출처·품질 게이트로 지역별로 구축한다. 첫 실증인 미국 Census 뉴욕 카운티 한 파일을 뉴욕시 5개 카운티로, 이어 [뉴욕주 62개 카운티](NY_STATE_ROADS_PROGRESS.md)로 확장하고 [뉴저지주 21개 카운티](NJ_STATE_ROADS_PROGRESS.md)를 추가했다. 현재 기본 세계 모드는 두 주의 도로 팩을 사용한다. **전 세계 상세 도로망은 아직 없다.**
 
 ## 미국 공식 원천 실증
 
@@ -41,7 +41,7 @@ ZIP의 `.prj`는 **EPSG:4269 NAD83**다. 현재 어댑터는 숫자 좌표를 �
 | 원천/지역 | 확보·판정 |
 |---|---|
 | 한국 나주 | 공식 도로 ZIP 실증은 기존 [지역 게이트](MAP_V0_3C_GATE_AUDIT.md)에 기록. 원본 CRS와 기준점 미확인으로 S16 `NO_GO`. |
-| 미국 | Census 2025 뉴욕주 62개 카운티를 실증. 다른 주 카운티는 미수집·미검증. 공식 배포 단위는 카운티별 All Roads 파일. |
+| 미국 | Census 2025 뉴욕주 62개·뉴저지주 21개 카운티를 실증. 다른 주 카운티는 미수집·미검증. 공식 배포 단위는 카운티별 All Roads 파일. |
 | 영국 | [OS Open Roads](https://www.ordnancesurvey.co.uk/products/os-open-roads)는 무료 [OGL v3](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/) 원천 후보. 공식 [문서](https://docs.os.uk/os-downloads/products/transport-network-portfolio/os-open-roads/os-open-roads-overview/os-open-roads-data)상 벡터 타일은 EPSG:3857. 2026-04 영국 전체 벡터 ZIP의 공식 범위 응답 크기 1,346,941,248바이트를 확인했으나 전체 파일은 미수집·미검증. 지역 패키지·위치 정확도도 미구축. |
 | 그 외 국가 | 공식 원천·배포 허용 조건·파일·좌표계·독립 정확도 조사 및 실증 필요. 빈 곳은 빈 곳으로 표시. |
 

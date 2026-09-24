@@ -19,6 +19,14 @@ archive_max_zoom = 15
 label = "US Census 도로 · 뉴욕주 62개 카운티 실증"
 
 [[pack]]
+path = "../../artifacts/world-roads/nj-state/state.pmtiles"
+manifest = "../../data/us_tiger_nj_state_roads.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 · 뉴저지주 21개 카운티 실증"
+
+[[pack]]
 path = "../../artifacts/world-buildings/queens-z11.pmtiles"
 manifest = "../../data/ms_queens_buildings.toml"
 min_visible_zoom = 14
