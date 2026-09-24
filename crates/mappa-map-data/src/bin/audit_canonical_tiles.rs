@@ -1,9 +1,12 @@
+use futures_util::StreamExt;
 use mappa_map_core::{TileKey, project};
 use mappa_map_data::{LocalPmTiles, PlaceKind, TileSource, canonical::SourceManifest, decode_mvt};
+use pmtiles::{AsyncPmTilesReader, TileCoord};
 use std::{
     collections::{BTreeMap, BTreeSet},
     error::Error,
     path::Path,
+    sync::Arc,
 };
 
 type Port = (u8, u16);
@@ -244,6 +247,18 @@ async fn audit(
 ) -> Result<(), Box<dyn Error + Send + Sync>> {
     let manifest = SourceManifest::open(manifest_path)?;
     let archive = LocalPmTiles::open(archive_path).await?;
+    let directory = Arc::new(AsyncPmTilesReader::new_with_path(archive_path).await?);
+    let mut tile_coords = vec![Vec::new(); usize::from(archive.max_zoom) + 1];
+    let mut entries = Arc::clone(&directory).entries();
+    while let Some(entry) = entries.next().await {
+        for id in entry?.iter_coords() {
+            let coord = TileCoord::from(id);
+            if coord.z() < archive.min_zoom || coord.z() > archive.max_zoom {
+                return Err("archive tile outside declared zoom range".into());
+            }
+            tile_coords[usize::from(coord.z())].push((coord.x(), coord.y()));
+        }
+    }
     let [west, south, east, north] = manifest.proof_bbox_wgs84;
     let nw = project(west, north)?;
     let se = project(east, south)?;
@@ -262,30 +277,33 @@ async fn audit(
         let mut vegetation = 0;
         let mut districts = 0;
         let mut edges = BTreeMap::new();
-        for y in y0..=y1 {
-            for x in x0..=x1 {
-                let Some(payload) = archive.tile_bytes(TileKey::new(z, x, y)?).await? else {
-                    continue;
-                };
-                bytes += payload.len();
-                tiles += 1;
-                let decoded = decode_mvt(payload)?;
-                if !decoded.land.is_empty()
-                    || decoded
-                        .place
-                        .iter()
-                        .any(|place| place.kind != PlaceKind::District)
-                {
-                    return Err("proof contains an unsupported layer".into());
-                }
-                roads += decoded.road_major.len()
-                    + decoded.road_collector.len()
-                    + decoded.road_local.len();
-                surfaces += decoded.road_surface.len();
-                water += decoded.water.len();
-                vegetation += decoded.green.len();
-                districts += decoded.place.len();
-                edges.insert((x, y), edge_ports(&decoded));
+        for &(x, y) in &tile_coords[usize::from(z)] {
+            if x < x0 || x > x1 || y < y0 || y > y1 {
+                return Err(format!("tile outside manifest bounds: z{z}/{x}/{y}").into());
+            }
+            let payload = archive
+                .tile_bytes(TileKey::new(z, x, y)?)
+                .await?
+                .ok_or("archive directory points to a missing tile")?;
+            bytes += payload.len();
+            tiles += 1;
+            let decoded = decode_mvt(payload)?;
+            if !decoded.land.is_empty()
+                || decoded
+                    .place
+                    .iter()
+                    .any(|place| place.kind != PlaceKind::District)
+            {
+                return Err("proof contains an unsupported layer".into());
+            }
+            roads +=
+                decoded.road_major.len() + decoded.road_collector.len() + decoded.road_local.len();
+            surfaces += decoded.road_surface.len();
+            water += decoded.water.len();
+            vegetation += decoded.green.len();
+            districts += decoded.place.len();
+            if edges.insert((x, y), edge_ports(&decoded)).is_some() {
+                return Err("duplicate tile coordinate in archive directory".into());
             }
         }
         let mut exact = 0;
@@ -295,76 +313,89 @@ async fn audit(
         let mut quantization_ambiguous = 0;
         let mut max_corner_distance = 0;
         let empty = EdgePorts::default();
-        for y in y0..=y1 {
-            for x in x0..=x1 {
-                let edge = edges.get(&(x, y)).unwrap_or(&empty);
-                if x < x1 {
-                    let next = edges.get(&(x + 1, y)).unwrap_or(&empty);
-                    let result = compare_ports(
-                        &edge.right,
-                        &next.left,
-                        &edge.right_through,
-                        &next.left_through,
-                        &edge.right_uncertainty,
-                        &next.left_uncertainty,
-                    );
-                    if result.2 > 0 && unmatched_samples.len() < 24 {
-                        unmatched_samples.push(format!(
-                            "z{z}/{x}/{y} right: this={:?} next={:?}",
-                            edge.right.iter().take(20).collect::<Vec<_>>(),
-                            next.left.iter().take(20).collect::<Vec<_>>()
-                        ));
-                    }
-                    if result.5 > worst_unmatched.0 {
-                        worst_unmatched = (
-                            result.5,
-                            format!(
-                                "z{z}/{x}/{y} right: this={:?} next={:?} this_through={:?} next_through={:?}",
-                                edge.right, next.left, edge.right_through, next.left_through
-                            ),
-                        );
-                    }
-                    exact += result.0;
-                    one_unit += result.1;
-                    unmatched += result.2;
-                    corner_ambiguous += result.3;
-                    quantization_ambiguous += result.4;
-                    max_corner_distance = max_corner_distance.max(result.5);
-                }
-                if y < y1 {
-                    let next = edges.get(&(x, y + 1)).unwrap_or(&empty);
-                    let result = compare_ports(
-                        &edge.bottom,
-                        &next.top,
-                        &edge.bottom_through,
-                        &next.top_through,
-                        &edge.bottom_uncertainty,
-                        &next.top_uncertainty,
-                    );
-                    if result.2 > 0 && unmatched_samples.len() < 24 {
-                        unmatched_samples.push(format!(
-                            "z{z}/{x}/{y} bottom: this={:?} next={:?}",
-                            edge.bottom.iter().take(20).collect::<Vec<_>>(),
-                            next.top.iter().take(20).collect::<Vec<_>>()
-                        ));
-                    }
-                    if result.5 > worst_unmatched.0 {
-                        worst_unmatched = (
-                            result.5,
-                            format!(
-                                "z{z}/{x}/{y} bottom: this={:?} next={:?} this_through={:?} next_through={:?}",
-                                edge.bottom, next.top, edge.bottom_through, next.top_through
-                            ),
-                        );
-                    }
-                    exact += result.0;
-                    one_unit += result.1;
-                    unmatched += result.2;
-                    corner_ambiguous += result.3;
-                    quantization_ambiguous += result.4;
-                    max_corner_distance = max_corner_distance.max(result.5);
-                }
+        let mut horizontal_seams = BTreeSet::new();
+        let mut vertical_seams = BTreeSet::new();
+        for &(x, y) in edges.keys() {
+            if x < x1 {
+                horizontal_seams.insert((x, y));
             }
+            if x > x0 {
+                horizontal_seams.insert((x - 1, y));
+            }
+            if y < y1 {
+                vertical_seams.insert((x, y));
+            }
+            if y > y0 {
+                vertical_seams.insert((x, y - 1));
+            }
+        }
+        for (x, y) in horizontal_seams {
+            let edge = edges.get(&(x, y)).unwrap_or(&empty);
+            let next = edges.get(&(x + 1, y)).unwrap_or(&empty);
+            let result = compare_ports(
+                &edge.right,
+                &next.left,
+                &edge.right_through,
+                &next.left_through,
+                &edge.right_uncertainty,
+                &next.left_uncertainty,
+            );
+            if result.2 > 0 && unmatched_samples.len() < 24 {
+                unmatched_samples.push(format!(
+                    "z{z}/{x}/{y} right: this={:?} next={:?}",
+                    edge.right.iter().take(20).collect::<Vec<_>>(),
+                    next.left.iter().take(20).collect::<Vec<_>>()
+                ));
+            }
+            if result.5 > worst_unmatched.0 {
+                worst_unmatched = (
+                    result.5,
+                    format!(
+                        "z{z}/{x}/{y} right: this={:?} next={:?} this_through={:?} next_through={:?}",
+                        edge.right, next.left, edge.right_through, next.left_through
+                    ),
+                );
+            }
+            exact += result.0;
+            one_unit += result.1;
+            unmatched += result.2;
+            corner_ambiguous += result.3;
+            quantization_ambiguous += result.4;
+            max_corner_distance = max_corner_distance.max(result.5);
+        }
+        for (x, y) in vertical_seams {
+            let edge = edges.get(&(x, y)).unwrap_or(&empty);
+            let next = edges.get(&(x, y + 1)).unwrap_or(&empty);
+            let result = compare_ports(
+                &edge.bottom,
+                &next.top,
+                &edge.bottom_through,
+                &next.top_through,
+                &edge.bottom_uncertainty,
+                &next.top_uncertainty,
+            );
+            if result.2 > 0 && unmatched_samples.len() < 24 {
+                unmatched_samples.push(format!(
+                    "z{z}/{x}/{y} bottom: this={:?} next={:?}",
+                    edge.bottom.iter().take(20).collect::<Vec<_>>(),
+                    next.top.iter().take(20).collect::<Vec<_>>()
+                ));
+            }
+            if result.5 > worst_unmatched.0 {
+                worst_unmatched = (
+                    result.5,
+                    format!(
+                        "z{z}/{x}/{y} bottom: this={:?} next={:?} this_through={:?} next_through={:?}",
+                        edge.bottom, next.top, edge.bottom_through, next.top_through
+                    ),
+                );
+            }
+            exact += result.0;
+            one_unit += result.1;
+            unmatched += result.2;
+            corner_ambiguous += result.3;
+            quantization_ambiguous += result.4;
+            max_corner_distance = max_corner_distance.max(result.5);
         }
         total_unmatched += unmatched;
         println!(

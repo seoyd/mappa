@@ -21,9 +21,11 @@ use thiserror::Error;
 mod ign_bdtopo;
 mod lambert93;
 mod nrn;
+mod wa_roads;
 pub use ign_bdtopo::{adapt_ign_bdtopo_roads, adapt_ign_bdtopo_stations, adapt_ign_bdtopo_water};
 pub use lambert93::inverse_lambert93;
 pub use nrn::adapt_ca_nrn_roads;
+pub use wa_roads::adapt_wa_road_network;
 
 const MAGIC: &[u8; 8] = b"MAPPAGEO";
 const SCHEMA_VERSION: u32 = 1;
@@ -191,6 +193,7 @@ impl SourceManifest {
                     | "us-census-tiger-areawater"
                     | "us-census-tiger-arealm-parks"
                     | "ca-nrn-roadseg"
+                    | "au-wa-road-network"
                     | "ign-bdtopo-road-segment"
                     | "ign-bdtopo-surface-water"
                     | "ign-bdtopo-passenger-station"

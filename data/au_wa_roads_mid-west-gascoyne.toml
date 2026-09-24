@@ -1,0 +1,35 @@
+schema_version = 1
+proof_region = "au-wa-mid-west-gascoyne"
+proof_bbox_wgs84 = [
+    113.3805461820001,
+    -31.58103981299996,
+    120.52896828300004,
+    -21.786356857999976,
+]
+
+[[source]]
+id = "au-wa-main-roads-network-fbdbdd56af879639"
+name = "Road Network"
+provider = "Main Roads Western Australia"
+source_version = "sha256:fbdbdd56af8796394a960dcd90751bbb0a2812b6432ca2db9a7f875da521512e"
+download_date = "2026-09-25"
+official_url = "https://portal-mainroads.opendata.arcgis.com/api/download/v1/items/7febe68ed1764e0d8402264ad62f0357/shapefile?layers=17"
+download_page_url = "https://catalogue.data.wa.gov.au/en/dataset/mrwa-road-network"
+file = "local/au_wa/road_network.zip"
+sha256 = "fbdbdd56af8796394a960dcd90751bbb0a2812b6432ca2db9a7f875da521512e"
+crs = "GDA94 geographic degrees (source .prj); numeric degrees retained; WGS84 position unverified"
+format = "Shapefile ZIP, Polyline"
+coverage = "WA Road Network source RA_NAME=Mid West-Gascoyne"
+resolution = "Official road centreline geometry; positional accuracy not independently tested"
+update_frequency = "Unspecified by WA dataset catalogue"
+license_id = "CC-BY-4.0"
+license_url = "https://creativecommons.org/licenses/by/4.0/"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "The Commissioner of Main Roads is the creator and owner of the data and Licenced Material, which is accessed pursuant to a Creative Commons (Attribution) Licence, which has a disclaimer of warranties and limitation of liability."
+share_alike = false
+adapter = "au-wa-road-network"
+adapter_version = 1

@@ -1,0 +1,73 @@
+# Main Roads Western Australia source regions; built offline from the approved ZIP.
+
+[[pack]]
+path = "../../artifacts/world-roads/au-wa/goldfields-esperance.pmtiles"
+manifest = "../../data/au_wa_roads_goldfields-esperance.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "Main Roads WA · Goldfields - Esperance · CC BY 4.0"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-wa/great-southern.pmtiles"
+manifest = "../../data/au_wa_roads_great-southern.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "Main Roads WA · Great Southern · CC BY 4.0"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-wa/kimberley.pmtiles"
+manifest = "../../data/au_wa_roads_kimberley.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "Main Roads WA · Kimberley · CC BY 4.0"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-wa/metropolitan.pmtiles"
+manifest = "../../data/au_wa_roads_metropolitan.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "Main Roads WA · Metropolitan · CC BY 4.0"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-wa/mid-west-gascoyne.pmtiles"
+manifest = "../../data/au_wa_roads_mid-west-gascoyne.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "Main Roads WA · Mid West-Gascoyne · CC BY 4.0"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-wa/pilbara.pmtiles"
+manifest = "../../data/au_wa_roads_pilbara.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "Main Roads WA · Pilbara · CC BY 4.0"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-wa/south-west.pmtiles"
+manifest = "../../data/au_wa_roads_south-west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "Main Roads WA · South West · CC BY 4.0"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-wa/unassigned.pmtiles"
+manifest = "../../data/au_wa_roads_unassigned.toml"
+min_visible_zoom = 12
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "Main Roads WA · Unassigned · CC BY 4.0"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-wa/wheatbelt.pmtiles"
+manifest = "../../data/au_wa_roads_wheatbelt.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "Main Roads WA · Wheatbelt · CC BY 4.0"

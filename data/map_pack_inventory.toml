@@ -57,6 +57,69 @@ sha256 = "722de9df0cb03365f90a0778b69e5c51a2104c42e91dff8e047541f535ac271e"
 download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-ar/722de9df0cb03365f90a0778b69e5c51a2104c42e91dff8e047541f535ac271e.pmtiles"
 
 [[pack]]
+path = "artifacts/world-roads/au-wa/goldfields-esperance.pmtiles"
+manifest = "data/au_wa_roads_goldfields-esperance.toml"
+manifest_sha256 = "63bc93e48c3ca96405e24ea4da119f754a227954e14d8344f9bf4eae78858b48"
+bytes = 8015432
+sha256 = "66cd62f0020653c166e58490957ff1bfab0d4e9db14e6029e83478ff01b1dda7"
+
+[[pack]]
+path = "artifacts/world-roads/au-wa/great-southern.pmtiles"
+manifest = "data/au_wa_roads_great-southern.toml"
+manifest_sha256 = "914f6c16ab9c21e70eeab1cf3d77681f5304abe33f339ea3d80a7a84eef0d912"
+bytes = 5343574
+sha256 = "7f98c39d38a5c2fb354ae6fc00347213ff37b0d8cd650adc6eb7d5b01471c9b6"
+
+[[pack]]
+path = "artifacts/world-roads/au-wa/kimberley.pmtiles"
+manifest = "data/au_wa_roads_kimberley.toml"
+manifest_sha256 = "c24a7cfa8b182a73f17908bf34312fedced44f1ec4181d51faf540cf8804f261"
+bytes = 3074264
+sha256 = "0565f6b820bcc36568844436e2b5e012bdae5a9eb51e3421c47e1f429ad08d4f"
+
+[[pack]]
+path = "artifacts/world-roads/au-wa/metropolitan.pmtiles"
+manifest = "data/au_wa_roads_metropolitan.toml"
+manifest_sha256 = "bf97da6c0b817bc03fca9cc5cbff592e6c4c1fb4a21319aee075e18d48e61961"
+bytes = 7152740
+sha256 = "ccb67dee0880c8eb6b000f7e3caa233808713039f59251bb6cc6b288f2a31f4c"
+
+[[pack]]
+path = "artifacts/world-roads/au-wa/mid-west-gascoyne.pmtiles"
+manifest = "data/au_wa_roads_mid-west-gascoyne.toml"
+manifest_sha256 = "bd9468bc256eede66519e17699c2f300bb6124efb5ecacd644295bb0650579c6"
+bytes = 9080998
+sha256 = "5dbeb3fa89b43567c21fd6d78d1d6edb81452176714cbece78c17c7840f6412e"
+
+[[pack]]
+path = "artifacts/world-roads/au-wa/pilbara.pmtiles"
+manifest = "data/au_wa_roads_pilbara.toml"
+manifest_sha256 = "febea1a7ab52508f0ded0402cee3ffb3edf24a4914fe9896cfe87129fbc99c58"
+bytes = 4374450
+sha256 = "f219ab5c9d76a797596d64d5b291cc2851cd664f1f3f8cbe7080c1e578836a6e"
+
+[[pack]]
+path = "artifacts/world-roads/au-wa/south-west.pmtiles"
+manifest = "data/au_wa_roads_south-west.toml"
+manifest_sha256 = "5cc6532ed3069786b33f073dcb4949bbe8d12f40ef20278f7ed38d5fcd16d0b6"
+bytes = 6491804
+sha256 = "febf11c47399ae74e1bf71df27f5b9b52d4933a9aebe30fe814d3565dc2fbec0"
+
+[[pack]]
+path = "artifacts/world-roads/au-wa/unassigned.pmtiles"
+manifest = "data/au_wa_roads_unassigned.toml"
+manifest_sha256 = "747ed000b67b358ccf4f3dbd9fa687a0658660d36b32d6bb394bf43623d55b51"
+bytes = 740535
+sha256 = "d65b674b1ee18f334010ada186846c327afe527e46359c5c8d7ff78d8dd6f05b"
+
+[[pack]]
+path = "artifacts/world-roads/au-wa/wheatbelt.pmtiles"
+manifest = "data/au_wa_roads_wheatbelt.toml"
+manifest_sha256 = "e0d092c0e0f4152916dd574758883f5dafa729b5ca6a81467e1c96efa8072904"
+bytes = 13601627
+sha256 = "1109af3d12a2afbd9a6c94a2c1ee83e2077151c09c66ed923469d558d8965eb8"
+
+[[pack]]
 path = "artifacts/world-roads/ca/ab.pmtiles"
 manifest = "data/ca_nrn_ab.toml"
 manifest_sha256 = "513ac310846266a697cbb4727f886353732b7a5c04332c8f22140d69e9937e63"
