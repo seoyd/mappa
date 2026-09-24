@@ -2,7 +2,7 @@
 
 ## 결정과 판정
 
-사용자 결정에 따라 **ODbL 원천을 현재 Mappa canonical GeoDB에 넣지 않는다.** 전 세계 도로의 국가별 공식·허용형 원천을 찾고, 같은 출처·품질 게이트로 지역별로 구축한다. 이번 첫 실증은 미국 Census의 뉴욕 카운티 도로 한 파일이다. **전 세계 상세 도로망은 아직 없다.**
+사용자 결정에 따라 **ODbL 원천을 현재 Mappa canonical GeoDB에 넣지 않는다.** 전 세계 도로의 국가별 공식·허용형 원천을 찾고, 같은 출처·품질 게이트로 지역별로 구축한다. 첫 실증인 미국 Census 뉴욕 카운티 한 파일을 뉴욕시 5개 카운티로 확장했다. **전 세계 상세 도로망은 아직 없다.**
 
 ## 미국 공식 원천 실증
 
@@ -20,13 +20,27 @@
 
 ZIP의 `.prj`는 **EPSG:4269 NAD83**다. 현재 어댑터는 숫자 좌표를 그대로 보존하여 Web Mercator에 투영한다. WGS84 기준의 독립 기준점·datum 차이·연결성·노선 최신성은 검증되지 않았다. [Census 기술 문서](https://www2.census.gov/geo/pdfs/maps-data/data/tiger/tgrshp2025/TGRSHP2025_TechDoc.pdf)는 여섯 자리 소수 좌표가 그만큼의 위치 정확도를 뜻하지 않고 원천별 정확도가 다르다고 명시한다. 따라서 이 화면을 미터급 위치 정확도 통과로 판정하지 않는다.
 
+## 뉴욕시 5개 카운티 확장
+
+[미국 Census의 2025 TIGER/Line All Roads 배포 디렉터리](https://www2.census.gov/geo/tiger/TIGER2025/ROADS/)에서 Bronx(36005), Kings(36047), New York(36061), Queens(36081), Richmond(36085) ZIP을 받았다. 네 새 원본과 기존 맨해튼 파일의 SHA-256·NAD83 `.prj`·Shapefile 헤더 범위·DBF 레코드 수를 Rust `audit_us_road_source`로 확인했다. 헤더 수치 범위의 합집합 `[-74.255694, 40.497866, -73.70036, 40.914931]`을 [5원천 manifest](../data/us_tiger_nyc_roads.toml)에 기록했다. 이는 관측된 원천 헤더 범위이며 WGS84 독립 정확도 검증 결과가 아니다.
+
+| 단계 | 관측 결과 |
+|---|---|
+| 원본 | 5개 ZIP의 DBF 도로·경로 레코드 합계 22,014개; 추가 4개 ZIP 합계 약 2.4 MiB. ZIP SHA-256은 manifest에 각각 고정. |
+| 정규화 | 도로 채택 20,882개, 보행·자전거 등 종류 규칙으로 제외 1,132개; 출처 5개와 피처별 provenance 20,882개. [거절 기록](../artifacts/world-roads/nyc-five-boroughs.rejected.json) 포함. |
+| GeoDB | [5개 카운티 GeoDB](../artifacts/world-roads/nyc-five-boroughs.mgeodb) 9,707,642바이트. |
+| 타일 | [지역 PMTiles](../artifacts/world-roads/nyc-five-boroughs.pmtiles) 1,522개 비어 있지 않은 타일, 2,697,728바이트. 전체 파일 감사에서 해독 실패 0; 확대 단계별 중복 포함 주요 도로선 5,297개, 보조 1,794개, 생활 111,323개. |
+| 화면 | 기본 세계 모드 [Queens](../artifacts/world-roads/nyc-queens-world-z14.png), [Richmond](../artifacts/world-roads/nyc-richmond-world-z14.png), [Manhattan](../artifacts/world-integration/manhattan-world.png) z14.6 Metal 캡처 각각 실패 0. 건물·공원·해안 상세는 비어 있음. |
+
+기본 세계 모드의 지역 목록은 이전 맨해튼 한 카운티 팩을 이 5개 카운티 팩으로 **대체**한다. 도시 경계 안쪽의 도로 완전성, 경계 연결성, 명칭 중복 제거, 별도 기준점 위치 정확도와 iPhone 성능은 아직 통과하지 않았다. 기존 맨해튼 결과는 비교용으로 보관한다.
+
 ## 세계 확장에 필요한 상태
 
 | 원천/지역 | 확보·판정 |
 |---|---|
 | 한국 나주 | 공식 도로 ZIP 실증은 기존 [지역 게이트](MAP_V0_3C_GATE_AUDIT.md)에 기록. 원본 CRS와 기준점 미확인으로 S16 `NO_GO`. |
-| 미국 | Census 2025 뉴욕 카운티 한 파일만 실증. 나머지 미국 카운티는 미수집·미검증. 공식 배포 단위는 카운티별 All Roads 파일. |
-| 영국 | [OS Open Roads](https://www.ordnancesurvey.co.uk/products/os-open-roads)는 무료 OGL 원천 후보. 다운로드·라이선스 표기·좌표계·정밀도·실물 파일은 아직 검증하지 않음. |
+| 미국 | Census 2025 뉴욕시 5개 카운티를 실증. 나머지 미국 카운티는 미수집·미검증. 공식 배포 단위는 카운티별 All Roads 파일. |
+| 영국 | [OS Open Roads](https://www.ordnancesurvey.co.uk/products/os-open-roads)는 무료 [OGL v3](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/) 원천 후보. 공식 [문서](https://docs.os.uk/os-downloads/products/transport-network-portfolio/os-open-roads/os-open-roads-overview/os-open-roads-data)상 벡터 타일은 EPSG:3857. 2026-04 영국 전체 벡터 ZIP의 공식 범위 응답 크기 1,346,941,248바이트를 확인했으나 전체 파일은 미수집·미검증. 지역 패키지·위치 정확도도 미구축. |
 | 그 외 국가 | 공식 원천·배포 허용 조건·파일·좌표계·독립 정확도 조사 및 실증 필요. 빈 곳은 빈 곳으로 표시. |
 
 Microsoft Road Detections와 Overture Transportation은 세계 규모의 후보지만 [제공자 설명](https://github.com/microsoft/RoadDetections), [Overture 권리 안내](https://docs.overturemaps.org/attribution/)상 ODbL이다. 사용자가 선택한 기존 라이선스 규칙 때문에 현재 canonical 입력에서 제외한다. 이 결정으로 세계 상세 도로 구축은 국가별 자료 확보가 완료될 때까지 **진행 중**이다.
@@ -45,4 +59,14 @@ MAPPA_DATASET=canonical-proof \
 MAPPA_CANONICAL_FILE=artifacts/world-roads/manhattan-roads.pmtiles \
 cargo run --offline -p mappa-map-demo -- --capture \
   -73.98 40.77 14.6 artifacts/world-roads/manhattan-roads-z14.png
+
+cargo run --offline -p mappa-map-data --bin audit_us_road_source -- \
+  assets/map/source/public/us_tiger_2025_36*_roads.zip
+cargo run --offline -p mappa-map-data --bin build_canonical_proof -- \
+  data/us_tiger_nyc_roads.toml artifacts/world-roads/nyc-five-boroughs.mgeodb
+cargo run --offline -p mappa-map-data --bin build_canonical_tiles -- \
+  data/us_tiger_nyc_roads.toml artifacts/world-roads/nyc-five-boroughs.mgeodb \
+  artifacts/world-roads/nyc-five-boroughs.pmtiles
+cargo run --offline -p mappa-map-data --bin audit_fixture -- \
+  artifacts/world-roads/nyc-five-boroughs.pmtiles
 ```

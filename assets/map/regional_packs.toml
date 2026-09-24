@@ -8,7 +8,7 @@ min_visible_zoom = 14
 label = "Microsoft 건물 · 모나코 실증"
 
 [[pack]]
-path = "../../artifacts/world-roads/manhattan-roads.pmtiles"
-manifest = "../../data/us_tiger_manhattan_roads.toml"
+path = "../../artifacts/world-roads/nyc-five-boroughs.pmtiles"
+manifest = "../../data/us_tiger_nyc_roads.toml"
 min_visible_zoom = 10
-label = "US Census 도로 · 맨해튼 실증"
+label = "US Census 도로 · 뉴욕시 5개 카운티 실증"

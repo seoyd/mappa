@@ -4,7 +4,7 @@
 
 **세계 개략 지도는 표시된다. 전 세계 상세 지도는 완성되지 않았다.** 기본 화면은 Mappa의 Rust 타일 빌더·PMTiles 리더·Metal 렌더러가 로컬 파일만 읽는다. 해안·국경·도시·일부 주요 도로의 좌표 원본은 [Natural Earth 퍼블릭 도메인 자료](https://www.naturalearthdata.com/about/terms-of-use/)다. Mappa가 전 세계를 직접 측량했거나 독자적 원본 지형을 확보했다는 뜻은 아니다. 지도 서버와 유료 지도 API는 런타임에서 사용하지 않는다.
 
-상세 원천 확대의 첫 실증은 [모나코 건물 구축 현황](WORLD_BUILDINGS_PROGRESS.md)에 기록했다. 승인된 모나코 건물과 맨해튼 도로 파일을 기본 세계 모드의 고배율에 연결했다. 두 작은 실증 구역 밖의 상세 지리는 구축되지 않았다.
+상세 원천 확대의 첫 실증은 [모나코 건물 구축 현황](WORLD_BUILDINGS_PROGRESS.md)에 기록했다. 승인된 모나코 건물과 뉴욕시 5개 카운티 도로 파일을 기본 세계 모드의 고배율에 연결했다. 두 실증 구역 밖의 상세 지리는 구축되지 않았다.
 사용자가 선택한 기존 공유조건 금지 규칙에 따라 도로는 [국가별 공식 원천 실증](WORLD_ROADS_PROGRESS.md)으로 진행한다. 미국 뉴욕 카운티 한 파일을 처리했으며 세계 상세 도로망은 아직 없다.
 
 ## 실제로 보이는 범위
@@ -15,7 +15,7 @@
 | z5–z7 | Web Mercator 세계 범위 | Natural Earth 1:10m 해안·호수·국경, z6부터 선별된 도시·주요 도로·큰 수계, z7에서 더 많은 수계 | 1:10m은 **축척 1:1,000만**이며 10m 위치 정확도가 아님 |
 | z8–z9 | 전 세계 | z7 개략 데이터를 확대 | 새 상세 객체가 추가되지 않음 |
 | z10–z13 | 모나코 | z7 개략 데이터를 확대 | 건물 파일에 실제 타일이 없는 배율; 위치·객체 상세는 증가하지 않음 |
-| z10–z15 | 모나코·맨해튼 실증 구역 | 승인된 로컬 건물·도로 PMTiles; 건물은 z14부터 | 둘 다 부분 자료이며 위치 정확도·완전성 미통과 |
+| z10–z15 | 모나코·뉴욕시 5개 카운티 실증 구역 | 승인된 로컬 건물·도로 PMTiles; 건물은 z14부터 | 둘 다 부분 자료이며 위치 정확도·완전성 미통과 |
 | z10 이상 | 미수집 지역 | 중립색 빈 화면 | 지리 정보를 추정해 채우지 않음 |
 
 Web Mercator 표현 범위는 극점 밖 위도 약 ±85.05°까지다. z5–z7의 도로는 원본에 들어 있는 선별된 선만 그린다. [Natural Earth의 도로 설명](https://www.naturalearthdata.com/downloads/10m-cultural-vectors/roads/)도 기본 도로의 북미 중심 범위와 전 세계 확장 필요성을 명시한다. [수계 원본](https://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-rivers-lake-centerlines/)도 개략화된 중심선이며 모든 하천을 포함하지 않는다. 파리·라고스·부에노스아이레스·시드니 캡처에는 실제 원본에 수록된 도로선이 보였으나, 이 사례로 모든 나라의 도로가 완전하다고 판단하지 않는다. 건물과 정밀 도로는 각각 한 실증 구역에만 있으며, 역·공공기관·주소·길찾기·검증된 도로 연결성은 전 세계 범위에 없다.
@@ -26,7 +26,7 @@ Web Mercator 표현 범위는 극점 밖 위도 약 ±85.05°까지다. z5–z7�
 
 기본 세계 모드가 [지역 목록](../assets/map/regional_packs.toml)의 각 아카이브를 함께 연다. 시작할 때 canonical 출처 manifest의 라이선스 게이트를 통과시키고, PMTiles의 범위·출처 표기를 manifest와 대조한다. 고배율 타일과 겹치는 여러 지역 파일을 읽어 타입별 레이어를 합친다. 중복 지형의 식별·병합은 아직 구현되지 않았으므로 겹치는 지역 자료를 추가하기 전에 별도 검증이 필요하다. 현재 두 파일은 서로 다른 지역이다.
 
-Mac Metal 기본 세계 모드 캡처에서 [모나코 건물](../artifacts/world-integration/monaco-world.png)과 [맨해튼 도로](../artifacts/world-integration/manhattan-world.png)가 실제 z14 타일로 표시됐고, [파리의 미수집 상세 영역](../artifacts/world-integration/unmapped-world.png)은 빈 중립색으로 표시됐다. [모나코 z12](../artifacts/world-integration/monaco-overview-z12.png)는 실제 건물 타일이 시작되기 전이라 기존 z7 개략 자료를 확대하며 화면에 그 한계를 밝힌다. 네 캡처의 타일 실패는 각각 0개다. 최종 모나코의 동기·비동기 캡처 PNG는 SHA-256 `6477b6f1bb2cf1b12b861cdfce308e0de0a0b05e4db2aa7021989c6b73e074e2`로 일치했다. 이는 자료 선택·표시의 검증이며 현장 위치 정확도나 전 세계 커버리지 통과 판정이 아니다.
+Mac Metal 기본 세계 모드 캡처에서 [모나코 건물](../artifacts/world-integration/monaco-world.png), 뉴욕시 5개 카운티 팩의 [Manhattan](../artifacts/world-integration/manhattan-world.png)·[Queens](../artifacts/world-roads/nyc-queens-world-z14.png)·[Richmond](../artifacts/world-roads/nyc-richmond-world-z14.png) 도로가 실제 z14 타일로 표시됐다. [파리의 미수집 상세 영역](../artifacts/world-integration/unmapped-world.png)은 빈 중립색이다. [모나코 z12](../artifacts/world-integration/monaco-overview-z12.png)는 건물 타일이 시작되기 전이라 기존 z7 개략 자료를 확대하며 화면에 그 한계를 밝힌다. 여섯 캡처의 타일 실패는 각각 0개다. 최종 모나코의 동기·비동기 캡처 PNG는 SHA-256 `6477b6f1bb2cf1b12b861cdfce308e0de0a0b05e4db2aa7021989c6b73e074e2`로 일치했다. 이는 자료 선택·표시의 검증이며 현장 위치 정확도나 전 세계 커버리지 통과 판정이 아니다.
 
 현재 목록은 파일 2개를 시작 시 모두 열고 타일 요청마다 목록을 검사한다. 전 세계 수만 개 분할 파일에 적용하려면 공간 인덱스와 지연 열기, 파일 핸들·캐시 한도를 추가해야 한다. iPhone 구동과 메모리 측정도 아직 없다.
 

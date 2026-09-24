@@ -1,3 +1,4 @@
 /target
 .env
 .mappa-map-cache/
+/data/local/
