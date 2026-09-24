@@ -30,6 +30,7 @@ manifest = "data/us_tiger_al_state_roads_east.toml"
 manifest_sha256 = "cac7b3774b521cc54ea6f542e2672dd70c8259d60dcd5d65355b7900f01d89d9"
 bytes = 44828531
 sha256 = "82438c013997f981593b588ccfb3550d2384eb187d439aae6af8b51d5f9bb842"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-al/82438c013997f981593b588ccfb3550d2384eb187d439aae6af8b51d5f9bb842.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/al-state/roads-west.pmtiles"
@@ -37,6 +38,7 @@ manifest = "data/us_tiger_al_state_roads_west.toml"
 manifest_sha256 = "885893dec415c5f6bd8ce231335df080aabf1e3a4f370d3bb80c4f09b4de2bcd"
 bytes = 38498402
 sha256 = "18c183b07fd8f25ad5fb1f9e4b4afcf9660ba468ccda3fc0444b7a92f2aa9880"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-al/18c183b07fd8f25ad5fb1f9e4b4afcf9660ba468ccda3fc0444b7a92f2aa9880.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/ca/ab.pmtiles"
@@ -892,6 +894,7 @@ manifest = "data/us_tiger_al_state_areawater.toml"
 manifest_sha256 = "5c85c81f37cb7863bf3307aadc48eae354a681a205007889b4c554fd6205073c"
 bytes = 33194095
 sha256 = "d11f9f6eb6e01665f41dca134cf95b209b0d3c16a5759605cef06de059b70283"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-al/d11f9f6eb6e01665f41dca134cf95b209b0d3c16a5759605cef06de059b70283.pmtiles"
 
 [[pack]]
 path = "artifacts/world-water/dc/water.pmtiles"
