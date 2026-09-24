@@ -2,7 +2,7 @@
 
 ## 현재 판정
 
-**PE·NS·NB·NT·NU·YT 공식 도로선을 오프라인 지도에 연결했다. 캐나다의 나머지 7개 주와 전 세계 상세지도는 미완성이다.** [캐나다 정부 NRN 목록](https://open.canada.ca/data/en/dataset/3d282116-e556-400c-9306-ca1a3cada77f?res_page=3)은 13개 주·준주별 Road Segment ZIP을 제공하고 [Open Government Licence – Canada](https://open.canada.ca/en/open-government-licence-canada)를 적용한다. 라이선스는 상업적 재사용·수정·재배포를 허용하고 출처 표기를 요구하며 공유조건은 없다. Mappa 앱은 원천 다운로드 API나 외부 지도 서버를 런타임에 호출하지 않는다.
+**PE·NS·NB·NT·NU·YT·MB·NL 공식 도로선을 오프라인 지도에 연결했다. 캐나다의 나머지 5개 주와 전 세계 상세지도는 미완성이다.** [캐나다 정부 NRN 목록](https://open.canada.ca/data/en/dataset/3d282116-e556-400c-9306-ca1a3cada77f?res_page=3)은 13개 주·준주별 Road Segment ZIP을 제공하고 [Open Government Licence – Canada](https://open.canada.ca/en/open-government-licence-canada)를 적용한다. 라이선스는 상업적 재사용·수정·재배포를 허용하고 출처 표기를 요구하며 공유조건은 없다. Mappa 앱은 원천 다운로드 API나 외부 지도 서버를 런타임에 호출하지 않는다.
 
 | 단계 | 확인한 사실 |
 |---|---|
@@ -38,6 +38,19 @@ PE·NS 두 주 합계 원천 도로선은 **139,551개**, 비어 있지 않은 �
 
 기본 세계 모드의 Metal 화면 [Fredericton](../artifacts/world-roads/ca/fredericton-world-z14.png)·[Yellowknife](../artifacts/world-roads/ca/yellowknife-world-z14.png)·[Iqaluit](../artifacts/world-roads/ca/iqaluit-world-z14.png)·[Whitehorse](../artifacts/world-roads/ca/whitehorse-world-z14.png) z14 캡처는 각각 타일 실패 0과 캐나다 출처 표기를 확인했다. 화면에는 이 도로 원천에 없는 상세 수면·건물·기관을 채워 넣지 않아 해당 부분이 빈 중립색으로 보인다.
 
+## 추가 구축: MB·NL
+
+[Manitoba 원천 감사](../artifacts/world-roads/ca/mb-source-audit.log)와 [Newfoundland and Labrador 원천 감사](../artifacts/world-roads/ca/nl-source-audit.log)는 두 ZIP의 전체 항목 CRC 오류 0, 영문 ROADSEG Polyline, 각 지역 안에서 고유한 `ROADSEGID`를 확인했다. 이 오래된 내부 버전은 ZIP의 최상위 폴더를 생략하므로 Rust 어댑터가 공식 버전 경로의 두 형태를 모두 읽도록 확장했다. 두 `.prj`는 앞선 지역과 달리 **NAD83(CSRS98)** 지리 좌표라고 적혀 있다. 숫자 경위도를 유지했으며 별도 WGS84 기준점 대조는 없다.
+
+| 주 | 내부 버전 | 원본 ZIP 바이트·SHA-256 | 채택 / 거절 | PMTiles 바이트·SHA-256 | 실제 타일 전수 해독 |
+|---|---:|---|---:|---|---:|
+| MB | 6.0 | 56,901,383 · `0a258a1139be844dfaf6cf7e4c68dcdf28c0b0e72f2586e77dcbdac333e13172` | 110,604 / 0 | 30,924,133 · `26fa49b584282bd72b139d2e260999fa548db210ad577eb5720a42389766ffa8` | 152,072 / 오류 0 |
+| NL | 7.0 | 27,686,548 · `d931b174aff1fbd08b762a726d78c76abdeb5e3c6a5911316526bfa147dd02e0` | 44,484 / 0 | 11,616,664 · `28bcb58a1feb523d82232d3f237fca9160e58352cd8688b8ca1669870e1a3ebd` | 42,364 / 오류 0 |
+
+8개 지역 합계는 원본 도로선 **385,414개**, 실제 타일 **387,346개**, PMTiles **121,823,831바이트**다. MB에는 원본 분류 `Winter` 76개와 `Rapid Transit` 7개가 있으며 현재 렌더러는 둘을 일반 생활 도로선으로 그린다. 차량 통행 가능성과 계절성을 검증하지 않았다.
+
+기본 세계 모드의 [Winnipeg z14](../artifacts/world-roads/ca/winnipeg-world-z14.png)와 [St. John's z14](../artifacts/world-roads/ca/st-johns-world-z14.png) Metal 화면은 각각 타일 실패 0이며 원천 출처 표기를 확인했다.
+
 ## 재현
 
 원천은 빌드 때만 다운로드한다. 앱 런타임은 커밋된 로컬 팩을 읽는다.
@@ -71,4 +84,4 @@ cargo run --release --offline -p mappa-map-data --bin audit_fixture -- \
   artifacts/world-roads/ca/ns.pmtiles
 ```
 
-재다운로드 시 ZIP SHA가 달라지면 공식 원천 갱신 여부와 스키마를 다시 감사해야 한다. manifest의 날짜는 실제 다운로드 날짜로 기록한다. 다음 단계는 나머지 7개 주에 같은 스키마·권리·메모리 한계를 확인하고 지역별로 빌드하는 것이다. 북아일랜드 OSNI 도로선도 별도 공식 OGL 원천이 있지만 [현재 게시 ZIP 다운로드](https://admin.opendatani.gov.uk/dataset/osni-open-data-50k-transport-transport-lines)는 이 환경에서 HTTP 403을 반환해 아직 확보하지 못했다.
+재다운로드 시 ZIP SHA가 달라지면 공식 원천 갱신 여부와 스키마를 다시 감사해야 한다. manifest의 날짜는 실제 다운로드 날짜로 기록한다. 다음 단계는 나머지 5개 주에 같은 스키마·권리·메모리 한계를 확인하고 지역별로 빌드하는 것이다. 북아일랜드 OSNI 도로선도 별도 공식 OGL 원천이 있지만 [현재 게시 ZIP 다운로드](https://admin.opendatani.gov.uk/dataset/osni-open-data-50k-transport-transport-lines)는 이 환경에서 HTTP 403을 반환해 아직 확보하지 못했다.

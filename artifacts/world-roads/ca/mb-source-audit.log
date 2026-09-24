@@ -1,0 +1,7 @@
+source_sha256=0a258a1139be844dfaf6cf7e4c68dcdf28c0b0e72f2586e77dcbdac333e13172 province=MB records=110604
+zip_members=75 crc_failures=0
+roadseg_stem=NRN_MB_6_0_SHAPE_en/NRN_MB_6_0_ROADSEG
+prj=GEOGCS["GCS_North_American_1983_CSRS98",DATUM["D_North_American_1983_CSRS98",SPHEROID["GRS_1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["Degree",0.0174532925199432955]]
+shape_types={"Polyline": 110604}
+unique_nids=98494 unique_roadseg_ids=110604
+road_classes={"Some(Character(Some(\"Arterial\")))": 2, "Some(Character(Some(\"Collector\")))": 44939, "Some(Character(Some(\"Expressway / Highway\")))": 20857, "Some(Character(Some(\"Freeway\")))": 59, "Some(Character(Some(\"Local / Strata\")))": 244, "Some(Character(Some(\"Local / Street\")))": 42902, "Some(Character(Some(\"Ramp\")))": 1449, "Some(Character(Some(\"Rapid Transit\")))": 7, "Some(Character(Some(\"Resource / Recreation\")))": 12, "Some(Character(Some(\"Service Lane\")))": 57, "Some(Character(Some(\"Winter\")))": 76}

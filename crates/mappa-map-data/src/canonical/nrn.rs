@@ -22,11 +22,12 @@ pub fn adapt_ca_nrn_roads(
     let mut archive = zip::ZipArchive::new(File::open(&source.file)?)
         .map_err(|error| CanonicalError::Feature(error.to_string()))?;
     let version = source.source_version.replace('.', "_");
-    let expected_suffix =
-        format!("/NRN_{province}_{version}_SHAPE_en/NRN_{province}_{version}_ROADSEG.shp");
+    let expected_member =
+        format!("NRN_{province}_{version}_SHAPE_en/NRN_{province}_{version}_ROADSEG.shp");
+    let expected_suffix = format!("/{expected_member}");
     let members: Vec<_> = archive
         .file_names()
-        .filter(|name| name.ends_with(&expected_suffix))
+        .filter(|name| *name == expected_member || name.ends_with(&expected_suffix))
         .map(str::to_owned)
         .collect();
     let [shp_name] = members.as_slice() else {

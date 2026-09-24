@@ -1,11 +1,27 @@
 # Official Canadian National Road Network province packs, built from local source ZIPs.
 [[pack]]
+path = "../../artifacts/world-roads/ca/mb.pmtiles"
+manifest = "../../data/ca_nrn_mb.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "CA MB · Contains information licensed under the Open Government Licence – Canada."
+
+[[pack]]
 path = "../../artifacts/world-roads/ca/nb.pmtiles"
 manifest = "../../data/ca_nrn_nb.toml"
 min_visible_zoom = 10
 archive_min_zoom = 10
 archive_max_zoom = 15
 label = "CA NB · Contains information licensed under the Open Government Licence – Canada."
+
+[[pack]]
+path = "../../artifacts/world-roads/ca/nl.pmtiles"
+manifest = "../../data/ca_nrn_nl.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "CA NL · Contains information licensed under the Open Government Licence – Canada."
 
 [[pack]]
 path = "../../artifacts/world-roads/ca/ns.pmtiles"

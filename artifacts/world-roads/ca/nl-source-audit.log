@@ -1,0 +1,7 @@
+source_sha256=d931b174aff1fbd08b762a726d78c76abdeb5e3c6a5911316526bfa147dd02e0 province=NL records=44484
+zip_members=63 crc_failures=0
+roadseg_stem=NRN_NL_7_0_SHAPE_en/NRN_NL_7_0_ROADSEG
+prj=GEOGCS["GCS_North_American_1983_CSRS98",DATUM["D_North_American_1983_CSRS98",SPHEROID["GRS_1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["Degree",0.0174532925199432955]]
+shape_types={"Polyline": 44484}
+unique_nids=39592 unique_roadseg_ids=44484
+road_classes={"Some(Character(Some(\"Alleyway / Lane\")))": 4, "Some(Character(Some(\"Arterial\")))": 19, "Some(Character(Some(\"Collector\")))": 12984, "Some(Character(Some(\"Expressway / Highway\")))": 7247, "Some(Character(Some(\"Freeway\")))": 465, "Some(Character(Some(\"Local / Strata\")))": 108, "Some(Character(Some(\"Local / Street\")))": 22774, "Some(Character(Some(\"Local / Unknown\")))": 87, "Some(Character(Some(\"Ramp\")))": 724, "Some(Character(Some(\"Resource / Recreation\")))": 63, "Some(Character(Some(\"Service Lane\")))": 9}
