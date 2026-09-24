@@ -1,4 +1,6 @@
-# Mappa v0.3A map architecture
+# Mappa v0.3A map architecture (historical)
+
+현재 기본 세계지도와 나주 canonical 실증의 레이어·타일 선택·렌더 순서는 [최신 지도 레이어 구조](MAP_LAYER_ARCHITECTURE.md)에 정리했다. 아래 내용은 초기 외부 데이터 비교 시안의 설계 기록이며 현재 기본 세계지도의 레이어 범위를 설명하지 않는다.
 
 This document describes the earlier external-data comparison modes. The desktop demo now defaults to the [offline world map](WORLD_MAP.md), built by Mappa's Rust pipeline from public-domain Natural Earth source data. Select `MAPPA_DATASET=first-party` for only [Mappa field records](FIRST_PARTY_MAP.md), or `MAPPA_DATASET=legacy-osm` / `MAPPA_DATASET=public-naju` for the older comparison modes described below.
 
@@ -28,4 +30,4 @@ Typed styles in `mappa-map-render` share the same geometry: Arcade, Lagoon, Cand
 
 An optional `text-rnd` feature in the desktop demo uses glyphon/cosmic-text and system font fallback to render six writing-system samples on the same Metal target. This is a feasibility probe, not map labels or a collision engine.
 
-Current scope: low-zoom world silhouettes and borders, bounded East Asia z5–z7 detail, Korea z8–z9 road network, and a bounded Seoul z10–z12 street/POI slice. There are no buildings, complete Korea street coverage, rotation, iOS map integration, or physical-device map results. The existing Apple Personal Team device registration gate remains blocked.
+Scope at the time of v0.3A: low-zoom world silhouettes and borders, bounded East Asia z5–z7 detail, Korea z8–z9 road network, and a bounded Seoul z10–z12 street/POI slice. There were no buildings, complete Korea street coverage, rotation, iOS map integration, or physical-device map results. The existing Apple Personal Team device registration gate remained blocked.

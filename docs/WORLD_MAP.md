@@ -27,6 +27,7 @@ Web Mercator 표현 범위는 극점 밖 위도 약 ±85.05°까지다. z5–z7�
 | 화면 | 동일 파리 z6.4에서 기존 50m [이전 화면](../artifacts/world-10m/europe-50m-before.png)과 [10m 화면](../artifacts/world-10m/europe-10m.png) 캡처, 두 화면 모두 타일 오류 0. 10m은 해안선·주요 도로·도시가 더 보임 |
 | 대륙별 표시 | [서아프리카](../artifacts/world-10m/africa-10m.png), [남미](../artifacts/world-10m/south-america-10m.png), [호주](../artifacts/world-10m/australia-10m.png) Mac Metal 캡처에서 타일 오류 0 |
 | 날짜변경선 | [피지 z7.4](../artifacts/world-10m/fiji-dateline-10m.png) 캡처가 실제 z7 세계 타일을 선택, 오류 0. 경도 래핑 때문에 z4로 후퇴하던 선택 조건을 수정 |
+| 레이어 존재 현황 | [z7 타일의 z3 구역별 CSV](../artifacts/world-10m/tile-presence-z7-by-z3.csv): 64구역 중 육지 타일 61, 도로선 타일 25, 육지는 있지만 도로선 타일은 없는 구역 36. 이는 자료 **존재 여부**이며 국가별 도로 완성률이 아님 |
 
 이 감사는 파일 해독과 표시 확인이다. 실제 현장 정확도, 도로 완전성, 국가별 건물 커버리지의 독립 검증은 아니다. 원본 도로가 없는 지역을 새 선으로 채우지 않는다. 기존 50m 파일은 비교·회귀용으로 보관하고 기본 상세 선택만 10m으로 바꿨다.
 

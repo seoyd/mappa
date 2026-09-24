@@ -16,7 +16,7 @@ MAPPA_DATASET=canonical-proof cargo run -p mappa-map-demo -- --street-demo 126.7
 
 ## 세계지도 (기본 모드)
 
-기본 지도는 Mappa의 Rust 타일 생성기·렌더러가 로컬 파일을 직접 읽어 그린다. 세계 z0–z4는 Natural Earth 1:110m, 전 세계 z5–z7은 새 1:10m 개략 원본, 동아시아 일부는 기존 1:10m 지역 아카이브를 쓴다. 지형·국경·도시·일부 주요 도로의 원본은 [퍼블릭 도메인 Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/)이고, 외부 지도 서버/API는 호출하지 않는다. 전 세계 건물·역·정밀 도로망은 없다. 상세 단계와 실제 검증 결과는 [세계지도 보고서](docs/WORLD_MAP.md)에 있다.
+기본 지도는 Mappa의 Rust 타일 생성기·렌더러가 로컬 파일을 직접 읽어 그린다. 세계 z0–z4는 Natural Earth 1:110m, 전 세계 z5–z7은 새 1:10m 개략 원본, 동아시아 일부는 기존 1:10m 지역 아카이브를 쓴다. 지형·국경·도시·일부 주요 도로의 원본은 [퍼블릭 도메인 Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/)이고, 외부 지도 서버/API는 호출하지 않는다. 전 세계 건물·역·정밀 도로망은 없다. [지도 레이어·선택 구조](docs/MAP_LAYER_ARCHITECTURE.md)와 [세계지도 검증 결과](docs/WORLD_MAP.md)에 현재 상태를 구분해 기록했다.
 
 ```bash
 cargo run -p mappa-map-demo
