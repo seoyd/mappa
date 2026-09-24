@@ -1,12 +1,14 @@
 //! Runtime tiles built only from MappaGeoDB, never from a raw source or a base map.
 
-use super::{DynError, add_lines, add_polygons};
+use super::{DynError, add_lines_with_buffer, add_polygons};
 use crate::canonical::{BBox, FeatureKind, GeoDb, Geometry as CanonicalGeometry};
 use geo::{BoundingRect, Coord, Geometry, LineString, Polygon, Rect};
 use mappa_map_core::{TileKey, project};
 use mvt::Tile;
 use pmtiles::{PmTilesWriter, TileCoord, TileType};
 use std::{collections::BTreeMap, fs::File, path::Path};
+
+const ROAD_TILE_BUFFER_UNITS: f64 = 32.0;
 
 struct ProjectedFeature {
     kind: FeatureKind,
@@ -129,6 +131,21 @@ pub fn build_canonical_tiles(
             let Some(bounds) = feature.geometry.bounding_rect() else {
                 continue;
             };
+            let buffer_world = ROAD_TILE_BUFFER_UNITS / (4096.0 * (1u32 << zoom) as f64);
+            let bounds = if feature.kind == FeatureKind::RoadSurface {
+                bounds
+            } else {
+                Rect::new(
+                    Coord {
+                        x: bounds.min().x - buffer_world,
+                        y: bounds.min().y - buffer_world,
+                    },
+                    Coord {
+                        x: bounds.max().x + buffer_world,
+                        y: bounds.max().y + buffer_world,
+                    },
+                )
+            };
             let (x0, x1, y0, y1) = tile_span(bounds, zoom);
             for y in y0.max(region_y0)..=y1.min(region_y1) {
                 for x in x0.max(region_x0)..=x1.min(region_x1) {
@@ -165,7 +182,7 @@ pub fn build_canonical_tiles(
                 (FeatureKind::RoadSecondary, "road_collector"),
                 (FeatureKind::RoadResidential, "road_local"),
             ] {
-                count += add_lines(
+                count += add_lines_with_buffer(
                     &mut tile,
                     layer,
                     candidates
@@ -174,6 +191,7 @@ pub fn build_canonical_tiles(
                         .map(|&index| &projected[index].geometry),
                     tile_bounds,
                     key,
+                    ROAD_TILE_BUFFER_UNITS,
                 )?;
             }
             if count > 0 {

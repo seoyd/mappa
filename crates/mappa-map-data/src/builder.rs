@@ -229,9 +229,31 @@ fn add_lines<'a>(
     rect: Rect<f64>,
     key: TileKey,
 ) -> Result<usize, DynError> {
+    add_lines_with_buffer(tile, name, geoms, rect, key, 0.0)
+}
+
+fn add_lines_with_buffer<'a>(
+    tile: &mut Tile,
+    name: &str,
+    geoms: impl IntoIterator<Item = &'a Geometry<f64>>,
+    rect: Rect<f64>,
+    key: TileKey,
+    buffer_units: f64,
+) -> Result<usize, DynError> {
     let mut layer = tile.create_layer(name);
     let mut count = 0;
     let n = (1u32 << key.z) as f64;
+    let buffer_world = buffer_units / (4096.0 * n);
+    let rect = Rect::new(
+        Coord {
+            x: rect.min().x - buffer_world,
+            y: rect.min().y - buffer_world,
+        },
+        Coord {
+            x: rect.max().x + buffer_world,
+            y: rect.max().y + buffer_world,
+        },
+    );
     for geom in geoms {
         for line in lines(geom) {
             if !line.bounding_rect().is_some_and(|r| overlaps(r, rect)) {

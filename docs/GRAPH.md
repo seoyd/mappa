@@ -19,7 +19,7 @@
 | S10 Provenance | feature → lineage | S8 | runtime 타일에서 제외 | 8,304건 추적·decode | PARTIAL: revision 체인 없음 |
 | S11 Tiles | GeoDB → PMTiles | S8,S9 | raw/OSM/NE 미입력 | 65 tiles, 모든 줌 decode | PASS_ROADS |
 | S12 Renderer | PMTiles → Mac 화면 | S11 | 로컬 한 파일만 열기 | z14·z15 Metal capture | PASS_ROADS |
-| S13 Fidelity | 화면/원본 → 오차 | S12 | 독립 기준점으로 판정 | [품질 보고](MAP_FIDELITY_V0_3C.md) | PARTIAL / CRS_UNVERIFIED |
+| S13 Fidelity | 화면/원본 → 오차 | S12 | 독립 기준점으로 판정 | [품질 보고](MAP_FIDELITY_V0_3C.md); 도로선 타일 경계 z10–z15 미일치 0 | PARTIAL / CRS_UNVERIFIED |
 | S14 Buildings | 건물 원천 → 경계·완성도 | S13 | 실제 geometry만 허용 | 승인 파일 미확보 | NO_GO_SOURCE_COVERAGE |
 | S15 Size/speed | 산출물 → 수치 | S11,S12 | Mac/모바일 구분 | [측정](BENCHMARK_MAP_V0_3C.md) | PARTIAL / ROADS_ONLY |
 | S16 Regional gate | S0–S15 → 확장 판정 | 전부 | 모든 필수 레이어·정확도 통과 | 독립 A/B 미완료 | NO_GO_SOURCE_COVERAGE |

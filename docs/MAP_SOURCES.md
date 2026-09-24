@@ -6,6 +6,8 @@
 |---|---|---|---|
 | [나주시 도로(차도)](https://www.data.go.kr/data/15123619/fileData.do) | 나주, 2023-01-01 SHP → WGS84 GeoJSON | 포털 표기 무료·이용허락범위 제한 없음. 원본 `.prj`가 없어 EPSG:5186 가정 변환, 기관 확인 대기 | `APPROVED`, 도로 중심선·도로면 2개 레이어 입력 |
 | [국토교통부 GIS건물통합정보](https://www.data.go.kr/data/15083092/fileData.do) | 전국 건물 SHP, 업데이트되는 원천 | [공공누리 제1유형](https://www.kogl.or.kr/info/publicGuide.do) 출처표시. [브이월드 다운로드](https://www.vworld.kr/dtmk/dtmk_ntads_s002.do?svcCde=NA&dsId=18)에서 2026-09-09 전남광주통합특별시 전체 SHP 258MB 및 배포 좌표계 EPSG:5186을 확인. 다운로드 클릭 시 “로그인 후 이용해주세요” | `APPROVED_WITH_ATTRIBUTION` 후보이나 파일 미확보, 미입력 |
+| [국토교통부 건축물연령정보](https://www.data.go.kr/data/15048122/fileData.do) | 전국 5,720,799행 SHP, 2024-02-14 자료 | 포털 표기 무료·이용허락범위 제한 없음. 실제 파일은 [브이월드](https://www.vworld.kr/dtmk/dtmk_ntads_s002.do?svcCde=NA&dsId=1) 제공이며 다운로드 가능 여부·건물 형상·나주 범위는 아직 확인하지 못함 | 접근·원본 미확인, 미입력 |
+| [국가데이터처 SGIS 행정구역 통계 및 경계](https://www.data.go.kr/data/15129688/fileData.do) | 전국 2025년 기준 행정경계 SHP와 통계 CSV | 포털 표기 무료·이용허락범위 제한 없음, `.prj` 포함 안내. 파일 자체와 나주 범위·형상은 아직 확인하지 못함 | `APPROVED` 후보, 원본 미확보·미입력 |
 | [Microsoft Global ML Building Footprints](https://github.com/microsoft/GlobalMLBuildingFootprints) | 글로벌 타일별 건물 | [CDLA Permissive 2.0](https://cdla.dev/permissive-2-0/). 확인한 2026-08-13 공식 인덱스에 나주/안산을 덮는 L9 타일 항목 없음 | 지역 coverage 부족, 미입력 |
 | [Overture Buildings](https://docs.overturemaps.org/guides/buildings/) | 글로벌 GeoParquet | 건물 테마 전체가 OSM 포함 ODbL로 배포됨 | OSM 없는 proof에서 제외 |
 | [Zenodo 한국 건물 후보](https://zenodo.org/records/20653796) | 지역별 건물 | CC-BY 표시는 있으나 상류 도로명주소 DB 재배포 권리 검토 필요 | `NEEDS_REVIEW`, 미입력 |
