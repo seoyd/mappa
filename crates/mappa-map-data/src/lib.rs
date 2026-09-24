@@ -42,6 +42,7 @@ pub struct DecodedTile {
     pub water: Vec<Polygon<f32>>,
     pub road_surface: Vec<Polygon<f32>>,
     pub boundary: Vec<LineString<f32>>,
+    pub waterway: Vec<LineString<f32>>,
     pub road: Vec<LineString<f32>>,
     pub road_major: Vec<LineString<f32>>,
     pub road_collector: Vec<LineString<f32>>,
@@ -132,6 +133,11 @@ impl DecodedTile {
             .iter()
             .map(|l| l.coords_count())
             .sum::<usize>();
+        let waterway = self
+            .waterway
+            .iter()
+            .map(|l| l.coords_count())
+            .sum::<usize>();
         let road = self.road.iter().map(|l| l.coords_count()).sum::<usize>();
         let road_major = self
             .road_major
@@ -153,6 +159,7 @@ impl DecodedTile {
             + water
             + road_surface
             + boundary
+            + waterway
             + road
             + road_major
             + road_collector
@@ -164,6 +171,7 @@ impl DecodedTile {
                 + self.road_surface.capacity())
                 * std::mem::size_of::<Polygon<f32>>()
             + (self.boundary.capacity()
+                + self.waterway.capacity()
                 + self.road.capacity()
                 + self.road_major.capacity()
                 + self.road_collector.capacity()
@@ -296,6 +304,7 @@ fn decode_inner(bytes: Vec<u8>) -> Result<DecodedTile, MapDataError> {
                 | "water"
                 | "road_surface"
                 | "boundary"
+                | "waterway"
                 | "road"
                 | "road_major"
                 | "road_collector"
@@ -320,6 +329,8 @@ fn decode_inner(bytes: Vec<u8>) -> Result<DecodedTile, MapDataError> {
                 ("road_surface", Geometry::MultiPolygon(mp)) => tile.road_surface.extend(mp.0),
                 ("boundary", Geometry::LineString(l)) => tile.boundary.push(l),
                 ("boundary", Geometry::MultiLineString(ml)) => tile.boundary.extend(ml.0),
+                ("waterway", Geometry::LineString(l)) => tile.waterway.push(l),
+                ("waterway", Geometry::MultiLineString(ml)) => tile.waterway.extend(ml.0),
                 ("road", Geometry::LineString(l)) => tile.road.push(l),
                 ("road", Geometry::MultiLineString(ml)) => tile.road.extend(ml.0),
                 ("road_major", Geometry::LineString(l)) => tile.road_major.push(l),
@@ -413,6 +424,18 @@ mod tests {
         assert!(!tile.land.is_empty());
         assert!(!tile.water.is_empty());
         assert!(!tile.boundary.is_empty());
+    }
+    #[tokio::test]
+    async fn bundled_world_detail_contains_source_river_geometry() {
+        let path = concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../assets/map/world_10m.pmtiles"
+        );
+        let source = LocalPmTiles::open(path).await.unwrap();
+        let center = mappa_map_core::project(-60.0, -3.0).unwrap();
+        let key = TileKey::new(6, (center.x * 64.0) as u32, (center.y * 64.0) as u32).unwrap();
+        let tile = decode_mvt(source.tile_bytes(key).await.unwrap().unwrap()).unwrap();
+        assert!(!tile.waterway.is_empty());
     }
     #[tokio::test]
     async fn bundled_detail_has_roads_and_places() {

@@ -19,6 +19,8 @@ struct Manifest {
     max_zoom: u8,
     max_road_rank: u8,
     max_place_rank: u8,
+    river_mid_max_rank: u8,
+    river_detail_max_rank: u8,
     source: Vec<Source>,
 }
 
@@ -55,6 +57,7 @@ fn verify(manifest: &Manifest, source_dir: &Path) -> Result<(), DynError> {
         || manifest.min_zoom != 5
         || manifest.max_zoom < manifest.min_zoom
         || manifest.max_zoom > 8
+        || manifest.river_mid_max_rank > manifest.river_detail_max_rank
     {
         return Err("invalid world build settings".into());
     }
@@ -64,6 +67,7 @@ fn verify(manifest: &Manifest, source_dir: &Path) -> Result<(), DynError> {
         "ne_10m_admin_0_boundary_lines_land.geojson",
         "ne_10m_populated_places.geojson",
         "ne_10m_roads.geojson",
+        "ne_10m_rivers_lake_centerlines.geojson",
     ]);
     let observed: BTreeSet<_> = manifest
         .source
@@ -105,15 +109,14 @@ fn main() -> Result<(), DynError> {
     let output = PathBuf::from(&args[2]);
     let manifest: Manifest = toml::from_str(&std::fs::read_to_string(manifest_path)?)?;
     verify(&manifest, &source_dir)?;
-    let n = 1u32 << manifest.min_zoom;
-    let (tiles, features) = mappa_map_data::builder::build_detail_fixture(
+    let (tiles, features) = mappa_map_data::builder::build_world_detail_with_rivers(
         &source_dir,
         &output,
         manifest.min_zoom,
         manifest.max_zoom,
-        [0, 0, n, n],
         manifest.max_road_rank,
         manifest.max_place_rank,
+        [manifest.river_mid_max_rank, manifest.river_detail_max_rank],
     )?;
     println!(
         "verified {} sources; {tiles} tiles, {features} tile features, {} bytes",

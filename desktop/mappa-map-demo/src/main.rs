@@ -313,12 +313,11 @@ impl TileManager {
         if world_mode() {
             let source = Arc::new(LocalPmTiles::open(map_file()).await?);
             let detail = Arc::new(LocalPmTiles::open(world_detail_file()).await?);
-            let asia = Arc::new(LocalPmTiles::open(detail_map_file()).await?);
             return Ok(Self {
                 source,
                 detail: detail.clone(),
                 mid: detail.clone(),
-                street: asia,
+                street: detail,
                 countries: load_country_labels(&country_label_file())?,
                 cache: HashMap::new(),
                 missing: HashSet::new(),
@@ -483,7 +482,7 @@ impl TileManager {
                     if camera.zoom > f64::from(self.mid.max_zoom) {
                         "개략지도 확대 표시 · 상세 도로/건물 없음".to_owned()
                     } else {
-                        "지형: Natural Earth · 세계 도로/건물 미완성".to_owned()
+                        "지형·수계: Natural Earth · 도로/건물 미완성".to_owned()
                     }
                 } else if public_roads_mode() {
                     "도로: 나주시 · 지형: Natural Earth".to_owned()
@@ -1863,9 +1862,7 @@ mod tests {
             assert_eq!(manager.max_zoom_for(&europe), 7);
             assert_eq!(manager.max_zoom_for(&overview), 4);
             assert_eq!(manager.max_zoom_for(&dateline), 7);
-            for (lon, lat, expected) in
-                [(127.5, 37.5, &manager.street), (2.35, 48.86, &manager.mid)]
-            {
+            for (lon, lat) in [(127.5, 37.5), (2.35, 48.86)] {
                 let point = project(lon, lat).unwrap();
                 let key =
                     TileKey::new(6, (point.x * 64.0) as u32, (point.y * 64.0) as u32).unwrap();
@@ -1878,7 +1875,7 @@ mod tests {
                         &manager.street,
                     ],
                 );
-                assert!(Arc::ptr_eq(selected, expected));
+                assert!(Arc::ptr_eq(selected, &manager.detail));
             }
             return;
         }

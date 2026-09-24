@@ -4,6 +4,8 @@ min_zoom = 5
 max_zoom = 7
 max_road_rank = 5
 max_place_rank = 6
+river_mid_max_rank = 5
+river_detail_max_rank = 7
 
 # All input coordinates are Natural Earth WGS84 GeoJSON at the pinned commit.
 # These are global overview layers, not street-level surveyed geography.
@@ -61,3 +63,14 @@ commercial_use = true
 modification = true
 redistribution = true
 coverage = "North America focused; Natural Earth does not claim a global road network"
+
+[[source]]
+file = "ne_10m_rivers_lake_centerlines.geojson"
+sha256 = "bb854a900ecbd3b408df46d5e16e3e0f974ba55993f9d8b5c26e855273c0905a"
+url = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_10m_rivers_lake_centerlines.geojson"
+license = "Natural Earth public domain"
+license_url = "https://www.naturalearthdata.com/about/terms-of-use/"
+commercial_use = true
+modification = true
+redistribution = true
+coverage = "selected generalized global river and lake centerlines, not all waterways"

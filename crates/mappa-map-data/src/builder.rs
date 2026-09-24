@@ -531,9 +531,9 @@ fn read_regional_lines(
             if let Some(limit) = max_rank {
                 let rank = feature
                     .property("scalerank")
-                    .and_then(|value| value.as_u64())
-                    .unwrap_or(u64::MAX);
-                if rank > limit as u64 {
+                    .and_then(|value| value.as_f64())
+                    .unwrap_or(f64::INFINITY);
+                if rank > f64::from(limit) {
                     continue;
                 }
             }
@@ -660,6 +660,52 @@ pub fn build_detail_fixture(
     max_road_rank: u8,
     max_place_rank: u8,
 ) -> Result<(usize, usize), DynError> {
+    build_detail_fixture_inner(
+        source_dir,
+        output,
+        min_zoom,
+        max_zoom,
+        tile_bounds,
+        [max_road_rank, max_place_rank],
+        None,
+    )
+}
+
+/// Build the same overview with ranked Natural Earth river centerlines.
+pub fn build_world_detail_with_rivers(
+    source_dir: &Path,
+    output: &Path,
+    min_zoom: u8,
+    max_zoom: u8,
+    max_road_rank: u8,
+    max_place_rank: u8,
+    river_ranks: [u8; 2],
+) -> Result<(usize, usize), DynError> {
+    if !(5..=8).contains(&min_zoom) {
+        return Err("world detail min zoom must be 5..=8".into());
+    }
+    let n = 1u32 << min_zoom;
+    build_detail_fixture_inner(
+        source_dir,
+        output,
+        min_zoom,
+        max_zoom,
+        [0, 0, n, n],
+        [max_road_rank, max_place_rank],
+        Some(river_ranks),
+    )
+}
+
+fn build_detail_fixture_inner(
+    source_dir: &Path,
+    output: &Path,
+    min_zoom: u8,
+    max_zoom: u8,
+    tile_bounds: [u32; 4],
+    detail_ranks: [u8; 2],
+    river_ranks: Option<[u8; 2]>,
+) -> Result<(usize, usize), DynError> {
+    let [max_road_rank, max_place_rank] = detail_ranks;
     if min_zoom < 5 || max_zoom < min_zoom || max_zoom > 8 {
         return Err("detail zooms must be within 5..=8".into());
     }
@@ -718,16 +764,38 @@ pub fn build_detail_fixture(
         region_lonlat,
         Some(max_road_rank),
     )?);
+    let rivers = if let Some([mid_rank, detail_rank]) = river_ranks {
+        if mid_rank > detail_rank {
+            return Err("river detail rank must be >= mid rank".into());
+        }
+        let path = source_dir.join("ne_10m_rivers_lake_centerlines.geojson");
+        Some([
+            SpatialGeometries::new(read_regional_lines(&path, region_lonlat, Some(mid_rank))?),
+            SpatialGeometries::new(read_regional_lines(
+                &path,
+                region_lonlat,
+                Some(detail_rank),
+            )?),
+        ])
+    } else {
+        None
+    };
     let places = SpatialPlaces::new(read_regional_places(
         &source_dir.join("ne_10m_populated_places.geojson"),
         region_lonlat,
         max_place_rank,
     )?);
-    let metadata = format!(
-        "{{\"vector_layers\":[{{\"id\":\"land\",\"fields\":{{}},\"minzoom\":{min_zoom},\"maxzoom\":{max_zoom}}},{{\"id\":\"water\",\"fields\":{{}},\"minzoom\":{min_zoom},\"maxzoom\":{max_zoom}}},{{\"id\":\"boundary\",\"fields\":{{}},\"minzoom\":{min_zoom},\"maxzoom\":{max_zoom}}},{{\"id\":\"road\",\"fields\":{{}},\"minzoom\":{},\"maxzoom\":{max_zoom}}},{{\"id\":\"place\",\"fields\":{{\"name\":\"String\",\"rank\":\"Number\"}},\"minzoom\":{},\"maxzoom\":{max_zoom}}}]}}",
-        min_zoom + 1,
-        min_zoom + 1
-    );
+    let mut layers = vec![
+        serde_json::json!({"id":"land","fields":{},"minzoom":min_zoom,"maxzoom":max_zoom}),
+        serde_json::json!({"id":"water","fields":{},"minzoom":min_zoom,"maxzoom":max_zoom}),
+        serde_json::json!({"id":"boundary","fields":{},"minzoom":min_zoom,"maxzoom":max_zoom}),
+        serde_json::json!({"id":"road","fields":{},"minzoom":min_zoom+1,"maxzoom":max_zoom}),
+        serde_json::json!({"id":"place","fields":{"name":"String","rank":"Number"},"minzoom":min_zoom+1,"maxzoom":max_zoom}),
+    ];
+    if rivers.is_some() {
+        layers.push(serde_json::json!({"id":"waterway","fields":{},"minzoom":min_zoom+1,"maxzoom":max_zoom}));
+    }
+    let metadata = serde_json::json!({"vector_layers":layers}).to_string();
     let file = File::create(output)?;
     let mut writer = PmTilesWriter::new(TileType::Mvt)
         .min_zoom(min_zoom)
@@ -760,6 +828,14 @@ pub fn build_detail_fixture(
                     + add_polygons(&mut tile, "water", water.query(rect), rect, key)?
                     + add_lines(&mut tile, "boundary", boundary.query(rect), rect, key)?;
                 if z > min_zoom {
+                    if let Some(rivers) = &rivers {
+                        let selected = if z == min_zoom + 1 {
+                            &rivers[0]
+                        } else {
+                            &rivers[1]
+                        };
+                        count += add_lines(&mut tile, "waterway", selected.query(rect), rect, key)?;
+                    }
                     count += add_lines(&mut tile, "road", road.query(rect), rect, key)?;
                     count += add_places(&mut tile, places.query(rect), rect, key)?;
                 }

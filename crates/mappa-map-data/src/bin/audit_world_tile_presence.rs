@@ -13,6 +13,7 @@ struct Cell {
     absent: u32,
     land: u32,
     water: u32,
+    waterway: u32,
     boundary: u32,
     road: u32,
     place: u32,
@@ -43,6 +44,7 @@ async fn main() -> Result<(), DynError> {
                     cell.decoded += 1;
                     cell.land += u32::from(!tile.land.is_empty());
                     cell.water += u32::from(!tile.water.is_empty());
+                    cell.waterway += u32::from(!tile.waterway.is_empty());
                     cell.boundary += u32::from(!tile.boundary.is_empty());
                     cell.road += u32::from(
                         !tile.road.is_empty()
@@ -59,16 +61,18 @@ async fn main() -> Result<(), DynError> {
     let mut output = File::create(&args[2])?;
     writeln!(
         output,
-        "group_z,x,y,west,south,east,north,decoded_tiles,absent_tiles,land_tiles,water_tiles,boundary_tiles,road_tiles,place_tiles"
+        "group_z,x,y,west,south,east,north,decoded_tiles,absent_tiles,land_tiles,water_tiles,waterway_tiles,boundary_tiles,road_tiles,place_tiles"
     )?;
     let mut land_cells = 0;
     let mut road_cells = 0;
+    let mut waterway_cells = 0;
     let mut land_without_road_cells = 0;
     for y in 0..groups {
         for x in 0..groups {
             let cell = cells[(y * groups + x) as usize];
             land_cells += usize::from(cell.land > 0);
             road_cells += usize::from(cell.road > 0);
+            waterway_cells += usize::from(cell.waterway > 0);
             land_without_road_cells += usize::from(cell.land > 0 && cell.road == 0);
             let west = x as f64 / groups as f64 * 360.0 - 180.0;
             let east = (x + 1) as f64 / groups as f64 * 360.0 - 180.0;
@@ -80,13 +84,14 @@ async fn main() -> Result<(), DynError> {
             };
             writeln!(
                 output,
-                "{group_zoom},{x},{y},{west:.6},{:.6},{east:.6},{:.6},{},{},{},{},{},{},{}",
+                "{group_zoom},{x},{y},{west:.6},{:.6},{east:.6},{:.6},{},{},{},{},{},{},{},{}",
                 lat(y + 1),
                 lat(y),
                 cell.decoded,
                 cell.absent,
                 cell.land,
                 cell.water,
+                cell.waterway,
                 cell.boundary,
                 cell.road,
                 cell.place
@@ -94,7 +99,7 @@ async fn main() -> Result<(), DynError> {
         }
     }
     println!(
-        "z{zoom} source presence: {} group cells; {land_cells} with land, {road_cells} with a road, {land_without_road_cells} with land and no road; {} decoded tiles, {} absent tiles. Presence is not completeness.",
+        "z{zoom} source presence: {} group cells; {land_cells} with land, {waterway_cells} with a waterway, {road_cells} with a road, {land_without_road_cells} with land and no road; {} decoded tiles, {} absent tiles. Presence is not completeness.",
         cells.len(),
         cells.iter().map(|cell| cell.decoded).sum::<u32>(),
         cells.iter().map(|cell| cell.absent).sum::<u32>()
