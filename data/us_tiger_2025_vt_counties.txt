@@ -1,0 +1,15 @@
+# Official Census TIGER2025/ROADS directory, state FIPS 50; observed 2026-09-25.
+tl_2025_50001_roads.zip
+tl_2025_50003_roads.zip
+tl_2025_50005_roads.zip
+tl_2025_50007_roads.zip
+tl_2025_50009_roads.zip
+tl_2025_50011_roads.zip
+tl_2025_50013_roads.zip
+tl_2025_50015_roads.zip
+tl_2025_50017_roads.zip
+tl_2025_50019_roads.zip
+tl_2025_50021_roads.zip
+tl_2025_50023_roads.zip
+tl_2025_50025_roads.zip
+tl_2025_50027_roads.zip
