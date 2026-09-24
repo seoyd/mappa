@@ -97,6 +97,8 @@ async fn audit(
         let mut bytes = 0;
         let mut roads = 0;
         let mut surfaces = 0;
+        let mut water = 0;
+        let mut vegetation = 0;
         let mut districts = 0;
         let mut edges = BTreeMap::new();
         for y in y0..=y1 {
@@ -108,8 +110,6 @@ async fn audit(
                 tiles += 1;
                 let decoded = decode_mvt(payload)?;
                 if !decoded.land.is_empty()
-                    || !decoded.water.is_empty()
-                    || !decoded.green.is_empty()
                     || decoded
                         .place
                         .iter()
@@ -121,6 +121,8 @@ async fn audit(
                     + decoded.road_collector.len()
                     + decoded.road_local.len();
                 surfaces += decoded.road_surface.len();
+                water += decoded.water.len();
+                vegetation += decoded.green.len();
                 districts += decoded.place.len();
                 edges.insert((x, y), edge_ports(&decoded));
             }
@@ -150,8 +152,25 @@ async fn audit(
         }
         total_unmatched += unmatched;
         println!(
-            "z={z} tiles={tiles} decoded_mvt_bytes={bytes} road_lines={roads} road_surfaces={surfaces} district_labels={districts} seam_exact={exact} seam_within_1_unit={one_unit} seam_unmatched={unmatched}"
+            "z={z} tiles={tiles} decoded_mvt_bytes={bytes} road_lines={roads} road_surfaces={surfaces} water={water} tree_cover={vegetation} district_labels={districts} seam_exact={exact} seam_within_1_unit={one_unit} seam_unmatched={unmatched}"
         );
+        if manifest
+            .source
+            .iter()
+            .any(|source| source.adapter == "esa-worldcover-water")
+            && water == 0
+        {
+            return Err(format!("z{z} is missing ESA permanent water").into());
+        }
+        if z >= 14
+            && manifest
+                .source
+                .iter()
+                .any(|source| source.adapter == "esa-worldcover-tree")
+            && vegetation == 0
+        {
+            return Err(format!("z{z} is missing ESA tree cover").into());
+        }
         if z >= 12
             && districts == 0
             && manifest

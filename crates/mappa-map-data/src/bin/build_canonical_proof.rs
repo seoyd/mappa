@@ -1,6 +1,6 @@
 use mappa_map_data::canonical::{
     BBox, GeoDb, SourceManifest, adapt_naju_road_surfaces, adapt_naju_roads, adapt_sgis_districts,
-    write_geodb,
+    adapt_worldcover_polygons, write_geodb,
 };
 use std::{error::Error, path::Path};
 
@@ -28,6 +28,11 @@ fn main() -> Result<(), Box<dyn Error>> {
                 rejected.extend(invalid);
             }
             "sgis-admin-district" => records.extend(adapt_sgis_districts(source, region)?),
+            "esa-worldcover-water" | "esa-worldcover-tree" => {
+                let (accepted, invalid) = adapt_worldcover_polygons(source, region)?;
+                records.extend(accepted);
+                rejected.extend(invalid);
+            }
             _ => return Err("unsupported source adapter".into()),
         }
     }

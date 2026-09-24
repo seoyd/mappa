@@ -45,7 +45,7 @@ fn tile_span(rect: Rect<f64>, zoom: u8) -> (u32, u32, u32, u32) {
     )
 }
 
-/// Returns (nonempty tiles, encoded road features). Empty areas stay empty.
+/// Returns (nonempty tiles, encoded features). Empty areas stay empty.
 pub fn build_canonical_tiles(
     geodb_path: &Path,
     output: &Path,
@@ -75,7 +75,12 @@ pub fn build_canonical_tiles(
             {
                 Geometry::LineString(project_ring(points)?)
             }
-            CanonicalGeometry::Polygon(rings) if feature.kind == FeatureKind::RoadSurface => {
+            CanonicalGeometry::Polygon(rings)
+                if matches!(
+                    feature.kind,
+                    FeatureKind::RoadSurface | FeatureKind::Water | FeatureKind::Vegetation
+                ) =>
+            {
                 let mut projected_rings = rings
                     .into_iter()
                     .map(project_ring)
@@ -109,6 +114,8 @@ pub fn build_canonical_tiles(
         "attribution": attribution,
         "vector_layers": [
             {"id": "road_surface", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
+            {"id": "water", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
+            {"id": "green", "fields": {}, "minzoom": 14, "maxzoom": max_zoom},
             {"id": "road_major", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
             {"id": "road_collector", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
             {"id": "road_local", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
@@ -176,6 +183,26 @@ pub fn build_canonical_tiles(
             );
             let mut tile = Tile::new(4096);
             let mut count = add_polygons(
+                &mut tile,
+                "water",
+                candidates
+                    .iter()
+                    .filter(|&&index| projected[index].kind == FeatureKind::Water)
+                    .map(|&index| &projected[index].geometry),
+                tile_bounds,
+                key,
+            )?;
+            count += add_polygons(
+                &mut tile,
+                "green",
+                candidates
+                    .iter()
+                    .filter(|&&index| projected[index].kind == FeatureKind::Vegetation)
+                    .map(|&index| &projected[index].geometry),
+                tile_bounds,
+                key,
+            )?;
+            count += add_polygons(
                 &mut tile,
                 "road_surface",
                 candidates
@@ -254,7 +281,7 @@ mod tests {
     use mappa_map_core::MapCamera;
 
     #[tokio::test]
-    async fn committed_proof_has_only_canonical_roads_and_districts() {
+    async fn committed_proof_has_approved_roads_water_tree_cover_and_districts() {
         let path = Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../../artifacts/map-v0.3c/naju-roads.pmtiles");
         let archive = LocalPmTiles::open(path).await.unwrap();
@@ -266,11 +293,20 @@ mod tests {
                 .unwrap()
                 .contains("국가데이터처")
         );
+        assert!(
+            archive
+                .attribution
+                .as_deref()
+                .unwrap()
+                .contains("ESA WorldCover")
+        );
         for zoom in 10..=15 {
             let camera =
                 MapCamera::new(126.715, 35.025, zoom as f64 + 0.2, 1200, 720, 1.0).unwrap();
             let mut roads = 0;
             let mut surfaces = 0;
+            let mut water = 0;
+            let mut vegetation = 0;
             for tile in camera.visible_tiles(15, 0) {
                 let Some(bytes) = archive.tile_bytes(tile.key).await.unwrap() else {
                     continue;
@@ -280,9 +316,9 @@ mod tests {
                     + decoded.road_collector.len()
                     + decoded.road_local.len();
                 surfaces += decoded.road_surface.len();
+                water += decoded.water.len();
+                vegetation += decoded.green.len();
                 assert!(decoded.land.is_empty());
-                assert!(decoded.water.is_empty());
-                assert!(decoded.green.is_empty());
                 assert!(
                     decoded
                         .place
@@ -291,6 +327,10 @@ mod tests {
                 );
             }
             assert!(roads > 0, "no decoded roads at zoom {zoom}");
+            assert!(water > 0, "no decoded water at zoom {zoom}");
+            if zoom >= 14 {
+                assert!(vegetation > 0, "no decoded tree cover at zoom {zoom}");
+            }
             if zoom >= 13 {
                 assert!(surfaces > 0, "no decoded road surfaces at zoom {zoom}");
             }

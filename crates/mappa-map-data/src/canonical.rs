@@ -60,6 +60,10 @@ pub struct SourceRecord {
     pub download_page_url: String,
     pub file: String,
     pub sha256: String,
+    #[serde(default)]
+    pub upstream_file: Option<String>,
+    #[serde(default)]
+    pub upstream_sha256: Option<String>,
     pub crs: String,
     pub format: String,
     pub coverage: String,
@@ -101,6 +105,16 @@ impl SourceManifest {
                     .to_string_lossy()
                     .into_owned();
             }
+            if let Some(upstream_file) = &mut source.upstream_file
+                && !Path::new(upstream_file).is_absolute()
+            {
+                *upstream_file = path
+                    .parent()
+                    .unwrap_or_else(|| Path::new("."))
+                    .join(&*upstream_file)
+                    .to_string_lossy()
+                    .into_owned();
+            }
             if source.id.is_empty() || !ids.insert(source.id.as_str()) {
                 return Err(CanonicalError::Corrupt("duplicate or empty source ID"));
             }
@@ -121,9 +135,19 @@ impl SourceManifest {
             {
                 return Err(CanonicalError::Corrupt("invalid source SHA-256"));
             }
+            match (&source.upstream_file, &source.upstream_sha256) {
+                (None, None) => {}
+                (Some(_), Some(hash))
+                    if hash.len() == 64 && hash.bytes().all(|byte| byte.is_ascii_hexdigit()) => {}
+                _ => return Err(CanonicalError::Corrupt("invalid upstream source SHA-256")),
+            }
             if !matches!(
                 source.adapter.as_str(),
-                "naju-road-centerline" | "naju-road-surface" | "sgis-admin-district"
+                "naju-road-centerline"
+                    | "naju-road-surface"
+                    | "sgis-admin-district"
+                    | "esa-worldcover-water"
+                    | "esa-worldcover-tree"
             ) || source.adapter_version != 1
             {
                 return Err(CanonicalError::Corrupt("unsupported source adapter"));
@@ -182,6 +206,7 @@ pub enum FeatureKind {
     Rail,
     Place,
     PlaceDistrict,
+    Vegetation,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -520,6 +545,129 @@ pub fn adapt_naju_road_surfaces(
     output.sort_by_key(|(feature, _)| feature.id);
     rejected.sort_by(|a, b| a.source_feature_id.cmp(&b.source_feature_id));
     Ok((output, rejected))
+}
+
+/// The source preparation step polygonizes a single ESA 10 m class mask.
+/// Keep water and tree cover distinct: tree cover is not a surveyed park.
+pub fn adapt_worldcover_polygons(
+    source: &SourceRecord,
+    region: BBox,
+) -> Result<(AdaptedFeatures, Vec<RejectedFeature>), CanonicalError> {
+    let (kind, min_zoom) = match source.adapter.as_str() {
+        "esa-worldcover-water" => (FeatureKind::Water, 10),
+        "esa-worldcover-tree" => (FeatureKind::Vegetation, 14),
+        _ => {
+            return Err(CanonicalError::Feature(
+                "unexpected WorldCover adapter".into(),
+            ));
+        }
+    };
+    if source_hash(Path::new(&source.file))? != source.sha256.to_lowercase() {
+        return Err(CanonicalError::SourceChecksum(source.id.clone()));
+    }
+    let (Some(upstream_file), Some(upstream_sha256)) =
+        (&source.upstream_file, &source.upstream_sha256)
+    else {
+        return Err(CanonicalError::Corrupt(
+            "WorldCover crop provenance missing",
+        ));
+    };
+    if source_hash(Path::new(upstream_file))? != upstream_sha256.to_lowercase() {
+        return Err(CanonicalError::SourceChecksum(format!(
+            "{} upstream crop",
+            source.id
+        )));
+    }
+    let GeoJson::FeatureCollection(collection) =
+        GeoJson::from_str(&fs::read_to_string(&source.file)?)?
+    else {
+        return Err(CanonicalError::Feature("expected FeatureCollection".into()));
+    };
+    let mut accepted = Vec::new();
+    let mut rejected = Vec::new();
+    let mut ids = BTreeSet::new();
+    for raw in collection.features {
+        if raw.property("DN").and_then(|value| value.as_i64()) != Some(1) {
+            return Err(CanonicalError::Feature(
+                "unexpected WorldCover mask class".into(),
+            ));
+        }
+        let bytes = serde_json::to_vec(&raw)
+            .map_err(|_| CanonicalError::Corrupt("source serialization"))?;
+        let digest: [u8; 32] = Sha256::digest(&bytes).into();
+        let source_feature_id = format!("{:x}", Sha256::digest(&bytes));
+        if !ids.insert(source_feature_id.clone()) {
+            return Err(CanonicalError::Feature(
+                "duplicate WorldCover polygon".into(),
+            ));
+        }
+        let Some(geojson::Geometry {
+            value: GeometryValue::Polygon { coordinates },
+            ..
+        }) = raw.geometry.as_ref()
+        else {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id,
+                reason: "expected Polygon".into(),
+            });
+            continue;
+        };
+        let rings = coordinates
+            .iter()
+            .map(|ring| {
+                ring.iter()
+                    .map(|position| {
+                        let [lon, lat] = position.as_slice() else {
+                            return Err(CanonicalError::Feature(
+                                "invalid WorldCover coordinate".into(),
+                            ));
+                        };
+                        Ok([*lon, *lat])
+                    })
+                    .collect::<Result<Vec<_>, _>>()
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+        let geometry = Geometry::Polygon(rings);
+        let bbox = match geometry.bbox() {
+            Ok(bbox) => bbox,
+            Err(error) => {
+                rejected.push(RejectedFeature {
+                    source_id: source.id.clone(),
+                    source_feature_id,
+                    reason: error.to_string(),
+                });
+                continue;
+            }
+        };
+        if !bbox.intersects(region) {
+            continue;
+        }
+        let id = stable_id(&source.id, &source_feature_id);
+        accepted.push((
+            CanonicalFeature {
+                id,
+                kind,
+                geometry,
+                bbox,
+                importance: 100,
+                min_zoom,
+                max_zoom: 15,
+                name: None,
+                revision: 1,
+            },
+            Provenance {
+                feature_id: id,
+                source_id: source.id.clone(),
+                source_feature_id,
+                source_revision: source.source_version.clone(),
+                adapter_version: source.adapter_version,
+                source_feature_sha256: digest,
+            },
+        ));
+    }
+    accepted.sort_by_key(|(feature, _)| feature.id);
+    Ok((accepted, rejected))
 }
 
 /// Locate an official district name inside the part of its boundary that falls
@@ -1014,6 +1162,37 @@ adapter_version=1"#,
             assert!(region.intersects(feature.bbox));
             assert_eq!(provenance.feature_id, feature.id);
             assert_eq!(provenance.source_id, source.id);
+        }
+    }
+
+    #[test]
+    fn worldcover_classes_keep_water_and_tree_cover_distinct() {
+        let manifest_path = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data/sources.toml");
+        let manifest = SourceManifest::open(&manifest_path).unwrap();
+        let [west, south, east, north] = manifest.proof_bbox_wgs84;
+        let region = BBox {
+            west,
+            south,
+            east,
+            north,
+        };
+        for (adapter, expected_kind, expected_count) in [
+            ("esa-worldcover-water", FeatureKind::Water, 79),
+            ("esa-worldcover-tree", FeatureKind::Vegetation, 2609),
+        ] {
+            let source = manifest
+                .source
+                .iter()
+                .find(|source| source.adapter == adapter)
+                .unwrap();
+            let (features, rejected) = adapt_worldcover_polygons(source, region).unwrap();
+            assert_eq!(features.len(), expected_count);
+            assert!(rejected.is_empty());
+            assert!(features.iter().all(|(feature, provenance)| {
+                feature.kind == expected_kind
+                    && feature.id == provenance.feature_id
+                    && provenance.source_id == source.id
+            }));
         }
     }
 

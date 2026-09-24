@@ -30,7 +30,19 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         .into_iter()
         .collect::<Vec<_>>()
         .join(", ");
-    let attribution = format!("원본: {} · Mappa GeoDB · 미구축 지역 공백", providers);
+    let worldcover_present = manifest
+        .source
+        .iter()
+        .any(|source| source.adapter.starts_with("esa-worldcover-"));
+    let worldcover_credit = if worldcover_present {
+        " · © ESA WorldCover project 2021 / Contains modified Copernicus Sentinel data (2021) processed by ESA WorldCover consortium"
+    } else {
+        ""
+    };
+    let attribution = format!(
+        "원본: {}{} · Mappa GeoDB · 미구축 지역 공백",
+        providers, worldcover_credit
+    );
     let [west, south, east, north] = manifest.proof_bbox_wgs84;
     let (tiles, features) = build_canonical_tiles(
         Path::new(&args[2]),
