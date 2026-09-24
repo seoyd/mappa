@@ -11,6 +11,7 @@ use std::{
     time::Duration,
 };
 use tokio::{fs, io::AsyncWriteExt, sync::Semaphore, task::JoinSet};
+use zip::ZipArchive;
 
 const MAX_SOURCE_BYTES: usize = 64 * 1024 * 1024;
 const CONCURRENT_DOWNLOADS: usize = 8;
@@ -112,6 +113,15 @@ async fn download(
             return Err("publisher MD5 mismatch".into());
         }
     }
+    if output
+        .extension()
+        .is_some_and(|extension| extension == "zip")
+    {
+        let archive = ZipArchive::new(std::fs::File::open(&temporary)?)?;
+        if archive.is_empty() {
+            return Err("publisher returned an empty ZIP archive".into());
+        }
+    }
     fs::rename(temporary, output).await?;
     Ok(total)
 }
@@ -189,14 +199,23 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         tasks.spawn(async move {
             let _permit = permit;
             let url = format!("https://www2.census.gov/geo/tiger/TIGER2025/{directory}/{name}");
-            let bytes = download(
-                &client,
-                &url,
-                &output.join(&name),
-                MAX_SOURCE_BYTES as u64,
-                None,
-            )
-            .await?;
+            let path = output.join(&name);
+            let bytes = match download(&client, &url, &path, MAX_SOURCE_BYTES as u64, None).await {
+                Ok(bytes) => bytes,
+                Err(first_error) => {
+                    eprintln!(
+                        "retrying invalid or unavailable publisher ZIP {name}: {first_error}"
+                    );
+                    download(
+                        &client,
+                        &format!("{url}?download=1"),
+                        &path,
+                        MAX_SOURCE_BYTES as u64,
+                        None,
+                    )
+                    .await?
+                }
+            };
             Ok::<_, Box<dyn Error + Send + Sync>>((name, bytes))
         });
     }

@@ -3,6 +3,30 @@
 # with observed features, not positional accuracy. Archives open on first use.
 # Adding a pack here does not certify its coverage or positional accuracy.
 [[pack]]
+path = "../../artifacts/world-water/wv-state/water.pmtiles"
+manifest = "../../data/us_tiger_wv_state_areawater.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 수면 · 웨스트버지니아주 55개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/wv-state/roads-west.pmtiles"
+manifest = "../../data/us_tiger_wv_state_roads_west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 서부 · 웨스트버지니아주 55개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/wv-state/roads-east.pmtiles"
+manifest = "../../data/us_tiger_wv_state_roads_east.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 동부 · 웨스트버지니아주 55개 카운티 실증"
+
+[[pack]]
 path = "../../artifacts/world-water/pa-state/water.pmtiles"
 manifest = "../../data/us_tiger_pa_state_areawater.toml"
 min_visible_zoom = 10

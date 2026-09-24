@@ -28,6 +28,9 @@
 /artifacts/world-roads/pa-state/state.mgeodb
 /artifacts/world-roads/pa-state/state.pmtiles
 /artifacts/world-water/pa-state/water.mgeodb
+/artifacts/world-roads/wv-state/state.mgeodb
+/artifacts/world-roads/wv-state/state.pmtiles
+/artifacts/world-water/wv-state/water.mgeodb
 /artifacts/world-roads/gb/*.mgeodb
 /artifacts/world-roads/ca/*.mgeodb
 /artifacts/world-roads/ca/on.pmtiles

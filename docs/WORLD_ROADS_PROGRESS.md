@@ -2,7 +2,7 @@
 
 ## 결정과 판정
 
-사용자 결정에 따라 **ODbL 원천을 현재 Mappa canonical GeoDB에 넣지 않는다.** 전 세계 도로의 국가별 공식·허용형 원천을 찾고, 같은 출처·품질 게이트로 지역별로 구축한다. 첫 실증인 미국 Census 뉴욕 카운티 한 파일을 뉴욕시 5개 카운티로, 이어 [뉴욕주 62개 카운티](NY_STATE_ROADS_PROGRESS.md)로 확장하고 [뉴저지주 21개 카운티](NJ_STATE_ROADS_PROGRESS.md), [델라웨어주 3개 카운티](DE_STATE_ROADS_PROGRESS.md), [코네티컷주 9개 계획지역](CT_STATE_ROADS_PROGRESS.md), [로드아일랜드주 5개 카운티](RI_STATE_ROADS_PROGRESS.md), [매사추세츠주 14개 카운티](MA_STATE_ROADS_PROGRESS.md), [뉴햄프셔주 10개 카운티](NH_STATE_PROGRESS.md), [버몬트주 14개 카운티](VT_STATE_PROGRESS.md), [메인주 16개 카운티](ME_STATE_PROGRESS.md), [메릴랜드주 24개 카운티 상당 단위](MD_STATE_PROGRESS.md), [펜실베이니아주 67개 카운티](PA_STATE_PROGRESS.md), [워싱턴 DC](DC_PROGRESS.md)를 추가했다. [프랑스 IGN 파리 D075 도로](FR_PARIS_ROADS_PROGRESS.md)도 첫 지역 팩으로 구축했다. 현재 기본 세계 모드는 미국 11개 주와 DC, 프랑스 파리 원천 범위, [Great Britain 공식 RoadLink 52격자](GB_ROADS_PROGRESS.md), [캐나다 13개 지역 공식 NRN](CA_ROADS_PROGRESS.md)의 도로 팩을 사용한다. **전 세계 상세 도로망은 아직 없다.**
+사용자 결정에 따라 **ODbL 원천을 현재 Mappa canonical GeoDB에 넣지 않는다.** 전 세계 도로의 국가별 공식·허용형 원천을 찾고, 같은 출처·품질 게이트로 지역별로 구축한다. 첫 실증인 미국 Census 뉴욕 카운티 한 파일을 뉴욕시 5개 카운티로, 이어 [뉴욕주 62개 카운티](NY_STATE_ROADS_PROGRESS.md)로 확장하고 [뉴저지주 21개 카운티](NJ_STATE_ROADS_PROGRESS.md), [델라웨어주 3개 카운티](DE_STATE_ROADS_PROGRESS.md), [코네티컷주 9개 계획지역](CT_STATE_ROADS_PROGRESS.md), [로드아일랜드주 5개 카운티](RI_STATE_ROADS_PROGRESS.md), [매사추세츠주 14개 카운티](MA_STATE_ROADS_PROGRESS.md), [뉴햄프셔주 10개 카운티](NH_STATE_PROGRESS.md), [버몬트주 14개 카운티](VT_STATE_PROGRESS.md), [메인주 16개 카운티](ME_STATE_PROGRESS.md), [메릴랜드주 24개 카운티 상당 단위](MD_STATE_PROGRESS.md), [펜실베이니아주 67개 카운티](PA_STATE_PROGRESS.md), [웨스트버지니아주 55개 카운티](WV_STATE_PROGRESS.md), [워싱턴 DC](DC_PROGRESS.md)를 추가했다. [프랑스 IGN 파리 D075 도로](FR_PARIS_ROADS_PROGRESS.md)도 첫 지역 팩으로 구축했다. 현재 기본 세계 모드는 미국 12개 주와 DC, 프랑스 파리 원천 범위, [Great Britain 공식 RoadLink 52격자](GB_ROADS_PROGRESS.md), [캐나다 13개 지역 공식 NRN](CA_ROADS_PROGRESS.md)의 도로 팩을 사용한다. **전 세계 상세 도로망은 아직 없다.**
 
 ## 미국 공식 원천 실증
 
@@ -41,7 +41,7 @@ ZIP의 `.prj`는 **EPSG:4269 NAD83**다. 현재 어댑터는 숫자 좌표를 �
 | 원천/지역 | 확보·판정 |
 |---|---|
 | 한국 나주 | 공식 도로 ZIP 실증은 기존 [지역 게이트](MAP_V0_3C_GATE_AUDIT.md)에 기록. 원본 CRS와 기준점 미확인으로 S16 `NO_GO`. |
-| 미국 | Census 2025 뉴욕주 62개·뉴저지주 21개·델라웨어주 3개·로드아일랜드주 5개·매사추세츠주 14개·뉴햄프셔주 10개·버몬트주 14개·메인주 16개·메릴랜드주 24개·펜실베이니아주 67개·DC 1개 카운티 상당 단위와 코네티컷주 9개 계획지역, 합계 246개 원천 단위를 실증. 다른 주 카운티는 미수집·미검증. 공식 배포 단위는 카운티 상당 단위 All Roads 파일. |
+| 미국 | Census 2025 뉴욕주 62개·뉴저지주 21개·델라웨어주 3개·로드아일랜드주 5개·매사추세츠주 14개·뉴햄프셔주 10개·버몬트주 14개·메인주 16개·메릴랜드주 24개·펜실베이니아주 67개·웨스트버지니아주 55개·DC 1개 카운티 상당 단위와 코네티컷주 9개 계획지역, 합계 301개 원천 단위를 실증. 다른 주 카운티는 미수집·미검증. 공식 배포 단위는 카운티 상당 단위 All Roads 파일. |
 | 프랑스 | [IGN BD TOPO 3.5 파리 D075 도로 팩](FR_PARIS_ROADS_PROGRESS.md): [Licence Ouverte 2.0](https://www.data.gouv.fr/pages/legal/licences/etalab-2.0), 공식 2026-06-15 7z 원본 142,874,290바이트를 범위 요청으로 확보하고 7z CRC·파생 ZIP·RGF93/Lambert-93·속성 판정. 도로 115,758개 채택, 36,375개 제외. 지역 팩 991타일 해독 실패 0, 파리 z14 화면 실패 0. 다른 프랑스 지역과 건물·시설은 미구축이며, [파리 영구 수면](FR_PARIS_WATER_PROGRESS.md)과 [`FICTIF=Non` 여객역](FR_PARIS_STATIONS_PROGRESS.md)은 별도 팩으로 표시한다. |
 | Great Britain | [OS Open Roads 52격자 구축](GB_ROADS_PROGRESS.md): 무료 OGL v3, 2026-04 전국 Shapefile 606,145,264바이트·게시 MD5 확인. 원본 3,967,825개 중 격자 간 중복 6,748개를 제거하고 3,961,077개 고유 RoadLink를 OSTN15 변환. 52개 로컬 팩의 타일 480,930개 전수 해독 오류 0. 독립 기준점·도로 연결성·실기기 성능 검증과 GB 상세 부가 레이어는 미완료. 북아일랜드 원천은 별도로 필요. |
 | 북아일랜드 | [OSNI 50K Transport Lines](https://admin.opendatani.gov.uk/dataset/osni-open-data-50k-transport-transport-lines)는 OGL로 게시됐지만 이 환경에서 공식 ZIP HTTP 403, 기존 ArcGIS ZIP HTTP 400. 원본 파일 확보·검증·구축 전. |
