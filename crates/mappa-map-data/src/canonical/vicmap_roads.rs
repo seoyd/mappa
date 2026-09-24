@@ -152,7 +152,14 @@ pub fn adapt_au_vic_vicmap_roads(
             let supported_type = matches!(
                 feature_type,
                 Some(
-                    "road" | "connector" | "bridge" | "tunnel" | "ford" | "dip" | "level crossing"
+                    "road"
+                        | "connector"
+                        | "bridge"
+                        | "tunnel"
+                        | "ford"
+                        | "dip"
+                        | "level crossing"
+                        | "roundabout"
                 )
             );
             let (kind, importance, min_zoom) = match class {

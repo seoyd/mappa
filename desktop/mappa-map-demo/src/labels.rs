@@ -3,12 +3,47 @@
 use super::{DynError, FORMAT, LabelKind, MapCamera, MapRenderer, ScreenLabel};
 use crate::scale::ScaleOverlay;
 use glyphon::{
-    Attrs, Buffer, Cache, Color, Family, FontSystem, Metrics, Resolution, Shaping, SwashCache,
-    TextArea, TextAtlas, TextBounds, TextRenderer, Viewport,
+    Attrs, Buffer, Cache, Color, ContentType, CustomGlyph, Family, FontSystem, Metrics,
+    RasterizeCustomGlyphRequest, RasterizedCustomGlyph, Resolution, Shaping, SwashCache, TextArea,
+    TextAtlas, TextBounds, TextRenderer, Viewport,
 };
 use std::collections::HashMap;
+use std::io::Cursor;
 
 const LABEL_CACHE_LIMIT: usize = 512;
+const CC_BY_LOGO: &[u8] = include_bytes!("../../../assets/map/licenses/land-tasmania-cc-by.png");
+
+fn rasterize_cc_by_logo(request: RasterizeCustomGlyphRequest) -> Option<RasterizedCustomGlyph> {
+    if request.id != 1 || request.width == 0 || request.height == 0 {
+        return None;
+    }
+    let mut decoder = png::Decoder::new(Cursor::new(CC_BY_LOGO));
+    decoder.set_transformations(png::Transformations::IDENTITY);
+    let mut reader = decoder.read_info().ok()?;
+    let mut source = vec![0; reader.output_buffer_size()?];
+    let info = reader.next_frame(&mut source).ok()?;
+    if info.color_type != png::ColorType::Rgba || info.bit_depth != png::BitDepth::Eight {
+        return None;
+    }
+    let width = usize::from(request.width);
+    let height = usize::from(request.height);
+    let source_width = info.width as usize;
+    let source_height = info.height as usize;
+    let mut data = vec![0; width * height * 4];
+    for y in 0..height {
+        let source_y = (y * source_height / height).min(source_height - 1);
+        for x in 0..width {
+            let source_x = (x * source_width / width).min(source_width - 1);
+            let from = (source_y * source_width + source_x) * 4;
+            let to = (y * width + x) * 4;
+            data[to..to + 4].copy_from_slice(&source[from..from + 4]);
+        }
+    }
+    Some(RasterizedCustomGlyph {
+        data,
+        content_type: ContentType::Color,
+    })
+}
 
 #[derive(Hash, PartialEq, Eq)]
 struct LabelKey {
@@ -142,10 +177,32 @@ impl LabelRenderer {
             }
             keys.push(key);
         }
+        let custom_glyphs: Vec<Vec<CustomGlyph>> = labels
+            .iter()
+            .map(|label| {
+                if label.kind == LabelKind::Attribution
+                    && label.name.contains("LIST Transport Segments")
+                {
+                    vec![CustomGlyph {
+                        id: 1,
+                        left: 0.0,
+                        top: -35.0 * scale,
+                        width: 88.0 * scale,
+                        height: 31.0 * scale,
+                        color: None,
+                        snap_to_physical_pixel: true,
+                        metadata: 0,
+                    }]
+                } else {
+                    Vec::new()
+                }
+            })
+            .collect();
         let areas: Vec<_> = labels
             .iter()
             .zip(&keys)
-            .map(|(label, key)| {
+            .zip(&custom_glyphs)
+            .map(|((label, key), glyphs)| {
                 let buffer = &self.buffers[key];
                 let (left, top) = label.text_origin(scale);
                 TextArea {
@@ -166,11 +223,11 @@ impl LabelRenderer {
                         LabelKind::Scale => Color::rgb(30, 48, 65),
                         _ => Color::rgb(48, 50, 58),
                     },
-                    custom_glyphs: &[],
+                    custom_glyphs: glyphs,
                 }
             })
             .collect();
-        self.text.prepare(
+        self.text.prepare_with_custom(
             &renderer.device,
             &renderer.queue,
             &mut self.fonts,
@@ -178,6 +235,7 @@ impl LabelRenderer {
             &self.viewport,
             areas,
             &mut self.swash,
+            rasterize_cc_by_logo,
         )?;
         let mut encoder = renderer
             .device
@@ -207,5 +265,26 @@ impl LabelRenderer {
         renderer.queue.submit(Some(encoder.finish()));
         self.atlas.trim();
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn official_cc_by_logo_rasterizes_at_screen_size() {
+        let raster = rasterize_cc_by_logo(RasterizeCustomGlyphRequest {
+            id: 1,
+            width: 88,
+            height: 31,
+            x_bin: glyphon::SubpixelBin::Zero,
+            y_bin: glyphon::SubpixelBin::Zero,
+            scale: 1.0,
+        })
+        .expect("embedded Land Tasmania CC BY logo");
+        assert_eq!(raster.content_type, ContentType::Color);
+        assert_eq!(raster.data.len(), 88 * 31 * 4);
+        assert!(raster.data.chunks_exact(4).any(|pixel| pixel[3] > 0));
     }
 }

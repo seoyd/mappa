@@ -287,6 +287,9 @@ struct RegionalPack {
     archive_min_zoom: u8,
     archive_max_zoom: u8,
     required_credits: Vec<String>,
+    screen_credits: Vec<String>,
+    source_page_url: Option<String>,
+    license_url: Option<String>,
     min_visible_zoom: u8,
     label: String,
 }
@@ -402,15 +405,6 @@ fn open_regional_packs() -> Result<Vec<RegionalPack>, DynError> {
             return Err(format!("duplicate regional pack: {}", entry.path.display()).into());
         }
         let manifest = SourceManifest::open(&parent.join(&entry.manifest))?;
-        if manifest.source.iter().any(|source| {
-            matches!(source.adapter.as_str(), "os-open-roads" | "ca-nrn-roadseg")
-                && source
-                    .attribution_text
-                    .as_deref()
-                    .is_none_or(|credit| !entry.label.contains(credit))
-        }) {
-            return Err("regional pack label omits its required source credit".into());
-        }
         if entry.archive_min_zoom < 10
             || entry.archive_max_zoom > 15
             || entry.archive_max_zoom < entry.archive_min_zoom
@@ -427,12 +421,29 @@ fn open_regional_packs() -> Result<Vec<RegionalPack>, DynError> {
                     .chain(record.attribution_text.iter().cloned())
             })
             .collect();
+        let screen_credits = manifest
+            .source
+            .iter()
+            .filter(|source| source.attribution_required)
+            .filter_map(|source| source.attribution_text.clone())
+            .collect();
+        let source_page_url = manifest
+            .source
+            .first()
+            .map(|source| source.download_page_url.clone());
+        let license_url = manifest
+            .source
+            .first()
+            .map(|source| source.license_url.clone());
         packs.push(RegionalPack {
             path: archive_path,
             bounds: manifest.proof_bbox_wgs84,
             archive_min_zoom: entry.archive_min_zoom,
             archive_max_zoom: entry.archive_max_zoom,
             required_credits,
+            screen_credits,
+            source_page_url,
+            license_url,
             min_visible_zoom: entry.min_visible_zoom,
             label: entry.label,
         });
@@ -448,6 +459,10 @@ fn merge_regional_labels<'a>(labels: impl IntoIterator<Item = &'a str>) -> Strin
     let mut ca_credits = BTreeSet::new();
     let mut qld_regions = Vec::new();
     let mut qld_credits = BTreeSet::new();
+    let mut act_regions = Vec::new();
+    let mut act_credits = BTreeSet::new();
+    let mut tas_regions = Vec::new();
+    let mut tas_credits = BTreeSet::new();
     let mut vicmap_regions = Vec::new();
     let mut vicmap_credits = BTreeSet::new();
     let mut ign_layers: BTreeMap<&str, BTreeSet<&str>> = BTreeMap::new();
@@ -470,6 +485,18 @@ fn merge_regional_labels<'a>(labels: impl IntoIterator<Item = &'a str>) -> Strin
         {
             qld_regions.push(region);
             qld_credits.insert(credit);
+        } else if let Some((region, credit)) = label
+            .strip_prefix("ACTmapi · ")
+            .and_then(|rest| rest.split_once(" · "))
+        {
+            act_regions.push(region);
+            act_credits.insert(credit);
+        } else if let Some((region, credit)) = label
+            .strip_prefix("LIST · ")
+            .and_then(|rest| rest.split_once(" · "))
+        {
+            tas_regions.push(region);
+            tas_credits.insert(credit);
         } else if let Some((region, credit)) = label
             .strip_prefix("Vicmap · ")
             .and_then(|rest| rest.split_once(" · "))
@@ -510,6 +537,24 @@ fn merge_regional_labels<'a>(labels: impl IntoIterator<Item = &'a str>) -> Strin
             "QRT · {} · {}",
             qld_regions.join(","),
             qld_credits.into_iter().collect::<Vec<_>>().join(" · ")
+        ));
+    }
+    if !act_regions.is_empty() {
+        act_regions.sort_unstable();
+        act_regions.dedup();
+        other.push(format!(
+            "ACTmapi · {} · {}",
+            act_regions.join(","),
+            act_credits.into_iter().collect::<Vec<_>>().join(" · ")
+        ));
+    }
+    if !tas_regions.is_empty() {
+        tas_regions.sort_unstable();
+        tas_regions.dedup();
+        other.push(format!(
+            "LIST · {} · {}",
+            tas_regions.join(","),
+            tas_credits.into_iter().collect::<Vec<_>>().join(" · ")
         ));
     }
     if !vicmap_regions.is_empty() {
@@ -704,6 +749,53 @@ impl ScreenLabel {
             .sum::<f32>()
             * scale
             + 8.0 * scale
+    }
+}
+
+#[derive(Debug, PartialEq, Eq)]
+enum AttributionLink {
+    License,
+    Source,
+}
+
+fn tas_attribution_link(
+    label: &ScreenLabel,
+    cursor: (f64, f64),
+    scale: f32,
+) -> Option<AttributionLink> {
+    if label.kind != LabelKind::Attribution || !label.name.contains("LIST Transport Segments") {
+        return None;
+    }
+    let (left, top) = label.text_origin(scale);
+    let (x, y) = (cursor.0 as f32, cursor.1 as f32);
+    if x >= left && x <= left + 88.0 * scale && y >= top - 35.0 * scale && y <= top - 4.0 * scale {
+        return Some(AttributionLink::License);
+    }
+    if x >= left && x <= left + label.text_width(scale) && y >= top && y <= top + 80.0 * scale {
+        return Some(AttributionLink::Source);
+    }
+    None
+}
+
+#[cfg(target_os = "macos")]
+fn open_attribution_url(url: &str) {
+    if !url.starts_with("https://") {
+        eprintln!("source link must use HTTPS");
+        return;
+    }
+    if let Err(error) = std::process::Command::new("open").arg(url).spawn() {
+        eprintln!("source link: {error}");
+    }
+}
+
+#[cfg(not(target_os = "macos"))]
+fn open_attribution_url(url: &str) {
+    if !url.starts_with("https://") {
+        eprintln!("source link must use HTTPS");
+        return;
+    }
+    if let Err(error) = std::process::Command::new("xdg-open").arg(url).spawn() {
+        eprintln!("source link: {error}");
     }
 }
 #[derive(Default)]
@@ -981,18 +1073,40 @@ impl TileManager {
                 self.source.attribution.clone().unwrap_or_default()
             } else if world_mode() {
                 if visible.first().is_some_and(|tile| tile.key.z >= 10) {
-                    let active: Vec<_> = self
-                        .regional_near(camera)
+                    let mut candidates = BTreeSet::new();
+                    for tile in visible {
+                        if let Some(ids) =
+                            self.regional_index.get(&regional_cell_for_tile(tile.key))
+                        {
+                            candidates.extend(ids.iter().copied());
+                        }
+                    }
+                    let active: Vec<_> = candidates
+                        .into_iter()
+                        .map(|id| &self.regional[id])
                         .filter(|pack| {
                             camera.zoom >= f64::from(pack.min_visible_zoom)
-                                && camera_center_inside(camera, pack.bounds)
+                                && visible
+                                    .iter()
+                                    .any(|tile| tile_intersects(tile.key, pack.bounds))
                         })
-                        .map(|pack| pack.label.as_str())
                         .collect();
                     if active.is_empty() {
                         "상세 자료 없음 · 미수집 지역".to_owned()
                     } else {
-                        format!("{} · 미수집 지역은 회색", merge_regional_labels(active))
+                        let mut label =
+                            merge_regional_labels(active.iter().map(|pack| pack.label.as_str()));
+                        let credits: BTreeSet<_> = active
+                            .iter()
+                            .flat_map(|pack| pack.screen_credits.iter())
+                            .collect();
+                        for credit in credits {
+                            if !label.contains(credit) {
+                                label.push_str(" / ");
+                                label.push_str(credit);
+                            }
+                        }
+                        format!("{label} · 미수집 지역은 회색")
                     }
                 } else if camera.zoom > f64::from(self.mid.max_zoom) {
                     "개략지도 확대 표시 · 상세 도로/건물 없음".to_owned()
@@ -2384,7 +2498,32 @@ impl ApplicationHandler<UserEvent> for App {
                 state,
                 button: MouseButton::Left,
                 ..
-            } => self.dragging = state == ElementState::Pressed,
+            } => {
+                if state == ElementState::Pressed
+                    && let (Some(camera), Some(manager)) = (&self.camera, &self.manager)
+                {
+                    let visible = camera.visible_tiles(manager.max_zoom_for(camera), 1);
+                    let labels = manager.visible_labels(camera, &visible);
+                    if let Some(link) = labels.iter().find_map(|label| {
+                        tas_attribution_link(label, self.cursor, camera.scale_factor as f32)
+                    }) && let Some(pack) = manager.regional.iter().find(|pack| {
+                        pack.label.starts_with("LIST · ")
+                            && visible
+                                .iter()
+                                .any(|tile| tile_intersects(tile.key, pack.bounds))
+                    }) {
+                        let url = match link {
+                            AttributionLink::License => pack.license_url.as_deref(),
+                            AttributionLink::Source => pack.source_page_url.as_deref(),
+                        };
+                        if let Some(url) = url {
+                            open_attribution_url(url);
+                            return;
+                        }
+                    }
+                }
+                self.dragging = state == ElementState::Pressed;
+            }
             WindowEvent::CursorMoved { position, .. } => {
                 if self.dragging
                     && let Some(camera) = &mut self.camera
@@ -2605,6 +2744,53 @@ mod tests {
         let merged = merge_regional_labels([first.as_str(), second.as_str()]);
         assert!(merged.contains("QRT · Brisbane City,Redland City"));
         assert_eq!(merged.matches(credit).count(), 1);
+    }
+
+    #[test]
+    fn adjacent_vicmap_packs_show_source_credit_once() {
+        let credit = "Copyright (c) The State of Victoria, Department of Energy, Environment and Climate Action";
+        let label = format!("Vicmap · Victoria · {credit}");
+        let merged = merge_regional_labels([label.as_str(), label.as_str()]);
+        assert_eq!(merged.matches("Vicmap · Victoria").count(), 1);
+        assert_eq!(merged.matches(credit).count(), 1);
+    }
+
+    #[test]
+    fn adjacent_act_packs_show_source_credit_once() {
+        let first = "ACTmapi · Belconnen · © Australian Capital Territory";
+        let second = "ACTmapi · Gungahlin · © Australian Capital Territory";
+        let merged = merge_regional_labels([first, second]);
+        assert!(merged.contains("ACTmapi · Belconnen,Gungahlin"));
+        assert_eq!(merged.matches("© Australian Capital Territory").count(), 1);
+    }
+
+    #[test]
+    fn adjacent_tas_packs_show_source_credit_once() {
+        let credit = "LIST Transport Segments from theLIST © State of Tasmania · CC BY 3.0 AU · adapted by Mappa";
+        let first = format!("LIST · Tasmania · {credit}");
+        let second = format!("LIST · Tasmania · {credit}");
+        let merged = merge_regional_labels([first.as_str(), second.as_str()]);
+        assert_eq!(merged.matches(credit).count(), 1);
+    }
+
+    #[test]
+    fn tas_credit_and_logo_open_separate_source_links() {
+        let label = ScreenLabel {
+            name: "LIST Transport Segments from theLIST © State of Tasmania".into(),
+            x: 12.0,
+            y: 600.0,
+            rank: 0,
+            kind: LabelKind::Attribution,
+        };
+        assert_eq!(
+            tas_attribution_link(&label, (30.0, 575.0), 1.0),
+            Some(AttributionLink::License)
+        );
+        assert_eq!(
+            tas_attribution_link(&label, (30.0, 605.0), 1.0),
+            Some(AttributionLink::Source)
+        );
+        assert_eq!(tas_attribution_link(&label, (300.0, 400.0), 1.0), None);
     }
 
     #[test]

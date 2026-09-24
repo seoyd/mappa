@@ -1,4 +1,4 @@
-//! Register audited Vicmap road packs in the offline world catalog.
+//! Register audited ACTmapi road packs in the offline world catalog.
 
 use mappa_map_data::canonical::SourceManifest;
 use std::{error::Error, fmt::Write, path::Path};
@@ -6,7 +6,7 @@ use std::{error::Error, fmt::Write, path::Path};
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<_> = std::env::args().collect();
     if args.len() != 4 {
-        return Err("usage: make_au_vic_vicmap_catalog MANIFEST_DIR PACK_DIR OUTPUT.toml".into());
+        return Err("usage: make_au_act_catalog MANIFEST_DIR PACK_DIR OUTPUT.toml".into());
     }
     let manifest_dir = Path::new(&args[1]);
     let pack_dir = Path::new(&args[2]);
@@ -16,14 +16,14 @@ fn main() -> Result<(), Box<dyn Error>> {
         .collect::<Result<Vec<_>, _>>()?;
     paths.sort();
     let mut catalog = String::from(
-        "# Statewide Victoria Vicmap Transport Road Line; open vehicular roads from audited WFS pages.\n",
+        "# ACTmapi Road Centrelines source districts; operational general roads only.\n",
     );
     let mut count = 0;
     for manifest_path in paths {
         let Some(stem) = manifest_path.file_stem().and_then(|name| name.to_str()) else {
             continue;
         };
-        let Some(region) = stem.strip_prefix("au_vic_vicmap_roads_") else {
+        let Some(code) = stem.strip_prefix("au_act_roads_") else {
             continue;
         };
         if manifest_path.extension().and_then(|value| value.to_str()) != Some("toml") {
@@ -31,16 +31,20 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
         let manifest = SourceManifest::open(&manifest_path)?;
         if manifest.source.len() != 1
-            || manifest.source[0].adapter != "au-vic-vicmap-roads"
-            || manifest.proof_region != format!("au-vic-vicmap-{region}")
+            || manifest.source[0].adapter != "au-act-road-centrelines"
+            || manifest.proof_region != format!("au-act-roads-{code}")
         {
-            return Err(format!("invalid Vicmap manifest: {}", manifest_path.display()).into());
+            return Err(format!("invalid ACT manifest: {}", manifest_path.display()).into());
         }
-        let pack_path = pack_dir.join(format!("{region}.pmtiles"));
+        let pack_path = pack_dir.join(format!("{code}.pmtiles"));
         if !pack_path.is_file() {
-            return Err(format!("missing Vicmap pack: {}", pack_path.display()).into());
+            return Err(format!("missing ACT pack: {}", pack_path.display()).into());
         }
-        let log = std::fs::read_to_string(pack_dir.join(format!("{region}-tile-audit.log")))?;
+        let region = manifest.source[0]
+            .coverage
+            .strip_prefix("ACT Road Centrelines; source district assignment=")
+            .ok_or("ACT manifest omits source district")?;
+        let log = std::fs::read_to_string(pack_dir.join(format!("{code}-tile-audit.log")))?;
         let min_visible_zoom = (10..=15)
             .find(|zoom| {
                 log.lines()
@@ -52,14 +56,14 @@ fn main() -> Result<(), Box<dyn Error>> {
                     .and_then(|count| count.parse::<usize>().ok())
                     .is_some_and(|tiles| tiles > 0)
             })
-            .ok_or("Vicmap tile audit has no visible tiles")?;
+            .ok_or("ACT tile audit has no visible tiles")?;
         let reported_bytes = log
             .lines()
             .find_map(|line| line.strip_prefix("archive_bytes="))
-            .ok_or("Vicmap tile audit omits archive bytes")?
+            .ok_or("ACT tile audit omits archive bytes")?
             .parse::<u64>()?;
         if reported_bytes != std::fs::metadata(&pack_path)?.len() {
-            return Err("Vicmap archive changed after tile audit".into());
+            return Err("ACT archive changed after tile audit".into());
         }
         let catalog_dir = output_path.parent().ok_or("catalog output has no parent")?;
         let root = catalog_dir.join("../..").canonicalize()?;
@@ -76,10 +80,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         let credit = manifest.source[0]
             .attribution_text
             .as_deref()
-            .ok_or("Vicmap source lacks attribution")?;
-        let label = format!("Vicmap · Victoria · {credit}");
+            .ok_or("ACT source lacks attribution")?;
+        let label = format!("ACTmapi · {region} · {credit}");
         if label.chars().count() > 180 {
-            return Err("Vicmap label exceeds UI limit".into());
+            return Err(format!("ACT label exceeds UI limit: {region}").into());
         }
         let label = toml::Value::String(label);
         write!(
@@ -89,9 +93,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         count += 1;
     }
     if count == 0 {
-        return Err("no Vicmap road packs found".into());
+        return Err("no ACT road packs found".into());
     }
     std::fs::write(output_path, catalog)?;
-    println!("vicmap_packs={count} catalog={}", output_path.display());
+    println!("act_packs={count} catalog={}", output_path.display());
     Ok(())
 }
