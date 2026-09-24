@@ -3,6 +3,22 @@
 # with observed features, not positional accuracy. Archives open on first use.
 # Adding a pack here does not certify its coverage or positional accuracy.
 [[pack]]
+path = "../../artifacts/world-water/nh-state/water.pmtiles"
+manifest = "../../data/us_tiger_nh_state_areawater.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 수면 · 뉴햄프셔주 10개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/nh-state/state.pmtiles"
+manifest = "../../data/us_tiger_nh_state_roads.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 · 뉴햄프셔주 10개 카운티 실증"
+
+[[pack]]
 path = "../../artifacts/world-stations/fr-paris/stations.pmtiles"
 manifest = "../../data/ign_bdtopo_paris_stations.toml"
 min_visible_zoom = 13

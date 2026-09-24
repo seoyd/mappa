@@ -1,0 +1,1 @@
+artifacts/world-roads/nh-state/state.pmtiles: decoded=32213, absent=0, failures=0, layers (land, green, water, road_surface, building, boundary, waterway, major, collector, local, place)=[0, 0, 0, 0, 0, 0, 0, 4871, 42156, 361001, 0]

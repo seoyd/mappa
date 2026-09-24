@@ -1,0 +1,11 @@
+# Official Census TIGER2025/ROADS directory, state FIPS 33; observed 2026-09-25.
+tl_2025_33001_roads.zip
+tl_2025_33003_roads.zip
+tl_2025_33005_roads.zip
+tl_2025_33007_roads.zip
+tl_2025_33009_roads.zip
+tl_2025_33011_roads.zip
+tl_2025_33013_roads.zip
+tl_2025_33015_roads.zip
+tl_2025_33017_roads.zip
+tl_2025_33019_roads.zip

@@ -1,0 +1,11 @@
+# Official Census TIGER2025/AREAWATER directory, state FIPS 33; observed 2026-09-25.
+tl_2025_33001_areawater.zip
+tl_2025_33003_areawater.zip
+tl_2025_33005_areawater.zip
+tl_2025_33007_areawater.zip
+tl_2025_33009_areawater.zip
+tl_2025_33011_areawater.zip
+tl_2025_33013_areawater.zip
+tl_2025_33015_areawater.zip
+tl_2025_33017_areawater.zip
+tl_2025_33019_areawater.zip
