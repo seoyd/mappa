@@ -20,6 +20,20 @@ fn member(archive: &mut ZipArchive<File>, name: &str) -> Result<Vec<u8>, Box<dyn
     Ok(bytes)
 }
 
+fn extract_member(
+    archive: &mut ZipArchive<File>,
+    name: &str,
+    path: &Path,
+) -> Result<(), Box<dyn Error>> {
+    let mut item = archive.by_name(name)?;
+    if item.size() > 8 * 1024 * 1024 * 1024 {
+        return Err(format!("NRN member exceeds 8 GiB: {name}").into());
+    }
+    let mut output = File::create(path)?;
+    std::io::copy(&mut item, &mut output)?;
+    Ok(())
+}
+
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<_> = std::env::args().collect();
     if args.len() != 3 {
@@ -50,10 +64,13 @@ fn main() -> Result<(), Box<dyn Error>> {
     };
     let prj = member(&mut archive, &format!("{stem}.prj"))?;
     let prj = std::str::from_utf8(&prj)?;
-    let shp = member(&mut archive, &format!("{stem}.shp"))?;
-    let dbf = member(&mut archive, &format!("{stem}.dbf"))?;
-    let shape_reader = shapefile::ShapeReader::new(std::io::Cursor::new(shp))?;
-    let attr_reader = shapefile::dbase::Reader::new(std::io::Cursor::new(dbf))?;
+    let temporary = tempfile::tempdir()?;
+    let shp = temporary.path().join("roadseg.shp");
+    let dbf = temporary.path().join("roadseg.dbf");
+    extract_member(&mut archive, &format!("{stem}.shp"), &shp)?;
+    extract_member(&mut archive, &format!("{stem}.dbf"), &dbf)?;
+    let shape_reader = shapefile::ShapeReader::new(File::open(shp)?)?;
+    let attr_reader = shapefile::dbase::Reader::new(File::open(dbf)?)?;
     let mut reader = shapefile::Reader::new(shape_reader, attr_reader);
     let mut classes = BTreeMap::<String, usize>::new();
     let mut shape_types = BTreeMap::<String, usize>::new();

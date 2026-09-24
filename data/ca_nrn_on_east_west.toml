@@ -1,0 +1,35 @@
+schema_version = 1
+proof_region = "ca-nrn-ON-east-west"
+proof_bbox_wgs84 = [
+    -84.7265625,
+    41.7346623,
+    -79.453125,
+    56.0828031,
+]
+
+[[source]]
+id = "ca-nrn-ON-18.0"
+name = "National Road Network Road Segment"
+provider = "Statistics Canada / National Road Network"
+source_version = "18.0"
+download_date = "2026-09-24"
+official_url = "https://geo.statcan.gc.ca/nrn_rrn/on/nrn_rrn_on_SHAPE.zip"
+download_page_url = "https://open.canada.ca/data/en/dataset/3d282116-e556-400c-9306-ca1a3cada77f"
+file = "local/nrn_rrn_on_SHAPE.zip"
+sha256 = "01694758029c4b7ca275b483c7a1cfad5bf8d17d1a611fabc9a7e909eca1f568"
+crs = "NAD83(CSRS) geographic degrees; numeric degrees retained; WGS84 shift not independently verified"
+format = "Province ZIP / English ROADSEG Shapefile Polyline"
+coverage = "NRN ON provincial Road Segment input"
+resolution = "Official NRN source geometry; no independent field accuracy test"
+update_frequency = "Official dataset catalogue: annually"
+license_id = "OGL-CA"
+license_url = "https://open.canada.ca/en/open-government-licence-canada"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "Contains information licensed under the Open Government Licence – Canada."
+share_alike = false
+adapter = "ca-nrn-roadseg"
+adapter_version = 1

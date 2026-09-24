@@ -9,3 +9,5 @@
 /artifacts/world-roads/nj-state/state.rejected.json
 /artifacts/world-roads/gb/*.mgeodb
 /artifacts/world-roads/ca/*.mgeodb
+/artifacts/world-roads/ca/on.pmtiles
+/artifacts/world-roads/ca/on-east.pmtiles

@@ -53,10 +53,23 @@ pub fn adapt_ca_nrn_roads(
     }) {
         return Err(CanonicalError::Feature("unexpected NRN source CRS".into()));
     }
-    let shp = read_member(&mut archive, "shp")?;
-    let dbf = read_member(&mut archive, "dbf")?;
-    let shape_reader = shapefile::ShapeReader::new(std::io::Cursor::new(shp))?;
-    let attribute_reader = shapefile::dbase::Reader::new(std::io::Cursor::new(dbf))?;
+    let temporary = tempfile::tempdir()?;
+    let extract = |archive: &mut zip::ZipArchive<File>, extension: &str| {
+        let mut member = archive
+            .by_name(&format!("{stem}.{extension}"))
+            .map_err(|error| CanonicalError::Feature(error.to_string()))?;
+        if member.size() > 8 * 1024 * 1024 * 1024 {
+            return Err(CanonicalError::Feature("NRN member exceeds 8 GiB".into()));
+        }
+        let path = temporary.path().join(format!("roadseg.{extension}"));
+        let mut output = File::create(&path)?;
+        std::io::copy(&mut member, &mut output)?;
+        Ok::<_, CanonicalError>(path)
+    };
+    let shp = extract(&mut archive, "shp")?;
+    let dbf = extract(&mut archive, "dbf")?;
+    let shape_reader = shapefile::ShapeReader::new(File::open(shp)?)?;
+    let attribute_reader = shapefile::dbase::Reader::new(File::open(dbf)?)?;
     let mut reader = shapefile::Reader::new(shape_reader, attribute_reader);
     let mut output = Vec::new();
     let mut rejected = Vec::new();

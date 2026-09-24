@@ -2,7 +2,7 @@
 
 ## 현재 판정
 
-**PE·NS·NB·NT·NU·YT·MB·NL 공식 도로선을 오프라인 지도에 연결했다. 캐나다의 나머지 5개 주와 전 세계 상세지도는 미완성이다.** [캐나다 정부 NRN 목록](https://open.canada.ca/data/en/dataset/3d282116-e556-400c-9306-ca1a3cada77f?res_page=3)은 13개 주·준주별 Road Segment ZIP을 제공하고 [Open Government Licence – Canada](https://open.canada.ca/en/open-government-licence-canada)를 적용한다. 라이선스는 상업적 재사용·수정·재배포를 허용하고 출처 표기를 요구하며 공유조건은 없다. Mappa 앱은 원천 다운로드 API나 외부 지도 서버를 런타임에 호출하지 않는다.
+**13개 주·준주의 공식 NRN 도로선을 모두 오프라인 지도에 연결했다. 캐나다 밖 전 세계 상세지도와 현장 정확도 검증은 미완성이다.** [캐나다 정부 NRN 목록](https://open.canada.ca/data/en/dataset/3d282116-e556-400c-9306-ca1a3cada77f?res_page=3)은 13개 주·준주별 Road Segment ZIP을 제공하고 [Open Government Licence – Canada](https://open.canada.ca/en/open-government-licence-canada)를 적용한다. 라이선스는 상업적 재사용·수정·재배포를 허용하고 출처 표기를 요구하며 공유조건은 없다. Mappa 앱은 원천 다운로드 API나 외부 지도 서버를 런타임에 호출하지 않는다.
 
 | 단계 | 확인한 사실 |
 |---|---|
@@ -51,6 +51,26 @@ PE·NS 두 주 합계 원천 도로선은 **139,551개**, 비어 있지 않은 �
 
 기본 세계 모드의 [Winnipeg z14](../artifacts/world-roads/ca/winnipeg-world-z14.png)와 [St. John's z14](../artifacts/world-roads/ca/st-johns-world-z14.png) Metal 화면은 각각 타일 실패 0이며 원천 출처 표기를 확인했다.
 
+## 13개 주·준주 입력 구축 완료: AB·BC·SK·QC·ON
+
+아래 다섯 [공식 NRN ZIP](https://open.canada.ca/data/en/dataset/3d282116-e556-400c-9306-ca1a3cada77f?res_page=3)을 추가해 캐나다가 배포하는 **13개 주·준주 ROADSEG 입력을 모두 처리**했다. 원본 ZIP 전체 항목 CRC, 영문 Polyline, 각 지역 내부의 `ROADSEGID` 고유성, NAD83(CSRS/CSRS98) `.prj`, 원본 분류를 지역별로 감사했다. 원본을 빌드 때만 사용하고 앱은 로컬 타일만 읽는다.
+
+| 지역 | 내부 버전 | 원본 ZIP SHA-256 | 원본 채택 / 거절 | 최종 팩 바이트 | 실제 타일 전수 해독 |
+|---|---:|---|---:|---:|---:|
+| AB | 17.0 | `9061f00030ba8090d0a6d8491b946f8d333ce11752cb4e2a4fad403d9ff7a6d8` | 443,593 / 0 | 96,925,032 | 441,796 / 오류 0 |
+| BC | 14.0 | `0853f82281336f76e87a9b8b2863b553afa1af11e87e217a464bf918759dec30` | 263,584 / 0 | 54,385,159 | 162,651 / 오류 0 |
+| SK | 15.0 | `74a52d413fc69aceb256dc3e0a307d653a20ffbe36eaceff9cb42e039996debb` | 299,124 / 0 | 81,236,780 | 441,156 / 오류 0 |
+| QC | 10.0 | `f0642e6c9e07c6d19a900a900884b7f802d8964cadf9843b8cf439b11c94a1af` | 504,826 / 0 | 93,236,539 | 193,994 / 오류 0 |
+| ON | 18.0 | `01694758029c4b7ca275b483c7a1cfad5bf8d17d1a611fabc9a7e909eca1f568` | 651,662 / 0 | 128,440,034 (3개 팩) | 350,635 / 오류 0 |
+
+[AB](../artifacts/world-roads/ca/ab-source-audit.log)·[BC](../artifacts/world-roads/ca/bc-source-audit.log)·[SK](../artifacts/world-roads/ca/sk-source-audit.log)·[QC](../artifacts/world-roads/ca/qc-source-audit.log)·[ON](../artifacts/world-roads/ca/on-source-audit.log) 원천 감사 및 지역별 `*-tile-audit.log`를 보관한다. PMTiles SHA-256은 AB `5d231340513752f6bcf87cbc747c481f3ca19f47bcb5f37bafa07197ce88e630`, BC `c489282fc14da3aa4bf0ef44dc1620159220cb05dd89303d2e1700bdbbeed65e`, SK `0a9b3a8fac0f8a89cdbaa55f8cb7d665259deafd0042a0b14cd1cfc2040a1aef`, QC `a9bc85412d29bdc54f686749b13ec52f63ed1b6c993b995248579deff048e7e1`다.
+
+ON의 전체 로컬 팩은 129,411,907바이트로 저장소의 단일 파일 한도보다 컸다. [Rust 분할기](../crates/mappa-map-data/src/bin/shard_ca_nrn_pmtiles.rs)가 원본 경계에서 z10 타일 열을 계산해 서부와 동부로 나눴고, 동부가 101,879,709바이트여서 다시 둘로 나눴다. [1차](../artifacts/world-roads/ca/on-shard-audit.log)와 [2차](../artifacts/world-roads/ca/on-east-shard-audit.log) 모두 **원본의 압축 타일 바이트가 모든 350,635개 키에서 그대로 보존**됐음을 전수 확인했다. 최종 [서부](../artifacts/world-roads/ca/on-west.pmtiles) 26,543,067바이트·SHA `0a362f8abf9250e2564a186e357297f468a4035942c9a00cb4b893837f097c02`, [동부 서쪽](../artifacts/world-roads/ca/on-east-west.pmtiles) 59,758,187바이트·SHA `e50ada65bb4f8e0cf7a8a2b03c9942f26cfd1dbc68084028a09f5fc34f58aff8`, [동부 동쪽](../artifacts/world-roads/ca/on-east-east.pmtiles) 42,138,780바이트·SHA `fe89a974cb2bd4132ac962069ecb3eab146044fada853fb7964b7df485baa9da`다. 전체·중간 팩은 빌드 산출물이며 배포 목록에는 최종 3개만 넣었다.
+
+13개 원천 합계는 **도로선 2,548,203개 채택·거절 0개**다. Ontario 분할분을 포함한 **15개 팩, 576,047,375바이트, 비어 있지 않은 타일 1,977,578개**를 전수 해독해 오류 0개였다. [Calgary](../artifacts/world-roads/ca/calgary-world-z14.png)·[Victoria](../artifacts/world-roads/ca/victoria-world-z14.png)·[Regina](../artifacts/world-roads/ca/regina-world-z14.png)·[Montréal](../artifacts/world-roads/ca/montreal-world-z14.png)·[Toronto](../artifacts/world-roads/ca/toronto-world-z14.png)·[Thunder Bay](../artifacts/world-roads/ca/thunder-bay-world-z14.png) z14 Metal 캡처는 타일 실패 0과 출처 표기를 확인했다.
+
+**판정 한계:** 13개 공식 배포본의 입력을 처리했다는 뜻이며 캐나다 모든 실제 도로의 누락 없음·연결성·현장 위치 정확도가 입증된 것은 아니다. QC 원본 504,826개 중 353,895개가 `Local / Unknown`이고, 북부 일부 원본은 `Unknown`·`Winter`를 포함한다. 현재 지도는 계절성·차량 통행 가능 조건을 구분해 표시하지 않는다. 지역 간 같은 도로의 중복·경계 이음, WGS84 독립 기준점, iPhone 실기기 성능, 상세 수면·건물·역·공공기관도 미검증이다.
+
 ## 재현
 
 원천은 빌드 때만 다운로드한다. 앱 런타임은 커밋된 로컬 팩을 읽는다.
@@ -82,6 +102,24 @@ cargo run --release --offline -p mappa-map-data --bin build_canonical_tiles -- \
   artifacts/world-roads/ca/ns.pmtiles
 cargo run --release --offline -p mappa-map-data --bin audit_fixture -- \
   artifacts/world-roads/ca/ns.pmtiles
+
+# Ontario 전체 팩은 빌드용으로만 보관하고 z10 타일 열에서 나눈 3개를 배포한다.
+curl --fail --location --output data/local/nrn_rrn_on_SHAPE.zip \
+  'https://geo.statcan.gc.ca/nrn_rrn/on/nrn_rrn_on_SHAPE.zip'
+cargo run --release --offline -p mappa-map-data --bin audit_ca_nrn_zip -- \
+  data/local/nrn_rrn_on_SHAPE.zip ON
+cargo run --release --offline -p mappa-map-data --bin build_ca_nrn_province -- \
+  data/local/nrn_rrn_on_SHAPE.zip ON 18.0 2026-09-24 \
+  artifacts/world-roads/ca/on.mgeodb data/ca_nrn_on.toml
+cargo run --release --offline -p mappa-map-data --bin build_canonical_tiles -- \
+  data/ca_nrn_on.toml artifacts/world-roads/ca/on.mgeodb \
+  artifacts/world-roads/ca/on.pmtiles
+cargo run --release --offline -p mappa-map-data --bin shard_ca_nrn_pmtiles -- \
+  data/ca_nrn_on.toml artifacts/world-roads/ca/on.pmtiles \
+  artifacts/world-roads/ca/on
+cargo run --release --offline -p mappa-map-data --bin shard_ca_nrn_pmtiles -- \
+  data/ca_nrn_on_east.toml artifacts/world-roads/ca/on-east.pmtiles \
+  artifacts/world-roads/ca/on-east
 ```
 
-재다운로드 시 ZIP SHA가 달라지면 공식 원천 갱신 여부와 스키마를 다시 감사해야 한다. manifest의 날짜는 실제 다운로드 날짜로 기록한다. 다음 단계는 나머지 5개 주에 같은 스키마·권리·메모리 한계를 확인하고 지역별로 빌드하는 것이다. 북아일랜드 OSNI 도로선도 별도 공식 OGL 원천이 있지만 [현재 게시 ZIP 다운로드](https://admin.opendatani.gov.uk/dataset/osni-open-data-50k-transport-transport-lines)는 이 환경에서 HTTP 403을 반환해 아직 확보하지 못했다.
+재다운로드 시 ZIP SHA가 달라지면 공식 원천 갱신 여부와 스키마를 다시 감사해야 한다. manifest의 날짜는 실제 다운로드 날짜로 기록한다. 다음 단계는 캐나다 지역 간 중복·경계 연결성과 상세 수면·건물·장소, 위치 정확도를 검증하고 같은 게이트를 다른 나라에 확대하는 것이다. 북아일랜드 OSNI 도로선도 별도 공식 OGL 원천이 있지만 [현재 게시 ZIP 다운로드](https://admin.opendatani.gov.uk/dataset/osni-open-data-50k-transport-transport-lines)는 이 환경에서 HTTP 403을 반환해 아직 확보하지 못했다.

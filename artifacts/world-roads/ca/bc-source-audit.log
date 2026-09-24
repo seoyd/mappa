@@ -1,0 +1,7 @@
+source_sha256=0853f82281336f76e87a9b8b2863b553afa1af11e87e217a464bf918759dec30 province=BC records=263584
+zip_members=79 crc_failures=0
+roadseg_stem=NRN_BC_14_0_SHAPE_en/NRN_BC_14_0_ROADSEG
+prj=GEOGCS["GCS_North_American_1983_CSRS98",DATUM["D_North_American_1983_CSRS98",SPHEROID["GRS_1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["Degree",0.0174532925199432955]]
+shape_types={"Polyline": 263584}
+unique_nids=243246 unique_roadseg_ids=263584
+road_classes={"Some(Character(Some(\"Alleyway / Lane\")))": 12084, "Some(Character(Some(\"Arterial\")))": 18923, "Some(Character(Some(\"Collector\")))": 30309, "Some(Character(Some(\"Expressway / Highway\")))": 9741, "Some(Character(Some(\"Freeway\")))": 1843, "Some(Character(Some(\"Local / Strata\")))": 15179, "Some(Character(Some(\"Local / Street\")))": 157655, "Some(Character(Some(\"Local / Unknown\")))": 3701, "Some(Character(Some(\"Ramp\")))": 3686, "Some(Character(Some(\"Resource / Recreation\")))": 6873, "Some(Character(Some(\"Service Lane\")))": 3590}

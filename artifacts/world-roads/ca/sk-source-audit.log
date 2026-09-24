@@ -1,0 +1,7 @@
+source_sha256=74a52d413fc69aceb256dc3e0a307d653a20ffbe36eaceff9cb42e039996debb province=SK records=299124
+zip_members=46 crc_failures=0
+roadseg_stem=NRN_SK_15_0_SHAPE_en/NRN_SK_15_0_ROADSEG
+prj=GEOGCS["GCS_North_American_1983_CSRS",DATUM["D_North_American_1983_CSRS",SPHEROID["GRS_1980",6378137.0,298.257222101]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]]
+shape_types={"Polyline": 299124}
+unique_nids=275358 unique_roadseg_ids=299124
+road_classes={"Some(Character(Some(\"Alleyway / Lane\")))": 21274, "Some(Character(Some(\"Arterial\")))": 16, "Some(Character(Some(\"Collector\")))": 146109, "Some(Character(Some(\"Expressway / Highway\")))": 20037, "Some(Character(Some(\"Freeway\")))": 184, "Some(Character(Some(\"Local / Strata\")))": 3, "Some(Character(Some(\"Local / Street\")))": 72414, "Some(Character(Some(\"Local / Unknown\")))": 65, "Some(Character(Some(\"Ramp\")))": 1094, "Some(Character(Some(\"Rapid Transit\")))": 3, "Some(Character(Some(\"Resource / Recreation\")))": 37545, "Some(Character(Some(\"Service Lane\")))": 341, "Some(Character(Some(\"Unknown\")))": 14, "Some(Character(Some(\"Winter\")))": 25}

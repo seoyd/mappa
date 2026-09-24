@@ -1,0 +1,7 @@
+source_sha256=f0642e6c9e07c6d19a900a900884b7f802d8964cadf9843b8cf439b11c94a1af province=QC records=504826
+zip_members=28 crc_failures=0
+roadseg_stem=NRN_RRN_QC_SHAPE/NRN_QC_10_0_SHAPE_en/NRN_QC_10_0_ROADSEG
+prj=GEOGCS["GCS_North_American_1983_CSRS",DATUM["D_North_American_1983_CSRS",SPHEROID["GRS_1980",6378137.0,298.257222101]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]]
+shape_types={"Polyline": 504826}
+unique_nids=408680 unique_roadseg_ids=504826
+road_classes={"Some(Character(Some(\"Arterial\")))": 19014, "Some(Character(Some(\"Collector\")))": 59620, "Some(Character(Some(\"Expressway / Highway\")))": 41159, "Some(Character(Some(\"Freeway\")))": 9400, "Some(Character(Some(\"Local / Strata\")))": 4336, "Some(Character(Some(\"Local / Unknown\")))": 353895, "Some(Character(Some(\"Ramp\")))": 8810, "Some(Character(Some(\"Rapid Transit\")))": 207, "Some(Character(Some(\"Resource / Recreation\")))": 4742, "Some(Character(Some(\"Service Lane\")))": 3643}

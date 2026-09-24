@@ -2,7 +2,7 @@
 
 ## 결정과 판정
 
-사용자 결정에 따라 **ODbL 원천을 현재 Mappa canonical GeoDB에 넣지 않는다.** 전 세계 도로의 국가별 공식·허용형 원천을 찾고, 같은 출처·품질 게이트로 지역별로 구축한다. 첫 실증인 미국 Census 뉴욕 카운티 한 파일을 뉴욕시 5개 카운티로, 이어 [뉴욕주 62개 카운티](NY_STATE_ROADS_PROGRESS.md)로 확장하고 [뉴저지주 21개 카운티](NJ_STATE_ROADS_PROGRESS.md)를 추가했다. 현재 기본 세계 모드는 두 주, [Great Britain 공식 RoadLink 52격자](GB_ROADS_PROGRESS.md), [캐나다 8개 지역 공식 NRN](CA_ROADS_PROGRESS.md)의 도로 팩을 사용한다. **전 세계 상세 도로망은 아직 없다.**
+사용자 결정에 따라 **ODbL 원천을 현재 Mappa canonical GeoDB에 넣지 않는다.** 전 세계 도로의 국가별 공식·허용형 원천을 찾고, 같은 출처·품질 게이트로 지역별로 구축한다. 첫 실증인 미국 Census 뉴욕 카운티 한 파일을 뉴욕시 5개 카운티로, 이어 [뉴욕주 62개 카운티](NY_STATE_ROADS_PROGRESS.md)로 확장하고 [뉴저지주 21개 카운티](NJ_STATE_ROADS_PROGRESS.md)를 추가했다. 현재 기본 세계 모드는 두 주, [Great Britain 공식 RoadLink 52격자](GB_ROADS_PROGRESS.md), [캐나다 13개 지역 공식 NRN](CA_ROADS_PROGRESS.md)의 도로 팩을 사용한다. **전 세계 상세 도로망은 아직 없다.**
 
 ## 미국 공식 원천 실증
 
@@ -44,7 +44,7 @@ ZIP의 `.prj`는 **EPSG:4269 NAD83**다. 현재 어댑터는 숫자 좌표를 �
 | 미국 | Census 2025 뉴욕주 62개·뉴저지주 21개 카운티를 실증. 다른 주 카운티는 미수집·미검증. 공식 배포 단위는 카운티별 All Roads 파일. |
 | Great Britain | [OS Open Roads 52격자 구축](GB_ROADS_PROGRESS.md): 무료 OGL v3, 2026-04 전국 Shapefile 606,145,264바이트·게시 MD5 확인. 원본 3,967,825개 중 격자 간 중복 6,748개를 제거하고 3,961,077개 고유 RoadLink를 OSTN15 변환. 52개 로컬 팩의 타일 480,930개 전수 해독 오류 0. 독립 기준점·도로 연결성·실기기 성능 검증과 GB 상세 부가 레이어는 미완료. 북아일랜드 원천은 별도로 필요. |
 | 북아일랜드 | [OSNI 50K Transport Lines](https://admin.opendatani.gov.uk/dataset/osni-open-data-50k-transport-transport-lines)는 OGL로 게시됐지만 이 환경에서 공식 ZIP HTTP 403, 기존 ArcGIS ZIP HTTP 400. 원본 파일 확보·검증·구축 전. |
-| 캐나다 | [NRN 8개 지역 구축](CA_ROADS_PROGRESS.md): 공식 13개 주·준주 배포본 중 PE·NS·NB·NT·NU·YT·MB·NL 도로선 합계 385,414개 채택, 거절 0. 지역 팩 합계 387,346개 실제 타일 전수 해독 오류 0. 다른 5개 주와 주 경계·위치 정확도·연결성·실기기 성능은 미완료. |
+| 캐나다 | [NRN 13개 지역 구축](CA_ROADS_PROGRESS.md): 공식 13개 주·준주 배포본의 도로선 합계 2,548,203개 채택, 거절 0. Ontario를 3개로 나눈 총 15개 팩의 실제 타일 합계 1,977,578개 전수 해독 오류 0. 지역 경계·위치 정확도·연결성·실기기 성능은 미완료. |
 | 그 외 국가 | 공식 원천·배포 허용 조건·파일·좌표계·독립 정확도 조사 및 실증 필요. 빈 곳은 빈 곳으로 표시. |
 
 Microsoft Road Detections와 Overture Transportation은 세계 규모의 후보지만 [제공자 설명](https://github.com/microsoft/RoadDetections), [Overture 권리 안내](https://docs.overturemaps.org/attribution/)상 ODbL이다. 사용자가 선택한 기존 라이선스 규칙 때문에 현재 canonical 입력에서 제외한다. 이 결정으로 세계 상세 도로 구축은 국가별 자료 확보가 완료될 때까지 **진행 중**이다.

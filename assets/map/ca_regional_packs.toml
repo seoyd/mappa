@@ -1,5 +1,21 @@
 # Official Canadian National Road Network province packs, built from local source ZIPs.
 [[pack]]
+path = "../../artifacts/world-roads/ca/ab.pmtiles"
+manifest = "../../data/ca_nrn_ab.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "CA AB · Contains information licensed under the Open Government Licence – Canada."
+
+[[pack]]
+path = "../../artifacts/world-roads/ca/bc.pmtiles"
+manifest = "../../data/ca_nrn_bc.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "CA BC · Contains information licensed under the Open Government Licence – Canada."
+
+[[pack]]
 path = "../../artifacts/world-roads/ca/mb.pmtiles"
 manifest = "../../data/ca_nrn_mb.toml"
 min_visible_zoom = 10
@@ -48,12 +64,52 @@ archive_max_zoom = 15
 label = "CA NU · Contains information licensed under the Open Government Licence – Canada."
 
 [[pack]]
+path = "../../artifacts/world-roads/ca/on-west.pmtiles"
+manifest = "../../data/ca_nrn_on_west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "CA ON · Contains information licensed under the Open Government Licence – Canada."
+
+[[pack]]
+path = "../../artifacts/world-roads/ca/on-east-west.pmtiles"
+manifest = "../../data/ca_nrn_on_east_west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "CA ON · Contains information licensed under the Open Government Licence – Canada."
+
+[[pack]]
+path = "../../artifacts/world-roads/ca/on-east-east.pmtiles"
+manifest = "../../data/ca_nrn_on_east_east.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "CA ON · Contains information licensed under the Open Government Licence – Canada."
+
+[[pack]]
 path = "../../artifacts/world-roads/ca/pe.pmtiles"
 manifest = "../../data/ca_nrn_pe.toml"
 min_visible_zoom = 10
 archive_min_zoom = 10
 archive_max_zoom = 15
 label = "CA PE · Contains information licensed under the Open Government Licence – Canada."
+
+[[pack]]
+path = "../../artifacts/world-roads/ca/qc.pmtiles"
+manifest = "../../data/ca_nrn_qc.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "CA QC · Contains information licensed under the Open Government Licence – Canada."
+
+[[pack]]
+path = "../../artifacts/world-roads/ca/sk.pmtiles"
+manifest = "../../data/ca_nrn_sk.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "CA SK · Contains information licensed under the Open Government Licence – Canada."
 
 [[pack]]
 path = "../../artifacts/world-roads/ca/yt.pmtiles"
