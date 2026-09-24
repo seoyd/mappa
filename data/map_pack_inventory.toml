@@ -62,6 +62,7 @@ manifest = "data/au_qld_qrt_roads_aurukun-shire.toml"
 manifest_sha256 = "e264451561d62ec207d7e5f81f0667f5d4a2ae5235bd93a83f40fe4e17d0993c"
 bytes = 48065
 sha256 = "62438596916c3ecc8f14e65782403fa3ca148ca3d9af0906b39a45b9a45ba3c9"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/62438596916c3ecc8f14e65782403fa3ca148ca3d9af0906b39a45b9a45ba3c9.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/balonne-shire.pmtiles"
@@ -69,6 +70,7 @@ manifest = "data/au_qld_qrt_roads_balonne-shire.toml"
 manifest_sha256 = "739750c62500f8f7f2c7e4faf03d96a454c46b40c1a722f5cf2478a8fc57b833"
 bytes = 1271170
 sha256 = "5bae76272baaa8f985cc645a67247f19efb045234175880c96415b928c76a84c"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/5bae76272baaa8f985cc645a67247f19efb045234175880c96415b928c76a84c.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/banana-shire.pmtiles"
@@ -76,6 +78,7 @@ manifest = "data/au_qld_qrt_roads_banana-shire.toml"
 manifest_sha256 = "0bff4c5fb42cf31d650850cb41c6767e7d350a43ccdcdb1e9c15fb02b892e9ca"
 bytes = 2389692
 sha256 = "5bbcc0be89f4b8db90892aea4b18cb2e918e07d12142984db02c6c4a02667aa8"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/5bbcc0be89f4b8db90892aea4b18cb2e918e07d12142984db02c6c4a02667aa8.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/barcaldine-regional.pmtiles"
@@ -83,6 +86,7 @@ manifest = "data/au_qld_qrt_roads_barcaldine-regional.toml"
 manifest_sha256 = "5a19d74fa8dfa17e607092590c1f8fe9bfe4b8bbfa53a6086c38f588cf4c222f"
 bytes = 1635114
 sha256 = "bf739170b3a063daf46b24bf443db129f6c9cc7074eda7e8c66e4c6afe4f1885"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/bf739170b3a063daf46b24bf443db129f6c9cc7074eda7e8c66e4c6afe4f1885.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/barcoo-shire.pmtiles"
@@ -90,6 +94,7 @@ manifest = "data/au_qld_qrt_roads_barcoo-shire.toml"
 manifest_sha256 = "5483b0073b668ee2ba65c626690fa55d9686ab2357b75de132e44c91651d541a"
 bytes = 1140999
 sha256 = "176ca38938f7e3cd741665ea54f6b5114245cc43d05999439000894d4b84411c"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/176ca38938f7e3cd741665ea54f6b5114245cc43d05999439000894d4b84411c.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/blackall-tambo-regional.pmtiles"
@@ -97,6 +102,7 @@ manifest = "data/au_qld_qrt_roads_blackall-tambo-regional.toml"
 manifest_sha256 = "3ff72d25dc529b3fc4e6fef5af077cc62f90d947aae2e95c77f0764412b1cff4"
 bytes = 1112745
 sha256 = "631d11e9e7b5295246e7de694bda4e86430aca780ede5a1345ad8bd765cb9ad3"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/631d11e9e7b5295246e7de694bda4e86430aca780ede5a1345ad8bd765cb9ad3.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/boulia-shire.pmtiles"
@@ -104,6 +110,7 @@ manifest = "data/au_qld_qrt_roads_boulia-shire.toml"
 manifest_sha256 = "8c1275820dd4a36cfc0433772e715249e377c7e9c93ea6fbb6418cc165ed53c7"
 bytes = 992094
 sha256 = "1db451e9ce46408eefa20f4e376444672b83d3d810057a6f376a63a4a2ad9644"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/1db451e9ce46408eefa20f4e376444672b83d3d810057a6f376a63a4a2ad9644.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/brisbane-city.pmtiles"
@@ -111,6 +118,7 @@ manifest = "data/au_qld_qrt_roads_brisbane-city.toml"
 manifest_sha256 = "236db20162cfa027a84e8db50525286dbab5ba7ed4b064e1bb241c8882a40506"
 bytes = 3377949
 sha256 = "e2564b65c6f34a031ed4c03d2299d89e6eb7b21bcaf9c59e5afe672ddf57353b"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/e2564b65c6f34a031ed4c03d2299d89e6eb7b21bcaf9c59e5afe672ddf57353b.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/bulloo-shire.pmtiles"
@@ -118,6 +126,7 @@ manifest = "data/au_qld_qrt_roads_bulloo-shire.toml"
 manifest_sha256 = "d7bcffc7199a28bd922650c960c2312d211cea97f8a40d30b36141601f284bbf"
 bytes = 1129790
 sha256 = "ba038d11507dffc82bf80a83756c01082ff6ee44722b0c2ae184dd0a390d444b"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/ba038d11507dffc82bf80a83756c01082ff6ee44722b0c2ae184dd0a390d444b.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/bundaberg-regional.pmtiles"
@@ -125,6 +134,7 @@ manifest = "data/au_qld_qrt_roads_bundaberg-regional.toml"
 manifest_sha256 = "9d332f920f5a6684a54aa660fd0965a19bde367a9f0e1ee00df0d531dc4052b0"
 bytes = 1638296
 sha256 = "f9d9fa035174a0c144c207e0e9978ecccf7a34d6e50e17fc09b9d3afaa76dedb"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/f9d9fa035174a0c144c207e0e9978ecccf7a34d6e50e17fc09b9d3afaa76dedb.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/burdekin-shire.pmtiles"
@@ -132,6 +142,7 @@ manifest = "data/au_qld_qrt_roads_burdekin-shire.toml"
 manifest_sha256 = "f153e8924e85609147c16fbcea78ab091a5fcf68c3a653a4d3061ff01cb4f5ac"
 bytes = 473471
 sha256 = "e24adff3aeef7f52009c9995db54fcbe93f4ba1a515125e39e68200bda46110e"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/e24adff3aeef7f52009c9995db54fcbe93f4ba1a515125e39e68200bda46110e.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/burke-shire.pmtiles"
@@ -139,6 +150,7 @@ manifest = "data/au_qld_qrt_roads_burke-shire.toml"
 manifest_sha256 = "6b52ac4ad71878510591b505d1482df10be4a5f95bf1b0624ca83bac42d81a60"
 bytes = 512319
 sha256 = "a7304dfe26809f16ea406406900a39594bb60d200d74753c7326686aeba4b709"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/a7304dfe26809f16ea406406900a39594bb60d200d74753c7326686aeba4b709.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/cairns-regional.pmtiles"
@@ -146,6 +158,7 @@ manifest = "data/au_qld_qrt_roads_cairns-regional.toml"
 manifest_sha256 = "c4460c6b0206e78c78828f9dffe27131a3f987c26e20405a0a1aa3c222e1af83"
 bytes = 835423
 sha256 = "84659ba5bb572435044d8faea70b66bbb416a808ea64351d7a9c9b1e33025e42"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/84659ba5bb572435044d8faea70b66bbb416a808ea64351d7a9c9b1e33025e42.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/carpentaria-shire.pmtiles"
@@ -153,6 +166,7 @@ manifest = "data/au_qld_qrt_roads_carpentaria-shire.toml"
 manifest_sha256 = "9f92a9c5e61d4d501ea3cdc82a3fddb83888e5eb6654dfcd087e2a9ce087f792"
 bytes = 763505
 sha256 = "7a916880175e10fdfeac22395f87469ed804da54436eb736fc67aae7c3ea198d"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/7a916880175e10fdfeac22395f87469ed804da54436eb736fc67aae7c3ea198d.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/cassowary-coast-regional.pmtiles"
@@ -160,6 +174,7 @@ manifest = "data/au_qld_qrt_roads_cassowary-coast-regional.toml"
 manifest_sha256 = "efbbc1ead06c4f954f8177fcad13807d6ecd3364f37e052176f9324df72d8fb0"
 bytes = 742028
 sha256 = "ea84e52d6d35a3c0d513848cf472810a153c6784ae62d1577a4ef865b7d90ed0"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/ea84e52d6d35a3c0d513848cf472810a153c6784ae62d1577a4ef865b7d90ed0.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/central-highlands-regional.pmtiles"
@@ -167,6 +182,7 @@ manifest = "data/au_qld_qrt_roads_central-highlands-regional.toml"
 manifest_sha256 = "76f5a5a829e0bf4f70c815ac63e6371202c6ea4483dc3bb224faa83b59b64939"
 bytes = 2593855
 sha256 = "14c16e2fcca217adc1389df69b172773f1f4f2e57579a0a61745e34fe49d7435"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/14c16e2fcca217adc1389df69b172773f1f4f2e57579a0a61745e34fe49d7435.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/charters-towers-regional.pmtiles"
@@ -174,6 +190,7 @@ manifest = "data/au_qld_qrt_roads_charters-towers-regional.toml"
 manifest_sha256 = "0a4ec09199dcb543a112526909b10c933bcc93d8d280c0dd770da8fabed9b725"
 bytes = 2158959
 sha256 = "2c0622f280598a4b0b2c6a40da5a5b49247e551b29656588d45969546bd58ba1"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/2c0622f280598a4b0b2c6a40da5a5b49247e551b29656588d45969546bd58ba1.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/cherbourg-aboriginal-shire.pmtiles"
@@ -181,6 +198,7 @@ manifest = "data/au_qld_qrt_roads_cherbourg-aboriginal-shire.toml"
 manifest_sha256 = "66f6d42d24ae0ce0c9fed6f67c396056e0c453dcf9e7b45f90863aed406f4c2e"
 bytes = 27291
 sha256 = "6a2ed9c00920aface172f264f3ba04337789e63d1bf314d4d02c1de572d619db"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/6a2ed9c00920aface172f264f3ba04337789e63d1bf314d4d02c1de572d619db.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/cloncurry-shire.pmtiles"
@@ -188,6 +206,7 @@ manifest = "data/au_qld_qrt_roads_cloncurry-shire.toml"
 manifest_sha256 = "8946f87151256d216772ecdc44b29f22dd4668da4e3f07c9d695e04117dd85d6"
 bytes = 877246
 sha256 = "56b66ffeb4e3f139ec97e61bcacb788ce32b1095d343a4d771ec8d5bc72606f5"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/56b66ffeb4e3f139ec97e61bcacb788ce32b1095d343a4d771ec8d5bc72606f5.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/cook-shire.pmtiles"
@@ -195,6 +214,7 @@ manifest = "data/au_qld_qrt_roads_cook-shire.toml"
 manifest_sha256 = "0181874ec197045f2ca6d5362289cb2238c70d9c7f3b72725ee481c366266692"
 bytes = 2110510
 sha256 = "3614d7d73159b4974df43f275b5ed8ef95e64d8198e47565d6fb1bead756891b"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/3614d7d73159b4974df43f275b5ed8ef95e64d8198e47565d6fb1bead756891b.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/croydon-shire.pmtiles"
@@ -202,6 +222,7 @@ manifest = "data/au_qld_qrt_roads_croydon-shire.toml"
 manifest_sha256 = "daecc16524b17a78eda55f66f28d3c8ea6477099f04f5e30c4e3a79c2065b8c1"
 bytes = 410632
 sha256 = "6529da63e8afe73965f281091578b249a76d963515cc0a7f6b4527ebc73afd37"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/6529da63e8afe73965f281091578b249a76d963515cc0a7f6b4527ebc73afd37.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/diamantina-shire.pmtiles"
@@ -209,6 +230,7 @@ manifest = "data/au_qld_qrt_roads_diamantina-shire.toml"
 manifest_sha256 = "f8cc4337cdd95e3d63bc708a7b1b5a30c8e78e28baa86911350756f324ca5e38"
 bytes = 744378
 sha256 = "3b4c9a04c3a76b175dbb5a60852a40a7a6324834b1d1760fb09a3e6fdd36690d"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/3b4c9a04c3a76b175dbb5a60852a40a7a6324834b1d1760fb09a3e6fdd36690d.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/doomadgee-aboriginal-shire.pmtiles"
@@ -216,6 +238,7 @@ manifest = "data/au_qld_qrt_roads_doomadgee-aboriginal-shire.toml"
 manifest_sha256 = "753e8750948c095541905091c4c47d6eb722ccd0e8e2343f12ec0a23030e245d"
 bytes = 61639
 sha256 = "c358d3f84b96ed4699d26729cce01bd1756b4ec4247bfeb872a8a4229c1e3bc7"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/c358d3f84b96ed4699d26729cce01bd1756b4ec4247bfeb872a8a4229c1e3bc7.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/douglas-shire.pmtiles"
@@ -223,6 +246,7 @@ manifest = "data/au_qld_qrt_roads_douglas-shire.toml"
 manifest_sha256 = "bafffc284b62259ba0c60970232d091ae90c765777cd1f52fb6a50b9cb3dd7bf"
 bytes = 232995
 sha256 = "f062bbbc2128f36bdcf314792fd1077932d73412b4f448cf3ed5ae1964e02920"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/f062bbbc2128f36bdcf314792fd1077932d73412b4f448cf3ed5ae1964e02920.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/etheridge-shire.pmtiles"
@@ -230,6 +254,7 @@ manifest = "data/au_qld_qrt_roads_etheridge-shire.toml"
 manifest_sha256 = "03a1da87b1027cad8ea244df42fcc4254e1400773806e3732dac25db0747ecc5"
 bytes = 901948
 sha256 = "a3219699659732785d959bbd69c12d211773f792a8b9b0fc25293028cdb5d26b"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/a3219699659732785d959bbd69c12d211773f792a8b9b0fc25293028cdb5d26b.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/flinders-shire.pmtiles"
@@ -237,6 +262,7 @@ manifest = "data/au_qld_qrt_roads_flinders-shire.toml"
 manifest_sha256 = "8c821cc4e112b546852f2f742e058d28fc98fba5822c3c88e2ac2431cb80051c"
 bytes = 1184392
 sha256 = "4ea3cf9e398610bcc82a6e7081c509ed509fcdd1be53587432d266ebb4e4f1f8"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/4ea3cf9e398610bcc82a6e7081c509ed509fcdd1be53587432d266ebb4e4f1f8.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/fraser-coast-regional.pmtiles"
@@ -244,6 +270,7 @@ manifest = "data/au_qld_qrt_roads_fraser-coast-regional.toml"
 manifest_sha256 = "9490665830bc2bd184ecd8b4787368c962038c1122d92c780f2967bebb5e97f5"
 bytes = 1691254
 sha256 = "fa01419b9d172ac19295c90b21b7406c420c05713cca8cf49ba7e857cd14a46c"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/fa01419b9d172ac19295c90b21b7406c420c05713cca8cf49ba7e857cd14a46c.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/gladstone-regional.pmtiles"
@@ -251,6 +278,7 @@ manifest = "data/au_qld_qrt_roads_gladstone-regional.toml"
 manifest_sha256 = "1e9b3951980256017bb16d02b0a373a999124c0e15a547d26bc0391d09e1c705"
 bytes = 1482401
 sha256 = "47cec507712170e99c01ee0e065568d9430c9fc18174d27a42c55cc5c960290f"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/47cec507712170e99c01ee0e065568d9430c9fc18174d27a42c55cc5c960290f.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/gold-coast-city.pmtiles"
@@ -258,6 +286,7 @@ manifest = "data/au_qld_qrt_roads_gold-coast-city.toml"
 manifest_sha256 = "8964b0521ad55ec373c346d77a6205991209f7d3d8a83ee99990142e35147bf1"
 bytes = 2151441
 sha256 = "305b0bdf5041a9622f9c26c882c3570e32da0a89a805df1a87fc976004dca0a3"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/305b0bdf5041a9622f9c26c882c3570e32da0a89a805df1a87fc976004dca0a3.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/goondiwindi-regional.pmtiles"
@@ -265,6 +294,7 @@ manifest = "data/au_qld_qrt_roads_goondiwindi-regional.toml"
 manifest_sha256 = "61af4662cbab09a69791780f81762f70575bf524cc8d148aa6d005b3ade671cc"
 bytes = 1611919
 sha256 = "ae7bfb42e95cb6e492c2500db1e7d312fe7008ec5e3c3b729bb0db2ed901b0cf"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/ae7bfb42e95cb6e492c2500db1e7d312fe7008ec5e3c3b729bb0db2ed901b0cf.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/gympie-regional.pmtiles"
@@ -272,6 +302,7 @@ manifest = "data/au_qld_qrt_roads_gympie-regional.toml"
 manifest_sha256 = "6cb388ebfd064c7a33ea2b03ec25226aa032f0dbfaef89052afec3c7a25a20c0"
 bytes = 2060293
 sha256 = "680d43fa25e2c165f7e8e0dccae24623e6c13dad02416308416441ba250484ed"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/680d43fa25e2c165f7e8e0dccae24623e6c13dad02416308416441ba250484ed.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/hinchinbrook-shire.pmtiles"
@@ -279,6 +310,7 @@ manifest = "data/au_qld_qrt_roads_hinchinbrook-shire.toml"
 manifest_sha256 = "0220954c6e739902d78246443667134b052f1abb2ed9e7530903191a81e2d85f"
 bytes = 626882
 sha256 = "c42a39cc9a6dbc75f3da1c2b989dc5e5e419c5570f628c0248a903215b281ace"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/c42a39cc9a6dbc75f3da1c2b989dc5e5e419c5570f628c0248a903215b281ace.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/hope-vale-aboriginal-shire.pmtiles"
@@ -286,6 +318,7 @@ manifest = "data/au_qld_qrt_roads_hope-vale-aboriginal-shire.toml"
 manifest_sha256 = "764e406e203af036cc48999ce8eecc81c41c4caff4080b16b7c1dee52dcf8329"
 bytes = 61438
 sha256 = "ef921df242818028a9c2470041d4ce559dd73b79d980366125f3ad9bc85594f9"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/ef921df242818028a9c2470041d4ce559dd73b79d980366125f3ad9bc85594f9.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/ipswich-city.pmtiles"
@@ -293,6 +326,7 @@ manifest = "data/au_qld_qrt_roads_ipswich-city.toml"
 manifest_sha256 = "6571929e8f59fb2ebc2176761284c624ff2c32084c7059496da57441d31c8ec5"
 bytes = 1141684
 sha256 = "4870d5db96a9ee79240f4d9841a234984f6cb655d36ddf811736e2523e15fde0"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/4870d5db96a9ee79240f4d9841a234984f6cb655d36ddf811736e2523e15fde0.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/isaac-regional.pmtiles"
@@ -300,6 +334,7 @@ manifest = "data/au_qld_qrt_roads_isaac-regional.toml"
 manifest_sha256 = "8ba010edbdb13963d1667ceefc99efa7a6ab69b9f0748e18bc52538fff3adcd3"
 bytes = 1836262
 sha256 = "7ff5aa17f757ccba65d1f8cbb6f761bd88d66f1211b133a1e573ad96d5bae1d3"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/7ff5aa17f757ccba65d1f8cbb6f761bd88d66f1211b133a1e573ad96d5bae1d3.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/kowanyama-aboriginal-shire.pmtiles"
@@ -307,6 +342,7 @@ manifest = "data/au_qld_qrt_roads_kowanyama-aboriginal-shire.toml"
 manifest_sha256 = "71b19ea8a2eb94b33ce0db13accf97dcdf392205e3f06bbe1ac15c9e614ea31a"
 bytes = 75425
 sha256 = "f9e23a29040753898e0945ea295509d2dd3e67e13806439e9c76913e3a097758"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/f9e23a29040753898e0945ea295509d2dd3e67e13806439e9c76913e3a097758.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/livingstone-shire.pmtiles"
@@ -314,6 +350,7 @@ manifest = "data/au_qld_qrt_roads_livingstone-shire.toml"
 manifest_sha256 = "2d5360256aab2eb8048943b1c7c5e9b8bf076aec522ba1963b475741e40ae3cf"
 bytes = 932305
 sha256 = "7504c0732a417787aa287407f3c294df43fca1e8f9c7fbae6695ac98ce6c030d"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/7504c0732a417787aa287407f3c294df43fca1e8f9c7fbae6695ac98ce6c030d.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/lockhart-river-aboriginal-shire.pmtiles"
@@ -321,6 +358,7 @@ manifest = "data/au_qld_qrt_roads_lockhart-river-aboriginal-shire.toml"
 manifest_sha256 = "4afc441c4b110c0a7ed3087087bc07142bdf6f0671895ceb0168d80a00951894"
 bytes = 117376
 sha256 = "826c5d55bac596d9dd345af7e20cdb66c0c1dafdaa6171c3e1bf31d909392671"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/826c5d55bac596d9dd345af7e20cdb66c0c1dafdaa6171c3e1bf31d909392671.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/lockyer-valley-regional.pmtiles"
@@ -328,6 +366,7 @@ manifest = "data/au_qld_qrt_roads_lockyer-valley-regional.toml"
 manifest_sha256 = "29e1d6ca5d630dd0e6ce59f786df2b32c89b454efd838fd43520801a8b2264be"
 bytes = 752814
 sha256 = "7a39ee0db833ca2e59a6ac10924267bc37f229aefda8bbed14715f908258f08f"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/7a39ee0db833ca2e59a6ac10924267bc37f229aefda8bbed14715f908258f08f.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/logan-city.pmtiles"
@@ -335,6 +374,7 @@ manifest = "data/au_qld_qrt_roads_logan-city.toml"
 manifest_sha256 = "fb5f1a82d65846d24ee631bbb420d36ed1726fefa9bbfb6c1c3edd383a1385e0"
 bytes = 1366706
 sha256 = "7312d2a96735fdbf5d6b4ed740801561df4b7c860123f541cb377c78b2483418"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/7312d2a96735fdbf5d6b4ed740801561df4b7c860123f541cb377c78b2483418.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/longreach-regional.pmtiles"
@@ -342,6 +382,7 @@ manifest = "data/au_qld_qrt_roads_longreach-regional.toml"
 manifest_sha256 = "84565bc1b0c56d77722656b081bb1317c337b749ff8abe6362ecfcd9206cdf60"
 bytes = 1436557
 sha256 = "f5ada45e317795f37384f5623bbe08eb374f08ea3b03a60fd59d3a4caca359b9"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/f5ada45e317795f37384f5623bbe08eb374f08ea3b03a60fd59d3a4caca359b9.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/mackay-regional.pmtiles"
@@ -349,6 +390,7 @@ manifest = "data/au_qld_qrt_roads_mackay-regional.toml"
 manifest_sha256 = "d677faf27aca5aebcc10e417914e546b3f3ed3b92ae442ca4e77edfc037483ca"
 bytes = 1363855
 sha256 = "4246a109188693b4181f8ad5b8a8a7fca62f1b372a0c1414a67306e00f0b92bd"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/4246a109188693b4181f8ad5b8a8a7fca62f1b372a0c1414a67306e00f0b92bd.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/mapoon-aboriginal-shire.pmtiles"
@@ -356,6 +398,7 @@ manifest = "data/au_qld_qrt_roads_mapoon-aboriginal-shire.toml"
 manifest_sha256 = "2c9bdf15c2b6f4edf582cd9aa686bb575532b6b85d4aff8119dad35a2b715226"
 bytes = 31743
 sha256 = "9f103f7dcee37e3a7edd127f13a68ad09ac36056473fa09cf25f0831a33b3267"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/9f103f7dcee37e3a7edd127f13a68ad09ac36056473fa09cf25f0831a33b3267.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/maranoa-regional.pmtiles"
@@ -363,6 +406,7 @@ manifest = "data/au_qld_qrt_roads_maranoa-regional.toml"
 manifest_sha256 = "537285a6a738e6bd35e99cee14bbc55bc5736de61f09279b3ecbe79c54b7842a"
 bytes = 2878888
 sha256 = "363cb94035f5843a023ddc2d99a3dc1e7f952988778fd542a7c7718279057409"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/363cb94035f5843a023ddc2d99a3dc1e7f952988778fd542a7c7718279057409.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/mareeba-shire.pmtiles"
@@ -370,6 +414,7 @@ manifest = "data/au_qld_qrt_roads_mareeba-shire.toml"
 manifest_sha256 = "e87a3ec28021b43f40c99f871d22c3bddd57b23f0a67cd5ba9985823589590c8"
 bytes = 1134609
 sha256 = "40fb24ff23db6555b9fd3809484108717a750ed56e7bf8705269de753600c94e"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/40fb24ff23db6555b9fd3809484108717a750ed56e7bf8705269de753600c94e.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/mckinlay-shire.pmtiles"
@@ -377,6 +422,7 @@ manifest = "data/au_qld_qrt_roads_mckinlay-shire.toml"
 manifest_sha256 = "61832f05060875de5cf1be62a05c12c524e1d70b399a1c51b1ccfd77811f6e33"
 bytes = 860858
 sha256 = "e365d2779fc8aa809ce1e83f80f7f0cca65d94288b2423a1cfe6748999e8e793"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/e365d2779fc8aa809ce1e83f80f7f0cca65d94288b2423a1cfe6748999e8e793.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/moreton-bay-city.pmtiles"
@@ -384,6 +430,7 @@ manifest = "data/au_qld_qrt_roads_moreton-bay-city.toml"
 manifest_sha256 = "c9f6b5d95ca1838e1df2fce2c919862008845c71c9a993494aca4533343746fe"
 bytes = 2207636
 sha256 = "e6da438b1ea050e2266c6a9be07f03bf3eaaa0f38ba79c29ba33fbed726d3800"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/e6da438b1ea050e2266c6a9be07f03bf3eaaa0f38ba79c29ba33fbed726d3800.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/mornington-shire.pmtiles"
@@ -391,6 +438,7 @@ manifest = "data/au_qld_qrt_roads_mornington-shire.toml"
 manifest_sha256 = "89860ad0a7e740d90f600e86f80f00317985f173f29abf9ce6b4d0ba450156c5"
 bytes = 66106
 sha256 = "f721e0577825a2f18330f11714e6d26b2c788ef081a869d973aa95383b86a478"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/f721e0577825a2f18330f11714e6d26b2c788ef081a869d973aa95383b86a478.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/mount-isa-city.pmtiles"
@@ -398,6 +446,7 @@ manifest = "data/au_qld_qrt_roads_mount-isa-city.toml"
 manifest_sha256 = "300494557b30a2e44c342a7667805854d1af5d5f806c718196361490e0e041e5"
 bytes = 551669
 sha256 = "405f61a40ecb6874cc81c34961c6ec58fb607cc54333d9d0db520264ab816346"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/405f61a40ecb6874cc81c34961c6ec58fb607cc54333d9d0db520264ab816346.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/murweh-shire.pmtiles"
@@ -405,6 +454,7 @@ manifest = "data/au_qld_qrt_roads_murweh-shire.toml"
 manifest_sha256 = "886ce573aec8281d79e542adee64ddfb8c32bd4c15ecd3182df682503e61fd4a"
 bytes = 1151350
 sha256 = "ab016d2da0a91856f85ff6db55cba544633f1a0890188d8c8b1423da2b6d5dea"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/ab016d2da0a91856f85ff6db55cba544633f1a0890188d8c8b1423da2b6d5dea.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/napranum-aboriginal-shire.pmtiles"
@@ -412,6 +462,7 @@ manifest = "data/au_qld_qrt_roads_napranum-aboriginal-shire.toml"
 manifest_sha256 = "84c068552dc9b1c91d5f46a7580c9e7b4603d86360e761e5f2ed183876a75528"
 bytes = 25266
 sha256 = "3421b8f4da06d63180c50980da80f5fd6d61f0b53dbf1ea1ec530fbbbf42d1c3"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/3421b8f4da06d63180c50980da80f5fd6d61f0b53dbf1ea1ec530fbbbf42d1c3.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/noosa-shire.pmtiles"
@@ -419,6 +470,7 @@ manifest = "data/au_qld_qrt_roads_noosa-shire.toml"
 manifest_sha256 = "156f642fded1fb3bc1bf1cde717966a5fb61edbdeac9859e4134e0ee09f0fece"
 bytes = 565468
 sha256 = "3b3e8ec1706163fe1a7c018e264ad8d1ec2dd60ae63f750a1c85964671c8d8dd"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/3b3e8ec1706163fe1a7c018e264ad8d1ec2dd60ae63f750a1c85964671c8d8dd.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/north-burnett-regional.pmtiles"
@@ -426,6 +478,7 @@ manifest = "data/au_qld_qrt_roads_north-burnett-regional.toml"
 manifest_sha256 = "f8c9c52d76adbd0ff923a306deb570728729c9ae883f22af465401c302acc710"
 bytes = 2322868
 sha256 = "ede69a837fed639d0f805ed779a40a06a90750ac5bd5a2df150bf9a24a858dbb"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/ede69a837fed639d0f805ed779a40a06a90750ac5bd5a2df150bf9a24a858dbb.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/northern-peninsula-area-regional.pmtiles"
@@ -433,6 +486,7 @@ manifest = "data/au_qld_qrt_roads_northern-peninsula-area-regional.toml"
 manifest_sha256 = "8d47f885dbe52c05aef6bf5135c3a9b6bf0e2b7a6bd6b6ab8ad4ef41952afcfd"
 bytes = 90836
 sha256 = "8e7d33d13116ec346bc9590d16f92e33d9920a21272595d00582e16a1700caeb"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/8e7d33d13116ec346bc9590d16f92e33d9920a21272595d00582e16a1700caeb.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/palm-island-aboriginal-shire.pmtiles"
@@ -440,6 +494,7 @@ manifest = "data/au_qld_qrt_roads_palm-island-aboriginal-shire.toml"
 manifest_sha256 = "d1e872fc7998e46bf2ab655dd577da720d5b2a5d18d033c55e57e5da2e567ff0"
 bytes = 45898
 sha256 = "56fa44aa9fa130b47fd675f2c1f9e757a33566f3f40d52fa207bfde9aec165f4"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/56fa44aa9fa130b47fd675f2c1f9e757a33566f3f40d52fa207bfde9aec165f4.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/paroo-shire.pmtiles"
@@ -447,6 +502,7 @@ manifest = "data/au_qld_qrt_roads_paroo-shire.toml"
 manifest_sha256 = "bc139b7da1d14657b19458068ddbd069c5fa19afb367e03c5052bc22e6eabf92"
 bytes = 1431396
 sha256 = "737cccb9b1b2b7f1fefb0747bb0f7d162ea8faa7c82d01e3a926c33482cd643e"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/737cccb9b1b2b7f1fefb0747bb0f7d162ea8faa7c82d01e3a926c33482cd643e.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/pormpuraaw-aboriginal-shire.pmtiles"
@@ -454,6 +510,7 @@ manifest = "data/au_qld_qrt_roads_pormpuraaw-aboriginal-shire.toml"
 manifest_sha256 = "f6f2929b52124f30afa3bb9eb3b91279ef31e9eaac49faadeb097fb2e1af41f2"
 bytes = 51087
 sha256 = "30c9581c309850a9382fe49c245ef5960b2e9132f136abda37669c5f15d028cd"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/30c9581c309850a9382fe49c245ef5960b2e9132f136abda37669c5f15d028cd.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/qld-extent.pmtiles"
@@ -461,6 +518,7 @@ manifest = "data/au_qld_qrt_roads_qld-extent.toml"
 manifest_sha256 = "2b5eb3545d460357dc1f4fd52e61e143722e0231512ebb7cdcb81bd013856d19"
 bytes = 19602
 sha256 = "d300f2e130b0b709b7120a672eb9072e5bb1d53df6f57c106f3b2b696631c87e"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/d300f2e130b0b709b7120a672eb9072e5bb1d53df6f57c106f3b2b696631c87e.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/quilpie-shire.pmtiles"
@@ -468,6 +526,7 @@ manifest = "data/au_qld_qrt_roads_quilpie-shire.toml"
 manifest_sha256 = "0fbe17b1c27dd3d5c24b7dadba54e027e64f885f23e84ce36194345fe57d72e8"
 bytes = 1201045
 sha256 = "85eb2f50aca1bbf377591e9feb5cd11b1acfdf676cebca2a6e7f132df31c6367"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/85eb2f50aca1bbf377591e9feb5cd11b1acfdf676cebca2a6e7f132df31c6367.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/redland-city.pmtiles"
@@ -475,6 +534,7 @@ manifest = "data/au_qld_qrt_roads_redland-city.toml"
 manifest_sha256 = "100551b3b38b6cffed20501c7539dffac1024db171ee5f969e271e33d2a1b8fb"
 bytes = 687011
 sha256 = "e995541b66fe59cdb54cc91bb5522237c42444cc5abd6110798030c9c3f66a50"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/e995541b66fe59cdb54cc91bb5522237c42444cc5abd6110798030c9c3f66a50.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/richmond-shire.pmtiles"
@@ -482,6 +542,7 @@ manifest = "data/au_qld_qrt_roads_richmond-shire.toml"
 manifest_sha256 = "7ec664db99ff3f50281ff08fcab3c0f0d126c8985b45db518cc6f32056fc26f3"
 bytes = 540132
 sha256 = "bd0844ea0bf98403a6d18fe64883087d34073db92eefa1fdbfb7524402c06e8f"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/bd0844ea0bf98403a6d18fe64883087d34073db92eefa1fdbfb7524402c06e8f.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/rockhampton-regional.pmtiles"
@@ -489,6 +550,7 @@ manifest = "data/au_qld_qrt_roads_rockhampton-regional.toml"
 manifest_sha256 = "0f14140d824b6550e803beccce357d411b50807327874613442fdc666292df06"
 bytes = 938129
 sha256 = "6480c9ceb41865f57466699bfdf8c9e8bbffd94c93377a27ee57f7ece00cc828"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/6480c9ceb41865f57466699bfdf8c9e8bbffd94c93377a27ee57f7ece00cc828.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/scenic-rim-regional.pmtiles"
@@ -496,6 +558,7 @@ manifest = "data/au_qld_qrt_roads_scenic-rim-regional.toml"
 manifest_sha256 = "fcb93f90722694f97b26d87217663031c266f9701e4e71575f767f7a2ad82034"
 bytes = 951116
 sha256 = "3142a1662d59f7006b6df2175182a26cf268db57776d02d8cf2838cde4c3033c"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/3142a1662d59f7006b6df2175182a26cf268db57776d02d8cf2838cde4c3033c.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/somerset-regional.pmtiles"
@@ -503,6 +566,7 @@ manifest = "data/au_qld_qrt_roads_somerset-regional.toml"
 manifest_sha256 = "ce59b2e6042b003bb67205cd9726073aa3b483306c163695afc3510147d8dc1b"
 bytes = 1294761
 sha256 = "44f1d2657bfa26c3354bb15eb14fb839b7d58dad1c54fd8bcdf442881c49c2d3"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/44f1d2657bfa26c3354bb15eb14fb839b7d58dad1c54fd8bcdf442881c49c2d3.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/south-burnett-regional.pmtiles"
@@ -510,6 +574,7 @@ manifest = "data/au_qld_qrt_roads_south-burnett-regional.toml"
 manifest_sha256 = "ab80983de26e613e0cf8acfe22dc7ad4c7c9cc787d361604836e181d2bd403d9"
 bytes = 2263277
 sha256 = "2d923f2aa9b45b6d85ac817a95fa2d490713afd6f997a682ef2f3e2a0f4c246d"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/2d923f2aa9b45b6d85ac817a95fa2d490713afd6f997a682ef2f3e2a0f4c246d.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/southern-downs-regional.pmtiles"
@@ -517,6 +582,7 @@ manifest = "data/au_qld_qrt_roads_southern-downs-regional.toml"
 manifest_sha256 = "754e056c44b14817bc6455fa3778231ceaee157b9a743563184ae8ba2327be9f"
 bytes = 1515130
 sha256 = "b9f55db11457eb77001b2302feecc04bb5f66b58a4cb3647639b90655831ee82"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/b9f55db11457eb77001b2302feecc04bb5f66b58a4cb3647639b90655831ee82.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/sunshine-coast-regional.pmtiles"
@@ -524,6 +590,7 @@ manifest = "data/au_qld_qrt_roads_sunshine-coast-regional.toml"
 manifest_sha256 = "20ff4b8003401aa257ddcea46a39517c523c0c55a42a3d1c070c19a3dc842709"
 bytes = 2289336
 sha256 = "45c26990a9a0d210dd11c5543e7c0450db2ad21ba2c493e6dae670ed5c2bd6da"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/45c26990a9a0d210dd11c5543e7c0450db2ad21ba2c493e6dae670ed5c2bd6da.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/tablelands-regional.pmtiles"
@@ -531,6 +598,7 @@ manifest = "data/au_qld_qrt_roads_tablelands-regional.toml"
 manifest_sha256 = "56b93b1fe3a380a8aaf0684a14ae2c5c21d997ad73674198fbd486d51e06b166"
 bytes = 1041137
 sha256 = "df937381c7373ada86dc20a5e3024a9e1169edcf722eee8531723462bbfa6edb"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/df937381c7373ada86dc20a5e3024a9e1169edcf722eee8531723462bbfa6edb.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/toowoomba-regional.pmtiles"
@@ -538,6 +606,7 @@ manifest = "data/au_qld_qrt_roads_toowoomba-regional.toml"
 manifest_sha256 = "8b809eb9b49823043e1799c5633ddb02d14d5d607505bcf1b122301446f95cff"
 bytes = 2802143
 sha256 = "13c4efd0a1f14542e70a0b1b46bbac2e06ba32b9dda971862ce5576b93db0d52"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/13c4efd0a1f14542e70a0b1b46bbac2e06ba32b9dda971862ce5576b93db0d52.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/torres-shire.pmtiles"
@@ -545,6 +614,7 @@ manifest = "data/au_qld_qrt_roads_torres-shire.toml"
 manifest_sha256 = "f2bc6681c49329594f399c84ce5e3b4e58648834ac3efc41c9c3ac4bb51839d5"
 bytes = 48475
 sha256 = "63ba49bc201462b8a09aca90d385556f514120460c573da6f66d1e82f96298d9"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/63ba49bc201462b8a09aca90d385556f514120460c573da6f66d1e82f96298d9.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/torres-strait-island-regional.pmtiles"
@@ -552,6 +622,7 @@ manifest = "data/au_qld_qrt_roads_torres-strait-island-regional.toml"
 manifest_sha256 = "dd7899585804dd7c885b23f8e213a4127128fc882781046cea74e86ab053d6a5"
 bytes = 105628
 sha256 = "aefbf0b2e388ccf7eb2e612e4399157006d01d5096b58e53392e47997fd133f4"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/aefbf0b2e388ccf7eb2e612e4399157006d01d5096b58e53392e47997fd133f4.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/townsville-city.pmtiles"
@@ -559,6 +630,7 @@ manifest = "data/au_qld_qrt_roads_townsville-city.toml"
 manifest_sha256 = "f45da4cf29cce587508d1557280282091a6856db4495d0bf292e633a57d04789"
 bytes = 1095252
 sha256 = "3b2a4028ea82b1a2f127eea68b44e39b546f1172a5f621b25e20096213b05728"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/3b2a4028ea82b1a2f127eea68b44e39b546f1172a5f621b25e20096213b05728.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/weipa-town.pmtiles"
@@ -566,6 +638,7 @@ manifest = "data/au_qld_qrt_roads_weipa-town.toml"
 manifest_sha256 = "7462a257fd2524a7eacce607675c1d8a23801e4c59575a43ca0513640178f156"
 bytes = 51439
 sha256 = "6c44a0c47aaa1182a6ecfce3b793ee4b10aeb83f5a384d5e559c03ec175f0f67"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/6c44a0c47aaa1182a6ecfce3b793ee4b10aeb83f5a384d5e559c03ec175f0f67.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/western-downs-regional.pmtiles"
@@ -573,6 +646,7 @@ manifest = "data/au_qld_qrt_roads_western-downs-regional.toml"
 manifest_sha256 = "8da63ba749dec3f93e884cda136f2b2868fefb79d45c109da3a6e4e517a185d9"
 bytes = 3699286
 sha256 = "3f6d315482961bb902f856fe9e0b3e923df57d7d6d34963a45342a779c088cf9"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/3f6d315482961bb902f856fe9e0b3e923df57d7d6d34963a45342a779c088cf9.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/whitsunday-regional.pmtiles"
@@ -580,6 +654,7 @@ manifest = "data/au_qld_qrt_roads_whitsunday-regional.toml"
 manifest_sha256 = "3d10a59bcd8f50ac92278989f7959c40f64678d3fe4f08040cd703c5a4f285b5"
 bytes = 964882
 sha256 = "87a258d73ee9a694f54f19c60dc0fb247d1fcebd85f7d721846ab6398624f869"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/87a258d73ee9a694f54f19c60dc0fb247d1fcebd85f7d721846ab6398624f869.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/winton-shire.pmtiles"
@@ -587,6 +662,7 @@ manifest = "data/au_qld_qrt_roads_winton-shire.toml"
 manifest_sha256 = "9bc24116b1d4b9201e5176f4d80e77aef7717d3192b62a2c57a8fd7f640cdc4b"
 bytes = 1147075
 sha256 = "06f7e2c1e999d562027090a37aa94fbaea98f803bd4d81f21248305cd6595649"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/06f7e2c1e999d562027090a37aa94fbaea98f803bd4d81f21248305cd6595649.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/woorabinda-aboriginal-shire.pmtiles"
@@ -594,6 +670,7 @@ manifest = "data/au_qld_qrt_roads_woorabinda-aboriginal-shire.toml"
 manifest_sha256 = "96e2e8d889465d2c8476630fb04ae72f443ea0700dcc537b863d4e9a83366d15"
 bytes = 37456
 sha256 = "cb7e7252f9368a57d7a78ffa3cf1dde94c2fc795b21b87f06052f26811a1acb7"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/cb7e7252f9368a57d7a78ffa3cf1dde94c2fc795b21b87f06052f26811a1acb7.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/wujal-wujal-aboriginal-shire.pmtiles"
@@ -601,6 +678,7 @@ manifest = "data/au_qld_qrt_roads_wujal-wujal-aboriginal-shire.toml"
 manifest_sha256 = "756e8ef4f965a3704d6bf4b6a0a6912895b53b99943afebad3c9e3a3b724a2ad"
 bytes = 23040
 sha256 = "d1062ba113e887317247106b672316749a4f895a9f7b75f1a3b9dc31085867b8"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/d1062ba113e887317247106b672316749a4f895a9f7b75f1a3b9dc31085867b8.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-qld/yarrabah-aboriginal-shire.pmtiles"
@@ -608,6 +686,7 @@ manifest = "data/au_qld_qrt_roads_yarrabah-aboriginal-shire.toml"
 manifest_sha256 = "d035e29d1340fbbb82f13dedbfb8d7dbe7a9941dbb9680683132d1743183419d"
 bytes = 35799
 sha256 = "30185efdcded072b13ee7b68d9346da28fcfcc4b24c598e123dd42d3304114dc"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-au-qld-qrt/30185efdcded072b13ee7b68d9346da28fcfcc4b24c598e123dd42d3304114dc.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/au-vic-dtp/roads.pmtiles"
