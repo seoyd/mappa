@@ -1,0 +1,89 @@
+schema_version = 1
+proof_region = "us-tiger-2025-state-10-3-county-roads"
+proof_bbox_wgs84 = [
+    -75.788894,
+    38.451176,
+    -75.049844,
+    39.839476,
+]
+
+[[source]]
+id = "us-census-tiger-2025-roads-10001"
+name = "2025 TIGER/Line All Roads, county FIPS 10001"
+provider = "U.S. Census Bureau"
+source_version = "2025 TIGER/Line, legal boundaries as of 2025-01-01"
+download_date = "2026-09-24"
+official_url = "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_10001_roads.zip"
+download_page_url = "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html"
+file = "local/de_roads/tl_2025_10001_roads.zip"
+sha256 = "691092c316be6d82268a2d7feb9088301bca0c86bf3941a33292ea2e3776025e"
+crs = "EPSG:4269 NAD83; numeric degrees retained; WGS84 datum transform and positional accuracy pending"
+format = "ZIP Shapefile, county All Roads"
+coverage = "County FIPS 10001, source header bounds [-75.758476, 38.829851, -75.324785, 39.36132]; selected road classes only"
+resolution = "official TIGER/Line linear feature geometry; source accuracy varies"
+update_frequency = "annual publication; pinned 2025 snapshot"
+license_id = "US-GOV-PUBLIC-DOMAIN"
+license_url = "https://www2.census.gov/geo/pdfs/maps-data/data/tiger/tgrshp2025/TGRSHP2025_TechDoc.pdf"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "U.S. Census Bureau, 2025 TIGER/Line All Roads; Mappa modifications"
+share_alike = false
+adapter = "us-census-tiger-roads"
+adapter_version = 1
+
+[[source]]
+id = "us-census-tiger-2025-roads-10003"
+name = "2025 TIGER/Line All Roads, county FIPS 10003"
+provider = "U.S. Census Bureau"
+source_version = "2025 TIGER/Line, legal boundaries as of 2025-01-01"
+download_date = "2026-09-24"
+official_url = "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_10003_roads.zip"
+download_page_url = "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html"
+file = "local/de_roads/tl_2025_10003_roads.zip"
+sha256 = "f2e9e238201409095173db4c8f9dceb2f692cbf7322f376b880bfb531802265b"
+crs = "EPSG:4269 NAD83; numeric degrees retained; WGS84 datum transform and positional accuracy pending"
+format = "ZIP Shapefile, county All Roads"
+coverage = "County FIPS 10003, source header bounds [-75.788894, 39.290567, -75.433298, 39.839476]; selected road classes only"
+resolution = "official TIGER/Line linear feature geometry; source accuracy varies"
+update_frequency = "annual publication; pinned 2025 snapshot"
+license_id = "US-GOV-PUBLIC-DOMAIN"
+license_url = "https://www2.census.gov/geo/pdfs/maps-data/data/tiger/tgrshp2025/TGRSHP2025_TechDoc.pdf"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "U.S. Census Bureau, 2025 TIGER/Line All Roads; Mappa modifications"
+share_alike = false
+adapter = "us-census-tiger-roads"
+adapter_version = 1
+
+[[source]]
+id = "us-census-tiger-2025-roads-10005"
+name = "2025 TIGER/Line All Roads, county FIPS 10005"
+provider = "U.S. Census Bureau"
+source_version = "2025 TIGER/Line, legal boundaries as of 2025-01-01"
+download_date = "2026-09-24"
+official_url = "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_10005_roads.zip"
+download_page_url = "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html"
+file = "local/de_roads/tl_2025_10005_roads.zip"
+sha256 = "141689ef2f2b65c2c2129358b140e7e973ef1f611eda64bf1a0a1544f93e8b85"
+crs = "EPSG:4269 NAD83; numeric degrees retained; WGS84 datum transform and positional accuracy pending"
+format = "ZIP Shapefile, county All Roads"
+coverage = "County FIPS 10005, source header bounds [-75.722797, 38.451176, -75.049844, 38.947363]; selected road classes only"
+resolution = "official TIGER/Line linear feature geometry; source accuracy varies"
+update_frequency = "annual publication; pinned 2025 snapshot"
+license_id = "US-GOV-PUBLIC-DOMAIN"
+license_url = "https://www2.census.gov/geo/pdfs/maps-data/data/tiger/tgrshp2025/TGRSHP2025_TechDoc.pdf"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "U.S. Census Bureau, 2025 TIGER/Line All Roads; Mappa modifications"
+share_alike = false
+adapter = "us-census-tiger-roads"
+adapter_version = 1

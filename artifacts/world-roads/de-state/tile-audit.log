@@ -1,0 +1,1 @@
+artifacts/world-roads/de-state/state.pmtiles: decoded=7409, absent=0, failures=0, layers (land, green, water, road_surface, building, boundary, waterway, major, collector, local, place)=[0, 0, 0, 0, 0, 0, 0, 1631, 18748, 170297, 0]
