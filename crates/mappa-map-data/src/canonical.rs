@@ -1,7 +1,10 @@
 //! Build-time canonical geography. Raw source fields end at the adapter boundary.
 
 use flate2::read::GzDecoder;
-use geo::{BooleanOps, Coord, InteriorPoint, LineString, MultiPolygon, Polygon, Rect, Validation};
+use geo::{
+    BooleanOps, Contains, Coord, InteriorPoint, LineString, MultiPolygon, Point, Polygon, Rect,
+    Validation,
+};
 use geojson::{GeoJson, GeometryValue};
 use rstar::{AABB, RTree, RTreeObject};
 use serde::{Deserialize, Serialize};
@@ -158,6 +161,8 @@ impl SourceManifest {
                     | "esa-worldcover-tree"
                     | "microsoft-ml-building-footprints"
                     | "us-census-tiger-roads"
+                    | "us-census-tiger-areawater"
+                    | "us-census-tiger-arealm-parks"
             ) || source.adapter_version != 1
             {
                 return Err(CanonicalError::Corrupt("unsupported source adapter"));
@@ -364,14 +369,6 @@ pub fn adapt_microsoft_buildings(
         let line = line?;
         let digest: [u8; 32] = Sha256::digest(line.as_bytes()).into();
         let source_feature_id: String = digest.iter().map(|byte| format!("{byte:02x}")).collect();
-        if !raw_ids.insert(source_feature_id.clone()) {
-            rejected.push(RejectedFeature {
-                source_id: source.id.clone(),
-                source_feature_id,
-                reason: "duplicate source feature".into(),
-            });
-            continue;
-        }
         let raw = match GeoJson::from_str(&line) {
             Ok(GeoJson::Feature(raw)) => raw,
             _ => {
@@ -434,6 +431,14 @@ pub fn adapt_microsoft_buildings(
             }
         };
         if !bbox.intersects(region) {
+            continue;
+        }
+        if !raw_ids.insert(source_feature_id.clone()) {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id,
+                reason: "duplicate source feature within proof region".into(),
+            });
             continue;
         }
         let id = stable_id(&source.id, &source_feature_id);
@@ -611,6 +616,216 @@ pub fn adapt_us_census_roads(
     }
     output.sort_by_key(|(feature, _)| feature.id);
     Ok((output, rejected))
+}
+
+/// Read selected polygon classes from an official TIGER/Line ZIP. Numeric NAD83
+/// degrees are kept as published; no WGS84 accuracy is inferred.
+fn adapt_us_census_polygons(
+    source: &SourceRecord,
+    region: BBox,
+    adapter: &str,
+    id_field: &str,
+    kind: FeatureKind,
+    min_zoom: u8,
+    accepts: fn(&str) -> bool,
+) -> Result<(AdaptedFeatures, Vec<RejectedFeature>), CanonicalError> {
+    if source.adapter != adapter {
+        return Err(CanonicalError::Feature(
+            "wrong TIGER polygon adapter".into(),
+        ));
+    }
+    if source_hash(Path::new(&source.file))? != source.sha256.to_lowercase() {
+        return Err(CanonicalError::SourceChecksum(source.id.clone()));
+    }
+    let mut archive = zip::ZipArchive::new(File::open(&source.file)?)
+        .map_err(|error| CanonicalError::Feature(error.to_string()))?;
+    let prj = zip_member(&mut archive, ".prj")?;
+    if !std::str::from_utf8(&prj).is_ok_and(|text| text.contains("GCS_North_American_1983")) {
+        return Err(CanonicalError::Feature(
+            "unexpected TIGER polygon CRS".into(),
+        ));
+    }
+    let shp = zip_member(&mut archive, ".shp")?;
+    let dbf = zip_member(&mut archive, ".dbf")?;
+    let shape_reader = shapefile::ShapeReader::new(std::io::Cursor::new(shp))?;
+    let attribute_reader = shapefile::dbase::Reader::new(std::io::Cursor::new(dbf))?;
+    let mut reader = shapefile::Reader::new(shape_reader, attribute_reader);
+    let mut output = Vec::new();
+    let mut rejected = Vec::new();
+    let mut raw_ids = BTreeSet::new();
+    for (record_index, record) in reader.iter_shapes_and_records().enumerate() {
+        let (shape, attributes) = record?;
+        let string_field = |field: &str| -> Option<&str> {
+            match attributes.get(field) {
+                Some(shapefile::dbase::FieldValue::Character(Some(value))) => Some(value.trim()),
+                _ => None,
+            }
+        };
+        let raw_id = string_field(id_field)
+            .filter(|id| !id.is_empty())
+            .ok_or_else(|| CanonicalError::Feature(format!("missing TIGER {id_field}")))?
+            .to_owned();
+        if !raw_ids.insert(raw_id.clone()) {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id: raw_id,
+                reason: format!("duplicate {id_field} in TIGER polygon source"),
+            });
+            continue;
+        }
+        if !accepts(string_field("MTFCC").unwrap_or_default()) {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id: raw_id,
+                reason: format!("excluded MTFCC {:?}", string_field("MTFCC")),
+            });
+            continue;
+        }
+        let shapefile::Shape::Polygon(polygon) = shape else {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id: raw_id,
+                reason: format!("row {}: expected Polygon", record_index + 1),
+            });
+            continue;
+        };
+        let mut groups: Vec<Vec<Vec<[f64; 2]>>> = Vec::new();
+        let mut inner = Vec::new();
+        for ring in polygon.rings() {
+            let points: Vec<[f64; 2]> = ring.points().iter().map(|p| [p.x, p.y]).collect();
+            match ring {
+                shapefile::PolygonRing::Outer(_) => groups.push(vec![points]),
+                shapefile::PolygonRing::Inner(_) => inner.push(points),
+            }
+        }
+        let mut bad_hole = false;
+        for hole in inner {
+            let Some(first) = hole.first() else {
+                bad_hole = true;
+                break;
+            };
+            let point = Point::new(first[0], first[1]);
+            let containing = groups
+                .iter()
+                .enumerate()
+                .filter(|(_, rings)| {
+                    let exterior: LineString<f64> = rings[0]
+                        .iter()
+                        .map(|p| Coord { x: p[0], y: p[1] })
+                        .collect();
+                    Polygon::new(exterior, vec![]).contains(&point)
+                })
+                .map(|(index, _)| index)
+                .collect::<Vec<_>>();
+            if let [index] = containing.as_slice() {
+                groups[*index].push(hole);
+            } else {
+                bad_hole = true;
+                break;
+            }
+        }
+        if bad_hole || groups.is_empty() {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id: raw_id,
+                reason: "polygon has unpaired or ambiguous rings".into(),
+            });
+            continue;
+        }
+        for (part_index, rings) in groups.into_iter().enumerate() {
+            let part_id = format!("{raw_id}:{part_index}");
+            let geometry = Geometry::Polygon(rings);
+            let bbox = match geometry.bbox() {
+                Ok(bbox) => bbox,
+                Err(error) => {
+                    rejected.push(RejectedFeature {
+                        source_id: source.id.clone(),
+                        source_feature_id: part_id,
+                        reason: error.to_string(),
+                    });
+                    continue;
+                }
+            };
+            if !bbox.intersects(region) {
+                continue;
+            }
+            let id = stable_id(&source.id, &part_id);
+            let mut hasher = Sha256::new();
+            hasher.update(part_id.as_bytes());
+            hasher.update(string_field("MTFCC").unwrap_or_default().as_bytes());
+            if let Geometry::Polygon(rings) = &geometry {
+                for ring in rings {
+                    for [lon, lat] in ring {
+                        hasher.update(lon.to_le_bytes());
+                        hasher.update(lat.to_le_bytes());
+                    }
+                }
+            }
+            output.push((
+                CanonicalFeature {
+                    id,
+                    kind,
+                    geometry,
+                    bbox,
+                    importance: 400,
+                    min_zoom,
+                    max_zoom: 15,
+                    name: string_field("FULLNAME")
+                        .filter(|name| !name.is_empty() && name.len() <= 128)
+                        .map(str::to_owned),
+                    revision: 1,
+                },
+                Provenance {
+                    feature_id: id,
+                    source_id: source.id.clone(),
+                    source_feature_id: part_id,
+                    source_revision: source.source_version.clone(),
+                    adapter_version: source.adapter_version,
+                    source_feature_sha256: hasher.finalize().into(),
+                },
+            ));
+        }
+    }
+    output.sort_by_key(|(feature, _)| feature.id);
+    Ok((output, rejected))
+}
+
+/// County Area Hydrography polygons.
+pub fn adapt_us_census_areawater(
+    source: &SourceRecord,
+    region: BBox,
+) -> Result<(AdaptedFeatures, Vec<RejectedFeature>), CanonicalError> {
+    adapt_us_census_polygons(
+        source,
+        region,
+        "us-census-tiger-areawater",
+        "HYDROID",
+        FeatureKind::Water,
+        10,
+        |_| true,
+    )
+}
+
+/// Parks and recreation areas from state Area Landmark polygons. These are
+/// administrative park footprints, not satellite-derived tree cover.
+pub fn adapt_us_census_parks(
+    source: &SourceRecord,
+    region: BBox,
+) -> Result<(AdaptedFeatures, Vec<RejectedFeature>), CanonicalError> {
+    adapt_us_census_polygons(
+        source,
+        region,
+        "us-census-tiger-arealm-parks",
+        "AREAID",
+        FeatureKind::Park,
+        12,
+        |class| {
+            class
+                .strip_prefix('K')
+                .and_then(|value| value.parse::<u16>().ok())
+                .is_some_and(|code| (2180..=2190).contains(&code))
+        },
+    )
 }
 
 pub fn adapt_naju_roads(
@@ -1525,6 +1740,58 @@ adapter_version=1"#,
             assert_eq!(provenance.feature_id, feature.id);
             assert_eq!(provenance.source_id, source.id);
         }
+    }
+
+    #[test]
+    fn official_nyc_water_and_park_sources_keep_distinct_provenance() {
+        let data = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data");
+        let water = SourceManifest::open(&data.join("us_tiger_nyc_areawater.toml")).unwrap();
+        let [west, south, east, north] = water.proof_bbox_wgs84;
+        let region = BBox {
+            west,
+            south,
+            east,
+            north,
+        };
+        let mut water_total = 0;
+        for source in &water.source {
+            let (features, rejected) = adapt_us_census_areawater(source, region).unwrap();
+            assert!(rejected.is_empty());
+            assert!(features.iter().all(|(feature, provenance)| {
+                feature.kind == FeatureKind::Water
+                    && feature.id == provenance.feature_id
+                    && provenance.source_id == source.id
+            }));
+            water_total += features.len();
+        }
+        assert_eq!(water_total, 299);
+
+        let parks = SourceManifest::open(&data.join("us_tiger_nyc_parks.toml")).unwrap();
+        let [west, south, east, north] = parks.proof_bbox_wgs84;
+        let (features, rejected) = adapt_us_census_parks(
+            &parks.source[0],
+            BBox {
+                west,
+                south,
+                east,
+                north,
+            },
+        )
+        .unwrap();
+        assert_eq!(features.len(), 178);
+        assert_eq!(rejected.len(), 4_583);
+        assert_eq!(
+            rejected
+                .iter()
+                .filter(|record| record.reason == "polygon has unpaired or ambiguous rings")
+                .count(),
+            5
+        );
+        assert!(features.iter().all(|(feature, provenance)| {
+            feature.kind == FeatureKind::Park
+                && feature.id == provenance.feature_id
+                && provenance.source_id == parks.source[0].id
+        }));
     }
 
     #[test]

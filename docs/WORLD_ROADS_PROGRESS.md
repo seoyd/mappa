@@ -34,6 +34,8 @@ ZIP의 `.prj`는 **EPSG:4269 NAD83**다. 현재 어댑터는 숫자 좌표를 �
 
 기본 세계 모드의 지역 목록은 이전 맨해튼 한 카운티 팩을 이 5개 카운티 팩으로 **대체**한다. 도시 경계 안쪽의 도로 완전성, 경계 연결성, 명칭 중복 제거, 별도 기준점 위치 정확도와 iPhone 성능은 아직 통과하지 않았다. 기존 맨해튼 결과는 비교용으로 보관한다.
 
+이후 같은 기본 세계 모드에 [Census 수면](WORLD_WATER_PROGRESS.md), [뉴욕주 공원 경계](WORLD_PARKS_PROGRESS.md), [Queens 동부 Microsoft 건물](WORLD_BUILDINGS_PROGRESS.md)을 별도 출처 패키지로 추가했다. [네 레이어 합성 화면](../artifacts/world-integration/queens-four-layers-world.png)은 타일 오류 없이 표시됐지만, 이로써 도로 연결성이나 현장 위치 정확도가 검증된 것은 아니다.
+
 ## 세계 확장에 필요한 상태
 
 | 원천/지역 | 확보·판정 |

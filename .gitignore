@@ -2,3 +2,4 @@
 .env
 .mappa-map-cache/
 /data/local/
+/artifacts/world-buildings/queens-z11.mgeodb

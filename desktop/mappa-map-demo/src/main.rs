@@ -2388,32 +2388,24 @@ mod tests {
     use super::*;
 
     #[tokio::test]
-    async fn world_catalog_reads_both_observed_detail_layers() {
+    async fn world_catalog_reads_and_merges_observed_detail_layers() {
         if !world_mode() {
             return;
         }
         let manager = TileManager::open().await.unwrap();
-        assert_eq!(manager.regional.len(), 2);
+        assert_eq!(manager.regional.len(), 5);
         assert!(manager.regional_files.lock().unwrap().files.is_empty());
         for pack in &manager.regional {
             let [west, south, east, north] = pack.bounds;
             let (lon, lat) = ((west + east) / 2.0, (south + north) / 2.0);
-            let before = MapCamera::new(
-                lon,
-                lat,
-                f64::from(pack.min_visible_zoom) - 0.1,
-                1200,
-                720,
-                1.0,
-            )
-            .unwrap();
             let at =
                 MapCamera::new(lon, lat, f64::from(pack.min_visible_zoom), 1200, 720, 1.0).unwrap();
-            assert_eq!(manager.max_zoom_for(&before), manager.detail.max_zoom);
             assert_eq!(manager.max_zoom_for(&at), pack.archive_max_zoom);
         }
         let mut buildings = 0;
         let mut roads = 0;
+        let mut water = 0;
+        let mut parks = 0;
         for pack in &manager.regional {
             let bounds = pack.bounds;
             let northwest = project(bounds[0], bounds[3]).unwrap();
@@ -2443,6 +2435,8 @@ mod tests {
                     .unwrap();
                     if let Some(tile) = decoded.tile {
                         buildings += tile.building.len();
+                        water += tile.water.len();
+                        parks += tile.green.len();
                         roads += tile.road_major.len()
                             + tile.road_collector.len()
                             + tile.road_local.len();
@@ -2459,6 +2453,53 @@ mod tests {
         }
         assert!(buildings > 0, "building layer missing in world mode");
         assert!(roads > 0, "road layer missing in world mode");
+        assert!(water > 0, "water layer missing in world mode");
+        assert!(parks > 0, "park layer missing in world mode");
+        let queens = manager
+            .regional
+            .iter()
+            .find(|pack| pack.label.contains("Queens"))
+            .unwrap();
+        let northwest = project(queens.bounds[0], queens.bounds[3]).unwrap();
+        let southeast = project(queens.bounds[2], queens.bounds[1]).unwrap();
+        let n = 1u32 << 14;
+        let mut merged = false;
+        'overlap: for y in (northwest.y * f64::from(n)).floor() as u32
+            ..=(southeast.y * f64::from(n)).floor() as u32
+        {
+            for x in (northwest.x * f64::from(n)).floor() as u32
+                ..=(southeast.x * f64::from(n)).floor() as u32
+            {
+                let key = TileKey::new(14, x, y).unwrap();
+                let Some(tile) = read_decoded_tile(
+                    key,
+                    [
+                        &manager.source,
+                        &manager.detail,
+                        &manager.mid,
+                        &manager.street,
+                    ],
+                    &manager.regional,
+                    &manager.regional_index,
+                    &manager.regional_files,
+                )
+                .await
+                .unwrap()
+                .tile
+                else {
+                    continue;
+                };
+                if !tile.building.is_empty()
+                    && !(tile.road_major.is_empty()
+                        && tile.road_collector.is_empty()
+                        && tile.road_local.is_empty())
+                {
+                    merged = true;
+                    break 'overlap;
+                }
+            }
+        }
+        assert!(merged, "no z14 tile combines observed roads and buildings");
         let source = manager.regional[0]
             .source(&manager.regional_files)
             .await

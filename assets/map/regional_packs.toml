@@ -17,3 +17,27 @@ min_visible_zoom = 10
 archive_min_zoom = 10
 archive_max_zoom = 15
 label = "US Census 도로 · 뉴욕시 5개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-buildings/queens-z11.pmtiles"
+manifest = "../../data/ms_queens_buildings.toml"
+min_visible_zoom = 14
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "Microsoft 건물 · Queens 동부 z11 실증"
+
+[[pack]]
+path = "../../artifacts/world-water/nyc-five-boroughs.pmtiles"
+manifest = "../../data/us_tiger_nyc_areawater.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 수면 · 뉴욕시 5개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-parks/nyc-source-extent.pmtiles"
+manifest = "../../data/us_tiger_nyc_parks.toml"
+min_visible_zoom = 12
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 공원 · 뉴욕시 원천 범위 실증"

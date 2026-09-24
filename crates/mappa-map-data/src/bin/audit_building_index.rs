@@ -1,6 +1,6 @@
 //! Audit the pinned Microsoft source index without claiming map completeness.
 use flate2::read::GzDecoder;
-use mappa_map_core::project;
+use mappa_map_core::{WorldPoint, project, unproject};
 use sha2::{Digest, Sha256};
 use std::{
     collections::{BTreeMap, BTreeSet},
@@ -27,6 +27,32 @@ fn point_quadkey(lon: f64, lat: f64) -> Result<String, Box<dyn Error + Send + Sy
         .collect())
 }
 
+fn quadkey_bounds(quadkey: &str) -> Result<[f64; 4], Box<dyn Error + Send + Sync>> {
+    let mut x = 0u32;
+    let mut y = 0u32;
+    for digit in quadkey.bytes() {
+        if !(b'0'..=b'3').contains(&digit) {
+            return Err("invalid quadkey digit".into());
+        }
+        x = (x << 1) | u32::from((digit - b'0') & 1);
+        y = (y << 1) | u32::from((digit - b'0') >> 1);
+    }
+    tile_bounds(quadkey.len() as u8, x, y)
+}
+
+fn tile_bounds(z: u8, x: u32, y: u32) -> Result<[f64; 4], Box<dyn Error + Send + Sync>> {
+    let n = (1u32 << z) as f64;
+    let (west, north) = unproject(WorldPoint {
+        x: x as f64 / n,
+        y: y as f64 / n,
+    })?;
+    let (east, south) = unproject(WorldPoint {
+        x: (x + 1) as f64 / n,
+        y: (y + 1) as f64 / n,
+    })?;
+    Ok([west, south, east, north])
+}
+
 fn approximate_bytes(value: &str) -> Result<f64, Box<dyn Error + Send + Sync>> {
     for (suffix, multiplier) in [
         ("GB", 1_000_000_000.0),
@@ -47,11 +73,24 @@ fn approximate_bytes(value: &str) -> Result<f64, Box<dyn Error + Send + Sync>> {
 
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let args: Vec<String> = std::env::args().collect();
-    if args.len() != 2 && args.len() != 4 {
-        return Err("usage: audit_building_index INDEX.csv.gz [LON LAT]".into());
+    if !matches!(args.len(), 2 | 4 | 5) {
+        return Err("usage: audit_building_index INDEX.csv.gz [LON LAT [CLIP_ZOOM]]".into());
     }
-    let query = if args.len() == 4 {
+    let query = if args.len() >= 4 {
         Some(point_quadkey(args[2].parse()?, args[3].parse()?)?)
+    } else {
+        None
+    };
+    let clip = if args.len() == 5 {
+        let zoom: u8 = args[4].parse()?;
+        if !(9..=15).contains(&zoom) {
+            return Err("CLIP_ZOOM must be 9..=15".into());
+        }
+        let point = project(args[2].parse()?, args[3].parse()?)?;
+        let n = 1u32 << zoom;
+        let x = (point.x * f64::from(n)).floor() as u32;
+        let y = (point.y * f64::from(n)).floor() as u32;
+        Some((zoom, x, y, tile_bounds(zoom, x, y)?))
     } else {
         None
     };
@@ -102,10 +141,31 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         estimated_source_bytes / 1_000_000_000.0,
     );
     if let Some(quadkey) = query {
-        println!("query_z9_quadkey={quadkey} source_files={}", matches.len());
+        println!(
+            "query_z9_quadkey={quadkey} bbox_wgs84={:?} source_files={}",
+            quadkey_bounds(&quadkey)?,
+            matches.len()
+        );
         for (location, url) in matches {
             println!("location={location} url={url}");
         }
     }
+    if let Some((zoom, x, y, bbox)) = clip {
+        println!("clip_tile=z{zoom}/{x}/{y} bbox_wgs84={bbox:?}");
+    }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn quadkey_bounds_contains_queried_point() {
+        let lon = -73.78;
+        let lat = 40.75;
+        let quadkey = point_quadkey(lon, lat).unwrap();
+        let [west, south, east, north] = quadkey_bounds(&quadkey).unwrap();
+        assert!(west <= lon && lon < east && south <= lat && lat < north);
+    }
 }

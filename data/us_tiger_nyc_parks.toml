@@ -1,0 +1,31 @@
+schema_version = 1
+proof_region = "us-tiger-2025-new-york-city-source-extent-park-landmarks"
+# Numeric union of observed NYC road and water source headers, EPSG:4269 NAD83.
+proof_bbox_wgs84 = [-74.258843, 40.476578, -73.70036, 40.917705]
+
+[[source]]
+id = "us-census-tiger-2025-arealm-parks-36"
+name = "2025 TIGER/Line Area Landmarks, New York State park classes"
+provider = "U.S. Census Bureau"
+source_version = "2025 TIGER/Line, legal boundaries as of 2025-01-01"
+download_date = "2026-09-24"
+official_url = "https://www2.census.gov/geo/tiger/TIGER2025/AREALM/tl_2025_36_arealm.zip"
+download_page_url = "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html"
+file = "../assets/map/source/public/us_tiger_2025_36_arealm.zip"
+sha256 = "2c40daa05cec76eafb0bc1f5dc4e15f6077aa94031453a876638107e116912d8"
+crs = "EPSG:4269 NAD83; numeric degrees retained; WGS84 datum transform and positional accuracy pending"
+format = "ZIP Shapefile, New York State Area Landmarks; MTFCC K2180-K2190 selected"
+coverage = "Observed New York State park-class polygons intersecting the NYC road/water source extent; not complete park coverage"
+resolution = "official TIGER/Line area landmarks; source accuracy varies"
+update_frequency = "annual publication; pinned 2025 snapshot"
+license_id = "US-GOV-PUBLIC-DOMAIN"
+license_url = "https://www2.census.gov/geo/pdfs/maps-data/data/tiger/tgrshp2025/TGRSHP2025_TechDoc.pdf"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "U.S. Census Bureau, 2025 TIGER/Line Area Landmarks; Mappa modifications"
+share_alike = false
+adapter = "us-census-tiger-arealm-parks"
+adapter_version = 1

@@ -1,0 +1,31 @@
+schema_version = 1
+proof_region = "microsoft-buildings-us-z9-032010111-z11-604-769"
+# z11/604/769 bounds derived from Web Mercator, inside publisher z9/032010111.
+proof_bbox_wgs84 = [-73.828125, 40.71395582628604, -73.65234375, 40.84706035607122]
+
+[[source]]
+id = "ms-global-ml-buildings-2026-08-13-us-032010111"
+name = "Microsoft Global ML Building Footprints, United States quadkey 032010111"
+provider = "Microsoft"
+source_version = "2026-08-13"
+download_date = "2026-09-24"
+official_url = "https://bfppub.z5.web.core.windows.net/2026-08-13/global-buildings.geojsonl/RegionName=UnitedStates/quadkey=032010111/part-00185-110f5303-ff85-4c71-a2bf-c6070024fec8.c000.csv.gz"
+download_page_url = "https://github.com/microsoft/GlobalMLBuildingFootprints"
+file = "local/ms_us_032010111_2026-08-13.csv.gz"
+sha256 = "24b6b96d7d11069d833d4acd16ec48f461952706c846c310011e8d4af44ff926"
+crs = "EPSG:4326 (publisher documentation)"
+format = "gzip GeoJSONL Feature (.csv.gz extension)"
+coverage = "United States publisher z9 quadkey 032010111, clipped to z11/604/769 proof tile; observed records only"
+resolution = "ML-extracted building polygons; positional accuracy varies with imagery"
+update_frequency = "publisher releases; this is a pinned 2026-08-13 snapshot"
+license_id = "CDLA-Permissive-2.0"
+license_url = "https://cdla.dev/permissive-2-0/"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "Microsoft Global ML Building Footprints (CDLA Permissive 2.0)"
+share_alike = false
+adapter = "microsoft-ml-building-footprints"
+adapter_version = 1

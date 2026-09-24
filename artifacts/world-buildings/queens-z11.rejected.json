@@ -1,0 +1,72 @@
+[
+  {
+    "source_id": "ms-global-ml-buildings-2026-08-13-us-032010111",
+    "source_feature_id": "44c3075ee07ad4a16f17b7eff2f8bc90d9a6bdbb8287c323214b81b077600301",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "ms-global-ml-buildings-2026-08-13-us-032010111",
+    "source_feature_id": "e29f0f414e3b0bb2f4c7245a368b8a96f45251be30c1d382671ef7c4bc2310d1",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "ms-global-ml-buildings-2026-08-13-us-032010111",
+    "source_feature_id": "0705d1f923fd58de25f6b3d3a3832c6923679a8fd176d0e7e43af48045707d62",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "ms-global-ml-buildings-2026-08-13-us-032010111",
+    "source_feature_id": "c86437cf674097aa9c0b3bf677e166d5adc7c1893c38f80dacd91d20cd0241f6",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "ms-global-ml-buildings-2026-08-13-us-032010111",
+    "source_feature_id": "b82116d451c3ec3311f623d26e2fbae209d1c194acaf41ffe3d9ed6bac97c20d",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "ms-global-ml-buildings-2026-08-13-us-032010111",
+    "source_feature_id": "c1f9b94a68a915f7036ac061479523ad977ba1fe2c5032b22ea2976f08811359",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "ms-global-ml-buildings-2026-08-13-us-032010111",
+    "source_feature_id": "c52ab28657fa617a3be851955055cc8068ee82ae4cb79d5dc732c58ac19a123b",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "ms-global-ml-buildings-2026-08-13-us-032010111",
+    "source_feature_id": "094144bc4fbe6311ff54bf88d454596a13eda329ffc25a06e0aac674b98f8dd8",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "ms-global-ml-buildings-2026-08-13-us-032010111",
+    "source_feature_id": "2a8a20c6e4b762a3a7c87e11cb7424004d76e8f3ec2caa87f9b1a7bb955ec8e9",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "ms-global-ml-buildings-2026-08-13-us-032010111",
+    "source_feature_id": "937008d96c209b98611983bca529e4e2597a7e43e9bff1be95d163f9d4724589",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "ms-global-ml-buildings-2026-08-13-us-032010111",
+    "source_feature_id": "5b24f0b0d7c6dffb1f95f3d6dc965edc94d5fe3d37205c420a3ecc2c0d294762",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "ms-global-ml-buildings-2026-08-13-us-032010111",
+    "source_feature_id": "5c3d07cd872e90aef61979035dbe2a66fadad87ef3ac9b6db05429d44218c073",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "ms-global-ml-buildings-2026-08-13-us-032010111",
+    "source_feature_id": "0e90636c32cee2adae8491978301a4e09089370a891fa2213f37689db77d895a",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "ms-global-ml-buildings-2026-08-13-us-032010111",
+    "source_feature_id": "4a4748143bf355a4536b6914f2fa5e2dcfb26b35aae9d73939a74dfe7e3ca370",
+    "reason": "invalid source feature: invalid polygon topology"
+  }
+]

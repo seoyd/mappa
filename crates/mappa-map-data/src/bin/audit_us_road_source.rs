@@ -30,7 +30,7 @@ fn member(archive: &mut ZipArchive<File>, suffix: &str) -> Result<Vec<u8>, Box<d
 fn main() -> Result<(), Box<dyn Error>> {
     let paths: Vec<_> = std::env::args().skip(1).collect();
     if paths.is_empty() {
-        return Err("usage: audit_us_road_source ZIP [ZIP ...]".into());
+        return Err("usage: audit_us_road_source ROADS_OR_AREAWATER_ZIP [ZIP ...]".into());
     }
     let mut union = [
         f64::INFINITY,
@@ -49,11 +49,13 @@ fn main() -> Result<(), Box<dyn Error>> {
         let shape = member(&mut archive, ".shp")?;
         let dbf = member(&mut archive, ".dbf")?;
         let prj = member(&mut archive, ".prj")?;
-        if shape.len() < 100
-            || dbf.len() < 32
-            || u32::from_be_bytes(shape[0..4].try_into()?) != 9994
+        if shape.len() < 100 || dbf.len() < 32 {
+            return Err(format!("short TIGER Shapefile header: {}", path.display()).into());
+        }
+        let shape_type = u32::from_le_bytes(shape[32..36].try_into()?);
+        if u32::from_be_bytes(shape[0..4].try_into()?) != 9994
             || u32::from_le_bytes(shape[28..32].try_into()?) != 1000
-            || u32::from_le_bytes(shape[32..36].try_into()?) != 3
+            || !matches!(shape_type, 3 | 5)
             || !std::str::from_utf8(&prj)?.contains("GCS_North_American_1983")
         {
             return Err(
@@ -82,7 +84,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         union[2] = union[2].max(bounds[2]);
         union[3] = union[3].max(bounds[3]);
         println!(
-            "{} sha256={:x} source_crs=EPSG:4269 bbox_nad83={bounds:?} dbf_records={records}",
+            "{} sha256={:x} shape_type={shape_type} source_crs=EPSG:4269 bbox_nad83={bounds:?} dbf_records={records}",
             path.display(),
             hasher.finalize()
         );

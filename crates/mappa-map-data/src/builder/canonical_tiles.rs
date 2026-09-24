@@ -37,11 +37,19 @@ fn world_rect(bounds: BBox) -> Result<Rect<f64>, DynError> {
 fn tile_span(rect: Rect<f64>, zoom: u8) -> (u32, u32, u32, u32) {
     let n = (1u32 << zoom) as f64;
     let last = (n as u32) - 1;
+    let upper = |min: f64, max: f64| {
+        let value = if min == max {
+            (max * n).floor()
+        } else {
+            (max * n).ceil() - 1.0
+        };
+        value.clamp(0.0, last as f64) as u32
+    };
     (
         (rect.min().x * n).floor().max(0.0) as u32,
-        (rect.max().x * n).floor().min(last as f64) as u32,
+        upper(rect.min().x, rect.max().x),
         (rect.min().y * n).floor().max(0.0) as u32,
-        (rect.max().y * n).floor().min(last as f64) as u32,
+        upper(rect.min().y, rect.max().y),
     )
 }
 
@@ -81,6 +89,7 @@ pub fn build_canonical_tiles(
                     FeatureKind::RoadSurface
                         | FeatureKind::Water
                         | FeatureKind::Vegetation
+                        | FeatureKind::Park
                         | FeatureKind::Building
                 ) =>
             {
@@ -113,12 +122,18 @@ pub fn build_canonical_tiles(
     if attribution.is_empty() || attribution.len() > 512 {
         return Err("invalid canonical attribution".into());
     }
+    let green_min_zoom = projected
+        .iter()
+        .filter(|feature| matches!(feature.kind, FeatureKind::Vegetation | FeatureKind::Park))
+        .map(|feature| feature.min_zoom)
+        .min()
+        .unwrap_or(14);
     let metadata = serde_json::json!({
         "attribution": attribution,
         "vector_layers": [
             {"id": "road_surface", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
             {"id": "water", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
-            {"id": "green", "fields": {}, "minzoom": 14, "maxzoom": max_zoom},
+            {"id": "green", "fields": {}, "minzoom": green_min_zoom, "maxzoom": max_zoom},
             {"id": "building", "fields": {}, "minzoom": 14, "maxzoom": max_zoom},
             {"id": "road_major", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
             {"id": "road_collector", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
@@ -201,7 +216,12 @@ pub fn build_canonical_tiles(
                 "green",
                 candidates
                     .iter()
-                    .filter(|&&index| projected[index].kind == FeatureKind::Vegetation)
+                    .filter(|&&index| {
+                        matches!(
+                            projected[index].kind,
+                            FeatureKind::Vegetation | FeatureKind::Park
+                        )
+                    })
                     .map(|&index| &projected[index].geometry),
                 tile_bounds,
                 key,
@@ -293,6 +313,24 @@ mod tests {
     use super::*;
     use crate::{LocalPmTiles, TileSource, decode_mvt};
     use mappa_map_core::MapCamera;
+
+    #[test]
+    fn exact_tile_bounds_do_not_include_neighbor() {
+        let n = 1_024.0;
+        let rect = Rect::new(
+            Coord {
+                x: 100.0 / n,
+                y: 200.0 / n,
+            },
+            Coord {
+                x: 101.0 / n,
+                y: 201.0 / n,
+            },
+        );
+        assert_eq!(tile_span(rect, 10), (100, 100, 200, 200));
+        let point = Rect::new(rect.max(), rect.max());
+        assert_eq!(tile_span(point, 10), (101, 101, 201, 201));
+    }
 
     #[tokio::test]
     async fn committed_proof_has_approved_roads_water_tree_cover_and_districts() {
