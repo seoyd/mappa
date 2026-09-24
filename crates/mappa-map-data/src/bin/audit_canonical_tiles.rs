@@ -7,9 +7,10 @@ use std::{
 };
 
 type Port = (u8, u16);
-// A crossing snapped within three MVT units of a four-tile corner cannot be
-// assigned reliably to just the horizontal or vertical neighbor. Report it.
-const CORNER_AMBIGUITY_UNITS: u16 = 3;
+// A shallow road segment can move its interpolated edge crossing several units
+// after MVT rounding. Close to a four-tile corner its neighbor is ambiguous;
+// report such ports separately instead of certifying a two-tile seam.
+const CORNER_AMBIGUITY_UNITS: u16 = 8;
 
 #[derive(Default)]
 struct EdgePorts {
@@ -245,8 +246,8 @@ async fn audit(
                         worst_unmatched = (
                             result.4,
                             format!(
-                                "z{z}/{x}/{y} right: this={:?} next={:?}",
-                                edge.right, next.left
+                                "z{z}/{x}/{y} right: this={:?} next={:?} this_through={:?} next_through={:?}",
+                                edge.right, next.left, edge.right_through, next.left_through
                             ),
                         );
                     }
@@ -275,8 +276,8 @@ async fn audit(
                         worst_unmatched = (
                             result.4,
                             format!(
-                                "z{z}/{x}/{y} bottom: this={:?} next={:?}",
-                                edge.bottom, next.top
+                                "z{z}/{x}/{y} bottom: this={:?} next={:?} this_through={:?} next_through={:?}",
+                                edge.bottom, next.top, edge.bottom_through, next.top_through
                             ),
                         );
                     }
@@ -361,10 +362,14 @@ mod tests {
 
     #[test]
     fn unresolved_four_tile_corner_is_reported_separately() {
-        let required = BTreeSet::from([(2, 3)]);
+        let required = BTreeSet::from([(2, 4089)]);
         let result = compare_ports(&required, &BTreeSet::new(), &required, &BTreeSet::new());
         assert_eq!(result.2, 0);
         assert_eq!(result.3, 1);
+        let interior = BTreeSet::from([(2, 4087)]);
+        let result = compare_ports(&interior, &BTreeSet::new(), &interior, &BTreeSet::new());
+        assert_eq!(result.2, 1);
+        assert_eq!(result.3, 0);
     }
 
     #[tokio::test]

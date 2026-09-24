@@ -16,7 +16,7 @@ Rust `discover_tiger_inventory`가 [US Census 2025 TIGER/Line 도로 디렉터�
 
 ## 타일 연결과 표시
 
-[전체 도로 감사](../artifacts/world-roads/al-state/full-tile-audit.log)는 z10–z15 **144,241개 타일**에서 타일 내부를 통과하는 도로 경계 연결의 미일치 **0개**를 보고한다. 네 타일이 만나는 꼭짓점에서 3 MVT 단위 이내인 **5건**은 방향이 모호해 별도로 보고하며 연결 완료로 단정하지 않는다. [분할 감사](../artifacts/world-roads/al-state/shard-audit.log)는 전체 도로 타일이 서부 70,765개와 동부 73,476개에 한 번씩 들어가며 압축 바이트가 같음을 확인했다. [서부](../artifacts/world-roads/al-state/west-tile-audit.log)·[동부](../artifacts/world-roads/al-state/east-tile-audit.log)·[수역](../artifacts/world-water/al-state/full-tile-audit.log) 최종 팩의 전수 해독 결과는 각각 70,765·73,476·68,612개이고 부재·해독 실패는 모두 0개다.
+[전체 도로 감사](../artifacts/world-roads/al-state/full-tile-audit.log)는 z10–z15 **144,241개 타일**에서 타일 내부를 통과하는 도로 경계 연결의 미일치 **0개**를 보고한다. 네 타일이 만나는 꼭짓점에서 8 MVT 단위 이내인 **5건**은 방향이 모호해 별도로 보고하며 연결 완료로 단정하지 않는다. [분할 감사](../artifacts/world-roads/al-state/shard-audit.log)는 전체 도로 타일이 서부 70,765개와 동부 73,476개에 한 번씩 들어가며 압축 바이트가 같음을 확인했다. [서부](../artifacts/world-roads/al-state/west-tile-audit.log)·[동부](../artifacts/world-roads/al-state/east-tile-audit.log)·[수역](../artifacts/world-water/al-state/full-tile-audit.log) 최종 팩의 전수 해독 결과는 각각 70,765·73,476·68,612개이고 부재·해독 실패는 모두 0개다.
 
 최종 팩 SHA-256은 도로 서부 `18c183b07fd8f25ad5fb1f9e4b4afcf9660ba468ccda3fc0444b7a92f2aa9880`, 동부 `82438c013997f981593b588ccfb3550d2384eb187d439aae6af8b51d5f9bb842`, 수역 `d11f9f6eb6e01665f41dca134cf95b209b0d3c16a5759605cef06de059b70283`이다.
 

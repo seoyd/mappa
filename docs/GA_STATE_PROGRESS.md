@@ -16,7 +16,7 @@ Rust `discover_tiger_inventory`가 [US Census 2025 TIGER/Line 도로 디렉터�
 
 ## 타일 연결과 표시
 
-기존 빌더는 도로가 타일 경계를 지날 때 양쪽 버퍼 끝점을 각각 정수화해 중앙 연결점에 최대 여러 MVT 단위 차이를 남겼다. 빌더가 동일한 원본 선분에서 타일 경계 교차점을 계산해 양쪽 타일에 명시적으로 넣도록 수정했다. [전체 도로 감사](../artifacts/world-roads/ga-state/full-tile-audit.log)는 z10–z15 **172,941개 타일**에서 타일 내부를 통과하는 도로 경계 연결의 미일치 **0개**를 보고한다. 네 타일이 만나는 꼭짓점에서 3 MVT 단위 이내인 **7건**은 방향이 모호해 별도 보고하며 연결 완료로 단정하지 않는다.
+기존 빌더는 도로가 타일 경계를 지날 때 양쪽 버퍼 끝점을 각각 정수화해 중앙 연결점에 최대 여러 MVT 단위 차이를 남겼다. 빌더가 동일한 원본 선분에서 타일 경계 교차점을 계산해 양쪽 타일에 명시적으로 넣도록 수정했다. [전체 도로 감사](../artifacts/world-roads/ga-state/full-tile-audit.log)는 z10–z15 **172,941개 타일**에서 타일 내부를 통과하는 도로 경계 연결의 미일치 **0개**를 보고한다. 네 타일이 만나는 꼭짓점에서 8 MVT 단위 이내인 **7건**은 방향이 모호해 별도 보고하며 연결 완료로 단정하지 않는다.
 
 [1차](../artifacts/world-roads/ga-state/shard-audit.log)·[2차](../artifacts/world-roads/ga-state/west-shard-audit.log)·[3차](../artifacts/world-roads/ga-state/west-east-shard-audit.log) 분할 감사는 전체 도로 타일 172,941개가 최종 네 팩에 한 번씩 들어가며 압축 바이트가 같음을 확인했다. [서부](../artifacts/world-roads/ga-state/west-west-tile-audit.log)·[중서부](../artifacts/world-roads/ga-state/west-east-west-tile-audit.log)·[중동부](../artifacts/world-roads/ga-state/west-east-east-tile-audit.log)·[동부](../artifacts/world-roads/ga-state/east-tile-audit.log) 최종 도로 팩의 개별 전수 해독 결과는 각각 25,654·35,822·36,656·74,809개, [수역 팩](../artifacts/world-water/ga-state/full-tile-audit.log)은 99,703개이며 모두 부재·해독 실패 0개였다. 최종 팩 SHA-256은 도로 서부 `ac9793cbe3702d50eb7a9435f6d5bf4cab13935e5be53024d2f304ef9604db72`, 중서부 `bccd408894efc2ef31408489422d404a994666ca5fdbd056e9a812a783f9fe3d`, 중동부 `36d6bb65587aed090787fc70e18f2b1da7790db466e3e3ca7e40ae09a6596887`, 동부 `6c227147edf4733be35b603aa369a874918298a3b340c30fbe19c6d5e6865bd2`, 수역 `f54de4bf86e7e79d9dfb226b8f961760b0bc68e3dea5644c8769f1d458cd85d9`다.
 

@@ -3,6 +3,30 @@
 # with observed features, not positional accuracy. Archives open on first use.
 # Adding a pack here does not certify its coverage or positional accuracy.
 [[pack]]
+path = "../../artifacts/world-water/ms-state/water.pmtiles"
+manifest = "../../data/us_tiger_ms_state_areawater.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 수역 · 미시시피주 82개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/ms-state/roads-west.pmtiles"
+manifest = "../../data/us_tiger_ms_state_roads_west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 서부 · 미시시피주 82개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/ms-state/roads-east.pmtiles"
+manifest = "../../data/us_tiger_ms_state_roads_east.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 동부 · 미시시피주 82개 카운티 실증"
+
+[[pack]]
 path = "../../artifacts/world-water/al-state/water.pmtiles"
 manifest = "../../data/us_tiger_al_state_areawater.toml"
 min_visible_zoom = 10
