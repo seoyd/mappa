@@ -76,6 +76,8 @@ pub struct SourceRecord {
     pub modification: bool,
     pub redistribution: bool,
     pub attribution_required: bool,
+    #[serde(default)]
+    pub attribution_text: Option<String>,
     pub share_alike: bool,
     pub adapter: String,
     pub adapter_version: u32,
@@ -126,7 +128,8 @@ impl SourceManifest {
                 || !source.redistribution
                 || source.share_alike
                 || (source.attribution_required
-                    && source.license_status != "APPROVED_WITH_ATTRIBUTION")
+                    && (source.license_status != "APPROVED_WITH_ATTRIBUTION"
+                        || source.attribution_text.as_deref().is_none_or(str::is_empty)))
             {
                 return Err(CanonicalError::License(source.id.clone()));
             }
@@ -1132,6 +1135,24 @@ adapter_version=1"#,
             ),
             Err(CanonicalError::SourceChecksum(_))
         ));
+    }
+
+    #[test]
+    fn licensed_worldcover_cannot_drop_required_screen_credit() {
+        let manifest_path = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data/sources.toml");
+        let temporary_path = temporary("missing-credit.toml");
+        let content = fs::read_to_string(manifest_path).unwrap();
+        let without_credit = content
+            .lines()
+            .filter(|line| !line.starts_with("attribution_text = "))
+            .collect::<Vec<_>>()
+            .join("\n");
+        fs::write(&temporary_path, without_credit).unwrap();
+        assert!(matches!(
+            SourceManifest::open(&temporary_path),
+            Err(CanonicalError::License(_))
+        ));
+        fs::remove_file(temporary_path).unwrap();
     }
 
     #[test]
