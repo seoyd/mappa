@@ -12,7 +12,7 @@
 | 지도 팩 | [Massachusetts PMTiles](../artifacts/world-roads/ma-state/state.pmtiles) 37,066,020바이트, SHA-256 `971b8f303fa5a73d707859b300b8a389412f39507491bbcde4434e553cf78e8a`. z10–15 실제 [33,938개 타일 전수 해독](../artifacts/world-roads/ma-state/tile-audit.log), 부재·실패 0개. 타일별 중복 포함 도로선 1,096,232개. |
 | 화면 | 기본 세계 모드 [Boston z14 Metal 캡처](../artifacts/world-roads/ma-state/boston-world-z14.png), 타일 실패 0, Census 출처 표기 확인. |
 
-[Census 기술 문서](https://www2.census.gov/geo/pdfs/maps-data/data/tiger/tgrshp2025/TGRSHP2025_TechDoc.pdf)에 따른 미국 정부 원천 재사용·출처 표기 조건을 적용했다. 14개 카운티 입력을 전부 처리했다는 뜻이며 실제 도로 누락 없음, 인접 주 경계 연결성, NAD83에서 WGS84로의 독립 위치 정확도는 검증하지 않았다. 이 팩에는 상세 수면·건물·역·공공기관이 없다. iPhone 실기기 성능도 측정하지 않았다.
+[Census 기술 문서](https://www2.census.gov/geo/pdfs/maps-data/data/tiger/tgrshp2025/TGRSHP2025_TechDoc.pdf)에 따른 미국 정부 원천 재사용·출처 표기 조건을 적용했다. 14개 카운티 입력을 전부 처리했다는 뜻이며 실제 도로 누락 없음, 인접 주 경계 연결성, NAD83에서 WGS84로의 독립 위치 정확도는 검증하지 않았다. [매사추세츠 상세 수면](MA_STATE_WATER_PROGRESS.md)은 별도 팩으로 합성한다. 건물·역·공공기관과 iPhone 실기기 성능은 미검증이다.
 
 ## 재현
 

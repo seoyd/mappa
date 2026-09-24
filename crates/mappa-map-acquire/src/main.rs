@@ -15,9 +15,9 @@ use tokio::{fs, io::AsyncWriteExt, sync::Semaphore, task::JoinSet};
 const MAX_SOURCE_BYTES: usize = 64 * 1024 * 1024;
 const CONCURRENT_DOWNLOADS: usize = 8;
 
-fn county_name(name: &str) -> bool {
+fn county_name(name: &str, class: &str) -> bool {
     name.strip_prefix("tl_2025_")
-        .and_then(|rest| rest.strip_suffix("_roads.zip"))
+        .and_then(|rest| rest.strip_suffix(&format!("_{class}.zip")))
         .is_some_and(|county| county.len() == 5 && county.bytes().all(|b| b.is_ascii_digit()))
 }
 
@@ -154,18 +154,22 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         );
         return Ok(());
     }
-    if args.len() != 3 {
-        return Err("usage: mappa-map-acquire INVENTORY.txt OUTPUT_DIR".into());
-    }
-    let output = PathBuf::from(&args[2]);
+    let (inventory, output, class, directory) = match args.as_slice() {
+        [_, inventory, output] => (inventory, output, "roads", "ROADS"),
+        [_, mode, inventory, output] if mode == "--areawater" => {
+            (inventory, output, "areawater", "AREAWATER")
+        }
+        _ => return Err("usage: mappa-map-acquire [--areawater] INVENTORY.txt OUTPUT_DIR".into()),
+    };
+    let output = PathBuf::from(output);
     fs::create_dir_all(&output).await?;
     let mut names = BTreeSet::new();
-    for line in fs::read_to_string(&args[1]).await?.lines() {
+    for line in fs::read_to_string(inventory).await?.lines() {
         let name = line.trim();
         if name.is_empty() || name.starts_with('#') {
             continue;
         }
-        if !county_name(name) || !names.insert(name.to_owned()) {
+        if !county_name(name, class) || !names.insert(name.to_owned()) {
             return Err(format!("invalid or duplicate county source name: {name}").into());
         }
     }
@@ -184,7 +188,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         let output = output.clone();
         tasks.spawn(async move {
             let _permit = permit;
-            let url = format!("https://www2.census.gov/geo/tiger/TIGER2025/ROADS/{name}");
+            let url = format!("https://www2.census.gov/geo/tiger/TIGER2025/{directory}/{name}");
             let bytes = download(
                 &client,
                 &url,
@@ -214,9 +218,10 @@ mod tests {
 
     #[test]
     fn only_publisher_county_filenames_are_accepted() {
-        assert!(county_name("tl_2025_36061_roads.zip"));
-        assert!(!county_name("../tl_2025_36061_roads.zip"));
-        assert!(!county_name("tl_2025_36061_roads.zip/../../other"));
-        assert!(!county_name("tl_2024_36061_roads.zip"));
+        assert!(county_name("tl_2025_36061_roads.zip", "roads"));
+        assert!(county_name("tl_2025_36061_areawater.zip", "areawater"));
+        assert!(!county_name("../tl_2025_36061_roads.zip", "roads"));
+        assert!(!county_name("tl_2025_36061_roads.zip/../../other", "roads"));
+        assert!(!county_name("tl_2024_36061_roads.zip", "roads"));
     }
 }
