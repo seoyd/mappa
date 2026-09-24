@@ -3539,10 +3539,12 @@ version = "0.1.0"
 dependencies = [
  "md-5",
  "reqwest",
+ "serde",
  "sevenz-rust2",
  "sha2 0.10.9",
  "tempfile",
  "tokio",
+ "toml 0.9.12+spec-1.1.0",
  "zip",
 ]
 
