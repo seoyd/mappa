@@ -18,30 +18,19 @@ fn sha256(path: &Path) -> Result<String, Box<dyn Error>> {
     Ok(format!("{:x}", hash.finalize()))
 }
 
-fn selected_extension(entry: &ArchiveEntry) -> Option<&'static str> {
+fn selected_extension(entry: &ArchiveEntry, class: &str) -> Option<&'static str> {
     if entry.is_directory() || entry.size() > 4 * 1024 * 1024 * 1024 {
         return None;
     }
     let name = entry.name().to_ascii_lowercase();
     ["shp", "shx", "dbf", "prj", "cpg"]
         .into_iter()
-        .find(|ext| name.ends_with(&format!("troncon_de_route.{ext}")))
+        .find(|ext| name.ends_with(&format!("{class}.{ext}")))
 }
 
-/// The published DBF includes nullable date columns with `00000000` values.
-/// Keep only road fields used by the canonical adapter, preserving their raw
-/// values and record order. This avoids interpreting unrelated invalid dates.
-fn compact_road_dbf(path: &Path) -> Result<u32, Box<dyn Error>> {
-    const FIELDS: [&str; 8] = [
-        "ID",
-        "NATURE",
-        "NOM_COLL_G",
-        "NOM_COLL_D",
-        "IMPORTANCE",
-        "FICTIF",
-        "ETAT",
-        "ACCES_VL",
-    ];
+/// Keep only fields used by the canonical adapter, preserving raw values and
+/// record order. This avoids parsing unrelated nullable `00000000` dates.
+fn compact_dbf(path: &Path, fields: &[&str]) -> Result<u32, Box<dyn Error>> {
     let mut input = File::open(path)?;
     let mut header = [0u8; 32];
     input.read_exact(&mut header)?;
@@ -64,7 +53,7 @@ fn compact_road_dbf(path: &Path) -> Result<u32, Box<dyn Error>> {
         let name_end = bytes[..11].iter().position(|byte| *byte == 0).unwrap_or(11);
         let name = std::str::from_utf8(&bytes[..name_end])?;
         let length = usize::from(bytes[16]);
-        if FIELDS.contains(&name) {
+        if fields.contains(&name) {
             if !seen.insert(name.to_owned()) {
                 return Err(format!("duplicate IGN DBF field {name}").into());
             }
@@ -72,7 +61,7 @@ fn compact_road_dbf(path: &Path) -> Result<u32, Box<dyn Error>> {
         }
         old_offset += length;
     }
-    if old_offset != old_record_bytes || seen.len() != FIELDS.len() {
+    if old_offset != old_record_bytes || seen.len() != fields.len() {
         return Err(format!("IGN DBF schema differs: found {seen:?}").into());
     }
     let new_header_bytes = 32 + selected.len() * 32 + 1;
@@ -105,9 +94,11 @@ fn compact_road_dbf(path: &Path) -> Result<u32, Box<dyn Error>> {
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<_> = std::env::args().collect();
-    if args.len() != 3 {
-        return Err("usage: extract_ign_roads PUBLISHED.7z ROAD_ONLY.zip".into());
-    }
+    let (class, output_stem) = match args.as_slice() {
+        [_, _, _] => ("troncon_de_route", "road"),
+        [_, _, _, mode] if mode == "--water" => ("surface_hydrographique", "water"),
+        _ => return Err("usage: extract_ign_roads PUBLISHED.7z SELECTED.zip [--water]".into()),
+    };
     let archive = Path::new(&args[1]);
     let output = Path::new(&args[2]);
     let upstream_sha256 = sha256(archive)?;
@@ -117,7 +108,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         archive,
         temporary.path(),
         |entry, reader, _| -> Result<bool, SevenZError> {
-            let Some(extension) = selected_extension(entry) else {
+            let Some(extension) = selected_extension(entry, class) else {
                 // Solid 7z blocks require every preceding member to be drained.
                 // This also checks the archive's per-member CRC for skipped files.
                 if entry.has_stream() {
@@ -130,7 +121,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                     format!("duplicate {extension} road member").into(),
                 ));
             }
-            let path = temporary.path().join(format!("road.{extension}"));
+            let path = temporary.path().join(format!("{output_stem}.{extension}"));
             let mut file = File::create(path)?;
             let bytes = std::io::copy(reader, &mut file)?;
             if bytes != entry.size() {
@@ -146,7 +137,31 @@ fn main() -> Result<(), Box<dyn Error>> {
             return Err(format!("missing {required} road member").into());
         }
     }
-    let records = compact_road_dbf(&temporary.path().join("road.dbf"))?;
+    let selected_fields: &[&str] = if output_stem == "road" {
+        &[
+            "ID",
+            "NATURE",
+            "NOM_COLL_G",
+            "NOM_COLL_D",
+            "IMPORTANCE",
+            "FICTIF",
+            "ETAT",
+            "ACCES_VL",
+        ]
+    } else {
+        &[
+            "ID",
+            "NATURE",
+            "ETAT",
+            "PERSISTANC",
+            "NOM_P_EAU",
+            "NOM_C_EAU",
+        ]
+    };
+    let records = compact_dbf(
+        &temporary.path().join(format!("{output_stem}.dbf")),
+        selected_fields,
+    )?;
     fs::create_dir_all(output.parent().ok_or("output needs a parent directory")?)?;
     let temporary_zip = output.with_extension("part");
     let mut writer = ZipWriter::new(File::create(&temporary_zip)?);
@@ -155,8 +170,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         if !found.contains(extension) {
             continue;
         }
-        writer.start_file(format!("road.{extension}"), options)?;
-        let mut input = File::open(temporary.path().join(format!("road.{extension}")))?;
+        writer.start_file(format!("{output_stem}.{extension}"), options)?;
+        let mut input = File::open(temporary.path().join(format!("{output_stem}.{extension}")))?;
         let mut buffer = [0u8; 64 * 1024];
         loop {
             let read = input.read(&mut buffer)?;

@@ -18,7 +18,7 @@
 | 지도 팩 | [Paris PMTiles](../artifacts/world-roads/fr-paris/roads.pmtiles) 6,880,025바이트, SHA-256 `0b8e4e07ca7f5b6bb3a9a7e305f5c7743aab5487e8bd64759f88b10f6b3f72c7`. z10–15 실제 타일 [991개 전수 해독](../artifacts/world-roads/fr-paris/tile-audit.log), 부재 0·실패 0. |
 | 화면 | 기본 세계 모드 [파리 z14 Metal 캡처](../artifacts/world-roads/fr-paris/paris-world-z14.png) 타일 실패 0, IGN 출처 표기 확인. |
 
-도로 중심선의 파일·타일·화면을 검증한 결과다. 도로 연결성·모든 실제 도로의 완전성·현장 위치 정확도·RGF93에서 WGS84로의 독립 기준점 비교는 통과 판정하지 않았다. IGN의 [BD TOPO 3.5 명세](https://data.geopf.fr/annexes/ressources/documentation/DC_BDTOPO_3-5.pdf)는 도로의 성격과 취득 방법에 따른 정밀도 정보를 별도로 정의한다. 이번 팩에는 파리 상세 수면·건물·시설이 아직 없으며 iPhone 성능도 측정하지 않았다.
+도로 중심선의 파일·타일·화면을 검증한 결과다. 도로 연결성·모든 실제 도로의 완전성·현장 위치 정확도·RGF93에서 WGS84로의 독립 기준점 비교는 통과 판정하지 않았다. IGN의 [BD TOPO 3.5 명세](https://data.geopf.fr/annexes/ressources/documentation/DC_BDTOPO_3-5.pdf)는 도로의 성격과 취득 방법에 따른 정밀도 정보를 별도로 정의한다. [파리 상세 수면](FR_PARIS_WATER_PROGRESS.md)은 별도 팩으로 합성한다. 건물·시설은 아직 없으며 iPhone 성능도 측정하지 않았다.
 
 ## 재현
 

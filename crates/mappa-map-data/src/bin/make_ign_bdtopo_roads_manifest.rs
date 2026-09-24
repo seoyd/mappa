@@ -1,6 +1,8 @@
 //! Pin an official IGN departmental road class and derive its actual road bounds.
 
-use mappa_map_data::canonical::{BBox, SourceManifest, SourceRecord, adapt_ign_bdtopo_roads};
+use mappa_map_data::canonical::{
+    BBox, SourceManifest, SourceRecord, adapt_ign_bdtopo_roads, adapt_ign_bdtopo_water,
+};
 use sha2::{Digest, Sha256};
 use std::{error::Error, fs, path::Path};
 
@@ -13,11 +15,12 @@ fn sha256(path: &Path) -> Result<String, Box<dyn Error>> {
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<_> = std::env::args().collect();
-    if args.len() != 6
+    if !(args.len() == 6 || (args.len() == 7 && args[6] == "--water"))
         || !args[1].starts_with("https://data.geopf.fr/telechargement/download/BDTOPO/")
     {
-        return Err("usage: make_ign_bdtopo_roads_manifest OFFICIAL_7Z_URL ARCHIVE.7z ROAD.zip OUTPUT.toml DOWNLOAD_DATE".into());
+        return Err("usage: make_ign_bdtopo_roads_manifest OFFICIAL_7Z_URL ARCHIVE.7z SELECTED.zip OUTPUT.toml DOWNLOAD_DATE [--water]".into());
     }
+    let water = args.len() == 7;
     let archive = Path::new(&args[2]);
     let road_zip = Path::new(&args[3]);
     let output = Path::new(&args[4]);
@@ -48,10 +51,17 @@ fn main() -> Result<(), Box<dyn Error>> {
         .to_string_lossy()
         .into_owned();
     let relative_archive = archive.strip_prefix(parent)?.to_string_lossy().into_owned();
-    let source_id = format!("ign-bdtopo-{}", stem.to_lowercase());
+    let source_id = if water {
+        format!("ign-bdtopo-water-{}", stem.to_lowercase())
+    } else {
+        format!("ign-bdtopo-{}", stem.to_lowercase())
+    };
     let mut source = SourceRecord {
         id: source_id,
-        name: format!("IGN BD TOPO 3.5 Tronçon de route, {stem}"),
+        name: format!(
+            "IGN BD TOPO 3.5 {}, {stem}",
+            if water { "Surface hydrographique" } else { "Tronçon de route" }
+        ),
         provider: "Institut national de l'information géographique et forestière (IGN)".into(),
         source_version: stem.into(),
         download_date: date.into(),
@@ -64,9 +74,16 @@ fn main() -> Result<(), Box<dyn Error>> {
         dedup_file: None,
         dedup_sha256: None,
         crs: "EPSG:2154 RGF93 / Lambert-93; inverted to RGF93 geographic degrees; independent WGS84 datum and positional accuracy pending".into(),
-        format: "official 7z Shapefile; road-only ZIP selected and repacked in Rust".into(),
+        format: format!(
+            "official 7z Shapefile; {}-only ZIP selected and repacked in Rust",
+            if water { "water" } else { "road" }
+        ),
         coverage: "departmental road segment source; observed selected-road bounds below".into(),
-        resolution: "IGN BD TOPO 3.5 road centerlines; source precision varies by acquisition method".into(),
+        resolution: if water {
+            "IGN BD TOPO 3.5 surface hydrography polygons; source precision varies by acquisition method"
+        } else {
+            "IGN BD TOPO 3.5 road centerlines; source precision varies by acquisition method"
+        }.into(),
         update_frequency: "published quarterly snapshot; pinned edition".into(),
         license_id: "ETALAB-LICENCE-OUVERTE-2.0".into(),
         license_url: "https://www.data.gouv.fr/pages/legal/licences/etalab-2.0".into(),
@@ -77,7 +94,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         attribution_required: true,
         attribution_text: Some(format!("IGN, BD TOPO 3.5, {stem}; modifications Mappa")),
         share_alike: false,
-        adapter: "ign-bdtopo-road-segment".into(),
+        adapter: if water { "ign-bdtopo-surface-water" } else { "ign-bdtopo-road-segment" }.into(),
         adapter_version: 1,
     };
     let world = BBox {
@@ -86,7 +103,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         east: 180.0,
         north: 85.051_128_78,
     };
-    let (features, rejected) = adapt_ign_bdtopo_roads(&source, world)?;
+    let (features, rejected) = if water {
+        adapt_ign_bdtopo_water(&source, world)?
+    } else {
+        adapt_ign_bdtopo_roads(&source, world)?
+    };
     if features.is_empty() {
         for rejected in rejected.iter().take(8) {
             eprintln!(
@@ -110,7 +131,14 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
     source.file = relative_zip;
     source.upstream_file = Some(relative_archive);
-    source.coverage = format!("selected in-service vehicle-road geometry bounds {bounds:?}");
+    source.coverage = format!(
+        "selected in-service {} geometry bounds {bounds:?}",
+        if water {
+            "permanent surface-water"
+        } else {
+            "vehicle-road"
+        }
+    );
     let manifest = SourceManifest {
         schema_version: 1,
         proof_region: stem.to_lowercase(),
@@ -120,7 +148,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     fs::write(output, toml::to_string_pretty(&manifest)?)?;
     SourceManifest::open(output)?;
     println!(
-        "manifest={} accepted_parts={} rejected_records={} selected_road_bounds={bounds:?}",
+        "manifest={} accepted_parts={} rejected_records={} selected_geometry_bounds={bounds:?}",
         output.display(),
         features.len(),
         rejected.len()

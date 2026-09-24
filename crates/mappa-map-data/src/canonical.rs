@@ -21,7 +21,7 @@ use thiserror::Error;
 mod ign_bdtopo;
 mod lambert93;
 mod nrn;
-pub use ign_bdtopo::adapt_ign_bdtopo_roads;
+pub use ign_bdtopo::{adapt_ign_bdtopo_roads, adapt_ign_bdtopo_water};
 pub use lambert93::inverse_lambert93;
 pub use nrn::adapt_ca_nrn_roads;
 
@@ -192,6 +192,7 @@ impl SourceManifest {
                     | "us-census-tiger-arealm-parks"
                     | "ca-nrn-roadseg"
                     | "ign-bdtopo-road-segment"
+                    | "ign-bdtopo-surface-water"
                     | "os-open-roads"
             ) || (source.adapter == "os-open-roads" && source.adapter_version != 2)
                 || (source.adapter != "os-open-roads" && source.adapter_version != 1)
