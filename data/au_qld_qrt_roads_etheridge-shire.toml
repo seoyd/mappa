@@ -1,0 +1,35 @@
+schema_version = 1
+proof_region = "au-qld-qrt-etheridge-shire"
+proof_bbox_wgs84 = [
+    142.46314703999997,
+    -19.61811899140262,
+    144.74864591999994,
+    -17.60390495945546,
+]
+
+[[source]]
+id = "au-qld-qrt-roads-38ae4db69a21c0d2"
+name = "Queensland Roads and Tracks"
+provider = "State of Queensland, Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development"
+source_version = "sha256:38ae4db69a21c0d258088f583bb20b821f50a0b394569df70068073b59c50fec"
+download_date = "2026-09-25"
+official_url = "https://spatial-gis.information.qld.gov.au/arcgis/rest/services/Transportation/RoadsAndTracks/MapServer/10"
+download_page_url = "https://www.data.qld.gov.au/dataset/queensland-roads-and-tracks"
+file = "local/au_qld/qrt-2026-09-25/snapshot.toml"
+sha256 = "38ae4db69a21c0d258088f583bb20b821f50a0b394569df70068073b59c50fec"
+crs = "WGS84 geographic degrees returned by official ArcGIS outSR=4326; original service Web Mercator 102100"
+format = "Audited GeoJSON page snapshot with source ID and page SHA-256 manifest"
+coverage = "Queensland Roads and Tracks; source LGA assignment=Etheridge Shire"
+resolution = "Approximate road centreline; per-feature pos_accuracy exists but independent position accuracy not measured"
+update_frequency = "Official QRT service is maintained daily; this is one acquired snapshot"
+license_id = "CC-BY-4.0"
+license_url = "https://creativecommons.org/licenses/by/4.0/"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "© State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+share_alike = false
+adapter = "au-qld-qrt-roads"
+adapter_version = 1

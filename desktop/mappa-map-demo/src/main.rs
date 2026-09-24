@@ -446,6 +446,8 @@ fn merge_regional_labels<'a>(labels: impl IntoIterator<Item = &'a str>) -> Strin
     let mut gb_credits = BTreeSet::new();
     let mut ca_provinces = Vec::new();
     let mut ca_credits = BTreeSet::new();
+    let mut qld_regions = Vec::new();
+    let mut qld_credits = BTreeSet::new();
     let mut ign_layers: BTreeMap<&str, BTreeSet<&str>> = BTreeMap::new();
     for label in labels {
         if let Some((grid, credit)) = label
@@ -460,6 +462,12 @@ fn merge_regional_labels<'a>(labels: impl IntoIterator<Item = &'a str>) -> Strin
         {
             ca_provinces.push(province);
             ca_credits.extend(credit.split(" · "));
+        } else if let Some((region, credit)) = label
+            .strip_prefix("QRT · ")
+            .and_then(|rest| rest.split_once(" · "))
+        {
+            qld_regions.push(region);
+            qld_credits.insert(credit);
         } else if let Some((layer, region)) = label
             .strip_prefix("IGN BD TOPO ")
             .and_then(|rest| rest.split_once(" · "))
@@ -485,6 +493,15 @@ fn merge_regional_labels<'a>(labels: impl IntoIterator<Item = &'a str>) -> Strin
             "CA {} · {}",
             ca_provinces.join(","),
             ca_credits.into_iter().collect::<Vec<_>>().join(" · ")
+        ));
+    }
+    if !qld_regions.is_empty() {
+        qld_regions.sort_unstable();
+        qld_regions.dedup();
+        other.push(format!(
+            "QRT · {} · {}",
+            qld_regions.join(","),
+            qld_credits.into_iter().collect::<Vec<_>>().join(" · ")
         ));
     }
     for (region, layers) in ign_layers {
@@ -2564,6 +2581,16 @@ mod tests {
     }
 
     #[test]
+    fn nearby_qld_packs_show_source_credit_once() {
+        let credit = "© State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025";
+        let first = format!("QRT · Brisbane City · {credit}");
+        let second = format!("QRT · Redland City · {credit}");
+        let merged = merge_regional_labels([first.as_str(), second.as_str()]);
+        assert!(merged.contains("QRT · Brisbane City,Redland City"));
+        assert_eq!(merged.matches(credit).count(), 1);
+    }
+
+    #[test]
     fn paris_layers_share_one_source_label() {
         let merged = merge_regional_labels([
             "IGN BD TOPO 도로 · 파리 D075 실증",
@@ -2660,7 +2687,7 @@ mod tests {
         let queens = manager
             .regional
             .iter()
-            .find(|pack| pack.label.contains("Queens"))
+            .find(|pack| pack.label == "Microsoft 건물 · Queens 동부 z11 실증")
             .unwrap();
         let northwest = project(queens.bounds[0], queens.bounds[3]).unwrap();
         let southeast = project(queens.bounds[2], queens.bounds[1]).unwrap();

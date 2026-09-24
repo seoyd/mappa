@@ -1,0 +1,633 @@
+# Queensland Roads and Tracks source LGAs; built from audited GeoJSON pages.
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/aurukun-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_aurukun-shire.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Aurukun Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/balonne-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_balonne-shire.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Balonne Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/banana-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_banana-shire.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Banana Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/barcaldine-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_barcaldine-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Barcaldine Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/barcoo-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_barcoo-shire.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Barcoo Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/blackall-tambo-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_blackall-tambo-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Blackall Tambo Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/boulia-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_boulia-shire.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Boulia Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/brisbane-city.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_brisbane-city.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Brisbane City · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/bulloo-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_bulloo-shire.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Bulloo Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/bundaberg-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_bundaberg-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Bundaberg Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/burdekin-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_burdekin-shire.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Burdekin Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/burke-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_burke-shire.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Burke Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/cairns-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_cairns-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Cairns Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/carpentaria-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_carpentaria-shire.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Carpentaria Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/cassowary-coast-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_cassowary-coast-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Cassowary Coast Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/central-highlands-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_central-highlands-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Central Highlands Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/charters-towers-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_charters-towers-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Charters Towers Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/cherbourg-aboriginal-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_cherbourg-aboriginal-shire.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Cherbourg Aboriginal Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/cloncurry-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_cloncurry-shire.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Cloncurry Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/cook-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_cook-shire.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Cook Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/croydon-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_croydon-shire.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Croydon Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/diamantina-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_diamantina-shire.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Diamantina Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/doomadgee-aboriginal-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_doomadgee-aboriginal-shire.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Doomadgee Aboriginal Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/douglas-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_douglas-shire.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Douglas Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/etheridge-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_etheridge-shire.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Etheridge Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/flinders-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_flinders-shire.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Flinders Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/fraser-coast-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_fraser-coast-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Fraser Coast Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/gladstone-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_gladstone-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Gladstone Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/gold-coast-city.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_gold-coast-city.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Gold Coast City · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/goondiwindi-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_goondiwindi-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Goondiwindi Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/gympie-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_gympie-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Gympie Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/hinchinbrook-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_hinchinbrook-shire.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Hinchinbrook Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/hope-vale-aboriginal-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_hope-vale-aboriginal-shire.toml"
+min_visible_zoom = 12
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Hope Vale Aboriginal Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/ipswich-city.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_ipswich-city.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Ipswich City · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/isaac-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_isaac-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Isaac Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/kowanyama-aboriginal-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_kowanyama-aboriginal-shire.toml"
+min_visible_zoom = 12
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Kowanyama Aboriginal Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/livingstone-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_livingstone-shire.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Livingstone Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/lockhart-river-aboriginal-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_lockhart-river-aboriginal-shire.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Lockhart River Aboriginal Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/lockyer-valley-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_lockyer-valley-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Lockyer Valley Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/logan-city.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_logan-city.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Logan City · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/longreach-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_longreach-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Longreach Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/mackay-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_mackay-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Mackay Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/mapoon-aboriginal-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_mapoon-aboriginal-shire.toml"
+min_visible_zoom = 12
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Mapoon Aboriginal Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/maranoa-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_maranoa-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Maranoa Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/mareeba-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_mareeba-shire.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Mareeba Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/mckinlay-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_mckinlay-shire.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · McKinlay Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/moreton-bay-city.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_moreton-bay-city.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Moreton Bay City · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/mornington-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_mornington-shire.toml"
+min_visible_zoom = 12
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Mornington Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/mount-isa-city.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_mount-isa-city.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Mount Isa City · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/murweh-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_murweh-shire.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Murweh Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/napranum-aboriginal-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_napranum-aboriginal-shire.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Napranum Aboriginal Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/noosa-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_noosa-shire.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Noosa Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/north-burnett-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_north-burnett-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · North Burnett Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/northern-peninsula-area-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_northern-peninsula-area-regional.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Northern Peninsula Area Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/palm-island-aboriginal-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_palm-island-aboriginal-shire.toml"
+min_visible_zoom = 12
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Palm Island Aboriginal Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/paroo-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_paroo-shire.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Paroo Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/pormpuraaw-aboriginal-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_pormpuraaw-aboriginal-shire.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Pormpuraaw Aboriginal Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/qld-extent.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_qld-extent.toml"
+min_visible_zoom = 12
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · QLD Extent · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/quilpie-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_quilpie-shire.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Quilpie Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/redland-city.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_redland-city.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Redland City · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/richmond-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_richmond-shire.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Richmond Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/rockhampton-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_rockhampton-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Rockhampton Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/scenic-rim-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_scenic-rim-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Scenic Rim Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/somerset-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_somerset-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Somerset Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/south-burnett-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_south-burnett-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · South Burnett Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/southern-downs-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_southern-downs-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Southern Downs Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/sunshine-coast-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_sunshine-coast-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Sunshine Coast Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/tablelands-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_tablelands-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Tablelands Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/toowoomba-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_toowoomba-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Toowoomba Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/torres-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_torres-shire.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Torres Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/torres-strait-island-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_torres-strait-island-regional.toml"
+min_visible_zoom = 12
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Torres Strait Island Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/townsville-city.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_townsville-city.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Townsville City · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/weipa-town.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_weipa-town.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Weipa Town · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/western-downs-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_western-downs-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Western Downs Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/whitsunday-regional.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_whitsunday-regional.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Whitsunday Regional · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/winton-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_winton-shire.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Winton Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/woorabinda-aboriginal-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_woorabinda-aboriginal-shire.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Woorabinda Aboriginal Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/wujal-wujal-aboriginal-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_wujal-wujal-aboriginal-shire.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Wujal Wujal Aboriginal Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"
+
+[[pack]]
+path = "../../artifacts/world-roads/au-qld/yarrabah-aboriginal-shire.pmtiles"
+manifest = "../../data/au_qld_qrt_roads_yarrabah-aboriginal-shire.toml"
+min_visible_zoom = 11
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "QRT · Yarrabah Aboriginal Shire · © State of Queensland (Department of Natural Resources and Mines, Manufacturing and Regional and Rural Development) 2025"

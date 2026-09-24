@@ -1,0 +1,7 @@
+z=10 tiles=6 decoded_mvt_bytes=3395 road_lines=129 road_surfaces=0 water=0 tree_cover=0 district_labels=0 seam_exact=8 seam_within_1_unit=0 seam_unmatched=0 seam_corner_ambiguous=0 seam_quantization_ambiguous=0 seam_unmatched_max_corner_distance=0
+z=11 tiles=44 decoded_mvt_bytes=24611 road_lines=686 road_surfaces=0 water=0 tree_cover=0 district_labels=0 seam_exact=92 seam_within_1_unit=0 seam_unmatched=0 seam_corner_ambiguous=0 seam_quantization_ambiguous=0 seam_unmatched_max_corner_distance=0
+z=12 tiles=218 decoded_mvt_bytes=138200 road_lines=3622 road_surfaces=0 water=0 tree_cover=0 district_labels=0 seam_exact=770 seam_within_1_unit=0 seam_unmatched=0 seam_corner_ambiguous=0 seam_quantization_ambiguous=0 seam_unmatched_max_corner_distance=0
+z=13 tiles=519 decoded_mvt_bytes=191267 road_lines=4056 road_surfaces=0 water=0 tree_cover=0 district_labels=0 seam_exact=1588 seam_within_1_unit=0 seam_unmatched=0 seam_corner_ambiguous=0 seam_quantization_ambiguous=0 seam_unmatched_max_corner_distance=0
+z=14 tiles=1169 decoded_mvt_bytes=298356 road_lines=4840 road_surfaces=0 water=0 tree_cover=0 district_labels=0 seam_exact=3084 seam_within_1_unit=0 seam_unmatched=0 seam_corner_ambiguous=0 seam_quantization_ambiguous=0 seam_unmatched_max_corner_distance=0
+z=15 tiles=2599 decoded_mvt_bytes=520369 road_lines=6369 road_surfaces=0 water=0 tree_cover=0 district_labels=0 seam_exact=6166 seam_within_1_unit=0 seam_unmatched=0 seam_corner_ambiguous=0 seam_quantization_ambiguous=0 seam_unmatched_max_corner_distance=0
+archive_bytes=1134609
