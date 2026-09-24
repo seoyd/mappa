@@ -22,11 +22,19 @@ mvt = "0.15.0"
 tokio.workspace = true
 mlt-core = { version = "0.14.5", optional = true, default-features = false }
 flate2 = "1.1.10"
-shapefile = "0.9.0"
+shapefile = { version = "0.9.0", features = ["encoding_rs"] }
 zip = { version = "1.1.4", default-features = false, features = ["deflate"] }
+lonlat_bng = { version = "0.9.0", optional = true }
+md-5 = { version = "0.11", optional = true }
 
 [features]
 mlt-eval = ["dep:mlt-core"]
+gb-roads = ["dep:lonlat_bng", "dep:md-5"]
+
+[[bin]]
+name = "build_os_open_roads_grid"
+path = "src/bin/build_os_open_roads_grid.rs"
+required-features = ["gb-roads"]
 
 [[bin]]
 name = "compare_formats"

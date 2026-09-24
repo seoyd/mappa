@@ -27,6 +27,14 @@ archive_max_zoom = 15
 label = "US Census 도로 · 뉴저지주 21개 카운티 실증"
 
 [[pack]]
+path = "../../artifacts/world-roads/gb/tq.pmtiles"
+manifest = "../../data/os_open_roads_tq.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "GB TQ · Contains Ordnance Survey data © Crown copyright and database right 2026"
+
+[[pack]]
 path = "../../artifacts/world-buildings/queens-z11.pmtiles"
 manifest = "../../data/ms_queens_buildings.toml"
 min_visible_zoom = 14

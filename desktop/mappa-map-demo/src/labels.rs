@@ -15,6 +15,7 @@ struct LabelKey {
     name: String,
     kind: LabelKind,
     scale_bits: u32,
+    width_bits: u32,
 }
 
 pub struct LabelRenderer {
@@ -72,6 +73,9 @@ impl LabelRenderer {
         let labels: Vec<&ScreenLabel> = labels
             .iter()
             .filter(|label| {
+                if label.kind == LabelKind::Attribution {
+                    return true;
+                }
                 let (left, top) = label.text_origin(scale);
                 let right = left + label.text_width(scale);
                 let bottom = top + 26.0 * scale;
@@ -81,10 +85,21 @@ impl LabelRenderer {
             .collect();
         let mut keys = Vec::with_capacity(labels.len());
         for label in &labels {
+            let attribution_above_scale = label.kind == LabelKind::Attribution
+                && label.y < camera.height_px as f32 - 90.0 * scale;
+            let width = if attribution_above_scale {
+                camera.width_px as f32 - 24.0 * scale
+            } else if label.kind == LabelKind::Attribution {
+                camera.width_px as f32 - 300.0 * scale
+            } else {
+                280.0 * scale
+            }
+            .max(100.0 * scale);
             let key = LabelKey {
                 name: label.name.clone(),
                 kind: label.kind,
                 scale_bits: scale.to_bits(),
+                width_bits: width.to_bits(),
             };
             if !self.buffers.contains_key(&key) {
                 let size = match label.kind {
@@ -100,7 +115,14 @@ impl LabelRenderer {
                     &mut self.fonts,
                     Metrics::new(size * scale, (size + 6.0) * scale),
                 );
-                buffer.set_size(Some(280.0 * scale), Some(32.0 * scale));
+                buffer.set_size(
+                    Some(width),
+                    Some(if attribution_above_scale {
+                        80.0 * scale
+                    } else {
+                        32.0 * scale
+                    }),
+                );
                 buffer.set_text(
                     &label.name,
                     &Attrs::new().family(Family::SansSerif),
@@ -113,6 +135,7 @@ impl LabelRenderer {
                         name: key.name.clone(),
                         kind: key.kind,
                         scale_bits: key.scale_bits,
+                        width_bits: key.width_bits,
                     },
                     buffer,
                 );

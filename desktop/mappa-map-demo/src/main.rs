@@ -378,6 +378,15 @@ fn open_regional_packs() -> Result<Vec<RegionalPack>, DynError> {
             return Err(format!("duplicate regional pack: {}", entry.path.display()).into());
         }
         let manifest = SourceManifest::open(&parent.join(&entry.manifest))?;
+        if manifest.source.iter().any(|source| {
+            source.adapter == "os-open-roads"
+                && source
+                    .attribution_text
+                    .as_deref()
+                    .is_none_or(|credit| !entry.label.contains(credit))
+        }) {
+            return Err("OS regional pack label omits its required copyright credit".into());
+        }
         if entry.archive_min_zoom < 10
             || entry.archive_max_zoom > 15
             || entry.archive_max_zoom < entry.archive_min_zoom
@@ -824,41 +833,46 @@ impl TileManager {
                     kind: LabelKind::LegendCivic,
                 });
             }
-            accepted.push(ScreenLabel {
-                name: if first_party_mode() {
-                    "Mappa 직접 기록 · 미기록 지역은 빈 화면".to_owned()
-                } else if canonical_proof_mode() {
-                    self.source.attribution.clone().unwrap_or_default()
-                } else if world_mode() {
-                    if visible.first().is_some_and(|tile| tile.key.z >= 10) {
-                        let active: Vec<_> = self
-                            .regional_near(camera)
-                            .filter(|pack| {
-                                camera.zoom >= f64::from(pack.min_visible_zoom)
-                                    && camera_center_inside(camera, pack.bounds)
-                            })
-                            .map(|pack| pack.label.as_str())
-                            .collect();
-                        if active.is_empty() {
-                            "상세 자료 없음 · 미수집 지역".to_owned()
-                        } else {
-                            format!("{} · 미수집 지역은 회색", active.join(" / "))
-                        }
-                    } else if camera.zoom > f64::from(self.mid.max_zoom) {
-                        "개략지도 확대 표시 · 상세 도로/건물 없음".to_owned()
+            let attribution = if first_party_mode() {
+                "Mappa 직접 기록 · 미기록 지역은 빈 화면".to_owned()
+            } else if canonical_proof_mode() {
+                self.source.attribution.clone().unwrap_or_default()
+            } else if world_mode() {
+                if visible.first().is_some_and(|tile| tile.key.z >= 10) {
+                    let active: Vec<_> = self
+                        .regional_near(camera)
+                        .filter(|pack| {
+                            camera.zoom >= f64::from(pack.min_visible_zoom)
+                                && camera_center_inside(camera, pack.bounds)
+                        })
+                        .map(|pack| pack.label.as_str())
+                        .collect();
+                    if active.is_empty() {
+                        "상세 자료 없음 · 미수집 지역".to_owned()
                     } else {
-                        "지형·수계: Natural Earth · 도로/건물 미완성".to_owned()
+                        format!("{} · 미수집 지역은 회색", active.join(" / "))
                     }
-                } else if public_roads_mode() {
-                    "도로: 나주시 · 지형: Natural Earth".to_owned()
+                } else if camera.zoom > f64::from(self.mid.max_zoom) {
+                    "개략지도 확대 표시 · 상세 도로/건물 없음".to_owned()
                 } else {
-                    "© OpenStreetMap contributors".to_owned()
-                },
+                    "지형·수계: Natural Earth · 도로/건물 미완성".to_owned()
+                }
+            } else if public_roads_mode() {
+                "도로: 나주시 · 지형: Natural Earth".to_owned()
+            } else {
+                "© OpenStreetMap contributors".to_owned()
+            };
+            let mut attribution_label = ScreenLabel {
+                name: attribution,
                 x: 12.0 * scale,
                 y: camera.height_px as f32 - 22.0 * scale,
                 rank: 0,
                 kind: LabelKind::Attribution,
-            });
+            };
+            if attribution_label.text_width(scale) * 0.7 > camera.width_px as f32 - 300.0 * scale {
+                attribution_label.y = camera.height_px as f32 - 158.0 * scale;
+            }
+            accepted.push(attribution_label);
         }
         accepted
     }
@@ -2393,7 +2407,11 @@ mod tests {
             return;
         }
         let manager = TileManager::open().await.unwrap();
-        assert_eq!(manager.regional.len(), 6);
+        assert_eq!(manager.regional.len(), 7);
+        assert!(manager.regional.iter().any(|pack| {
+            pack.label
+                .contains("Contains Ordnance Survey data © Crown copyright")
+        }));
         assert!(manager.regional_files.lock().unwrap().files.is_empty());
         for pack in &manager.regional {
             let [west, south, east, north] = pack.bounds;

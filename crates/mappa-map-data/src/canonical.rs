@@ -163,6 +163,7 @@ impl SourceManifest {
                     | "us-census-tiger-roads"
                     | "us-census-tiger-areawater"
                     | "us-census-tiger-arealm-parks"
+                    | "os-open-roads"
             ) || source.adapter_version != 1
             {
                 return Err(CanonicalError::Corrupt("unsupported source adapter"));
@@ -591,6 +592,172 @@ pub fn adapt_us_census_roads(
                 hash.update(point.x.to_le_bytes());
                 hash.update(point.y.to_le_bytes());
             }
+            output.push((
+                CanonicalFeature {
+                    id,
+                    kind,
+                    geometry,
+                    bbox,
+                    importance,
+                    min_zoom,
+                    max_zoom: 15,
+                    name: name.clone(),
+                    revision: 1,
+                },
+                Provenance {
+                    feature_id: id,
+                    source_id: source.id.clone(),
+                    source_feature_id: part_id,
+                    source_revision: source.source_version.clone(),
+                    adapter_version: source.adapter_version,
+                    source_feature_sha256: hash.finalize().into(),
+                },
+            ));
+        }
+    }
+    output.sort_by_key(|(feature, _)| feature.id);
+    Ok((output, rejected))
+}
+
+/// Build-time OS Open Roads adapter. A selected 100 km source square is read
+/// from the official national archive; OSTN15 converts its EPSG:27700 X/Y to
+/// longitude/latitude. Z is not used by the planar map renderer.
+#[cfg(feature = "gb-roads")]
+pub fn adapt_os_open_roads_grid(
+    source: &SourceRecord,
+    grid: &str,
+) -> Result<(AdaptedFeatures, Vec<RejectedFeature>), CanonicalError> {
+    if source.adapter != "os-open-roads"
+        || grid.len() != 2
+        || !grid.bytes().all(|byte| byte.is_ascii_uppercase())
+    {
+        return Err(CanonicalError::Feature(
+            "invalid OS Open Roads adapter or grid".into(),
+        ));
+    }
+    if source_hash(Path::new(&source.file))? != source.sha256.to_lowercase() {
+        return Err(CanonicalError::SourceChecksum(source.id.clone()));
+    }
+    let mut archive = zip::ZipArchive::new(File::open(&source.file)?)
+        .map_err(|error| CanonicalError::Feature(error.to_string()))?;
+    let stem = format!("data/{grid}_RoadLink");
+    let read_member = |archive: &mut zip::ZipArchive<File>, suffix: &str| {
+        let mut member = archive
+            .by_name(&format!("{stem}{suffix}"))
+            .map_err(|error| CanonicalError::Feature(error.to_string()))?;
+        if member.size() > 512 * 1024 * 1024 {
+            return Err(CanonicalError::Feature("OS member exceeds 512 MiB".into()));
+        }
+        let mut bytes = Vec::with_capacity(member.size() as usize);
+        member.read_to_end(&mut bytes)?;
+        Ok::<_, CanonicalError>(bytes)
+    };
+    let prj = read_member(&mut archive, ".prj")?;
+    if !std::str::from_utf8(&prj).is_ok_and(|text| {
+        text.contains("British_National_Grid") && text.contains("AUTHORITY[\"EPSG\",27700]")
+    }) {
+        return Err(CanonicalError::Feature(
+            "unexpected OS Open Roads CRS".into(),
+        ));
+    }
+    let shp = read_member(&mut archive, ".shp")?;
+    let dbf = read_member(&mut archive, ".dbf")?;
+    let shape_reader = shapefile::ShapeReader::new(std::io::Cursor::new(shp))?;
+    let attribute_reader = shapefile::dbase::Reader::new(std::io::Cursor::new(dbf))?;
+    let mut reader = shapefile::Reader::new(shape_reader, attribute_reader);
+    let mut output = Vec::new();
+    let mut rejected = Vec::new();
+    let mut raw_ids = BTreeSet::new();
+    for (record_index, record) in reader.iter_shapes_and_records().enumerate() {
+        let (shape, attributes) = record?;
+        let string_field = |field: &str| -> Option<&str> {
+            match attributes.get(field) {
+                Some(shapefile::dbase::FieldValue::Character(Some(value))) => Some(value.trim()),
+                _ => None,
+            }
+        };
+        let source_feature_id = string_field("identifier")
+            .filter(|id| !id.is_empty())
+            .ok_or_else(|| CanonicalError::Feature("missing OS RoadLink identifier".into()))?
+            .to_owned();
+        if !raw_ids.insert(source_feature_id.clone()) {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id,
+                reason: "duplicate identifier in OS grid".into(),
+            });
+            continue;
+        }
+        let (kind, importance, min_zoom) = match string_field("function") {
+            Some("Motorway") => (FeatureKind::RoadPrimary, 750, 10),
+            Some("A Road") => (FeatureKind::RoadPrimary, 700, 10),
+            Some("B Road" | "Minor Road") => (FeatureKind::RoadSecondary, 500, 11),
+            Some(
+                "Local Road"
+                | "Local Access Road"
+                | "Restricted Local Access Road"
+                | "Secondary Access Road",
+            ) => (FeatureKind::RoadResidential, 200, 12),
+            value => {
+                rejected.push(RejectedFeature {
+                    source_id: source.id.clone(),
+                    source_feature_id,
+                    reason: format!("unmapped OS road function: {value:?}"),
+                });
+                continue;
+            }
+        };
+        let name = string_field("name1")
+            .filter(|name| !name.is_empty() && name.len() <= 128)
+            .map(str::to_owned);
+        let shapefile::Shape::PolylineZ(line) = shape else {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id,
+                reason: format!("row {}: expected PolylineZ", record_index + 1),
+            });
+            continue;
+        };
+        for (part_index, part) in line.parts().iter().enumerate() {
+            let part_id = format!("{source_feature_id}:{part_index}");
+            let mut points = Vec::with_capacity(part.len());
+            let mut hash = Sha256::new();
+            hash.update(part_id.as_bytes());
+            hash.update(string_field("function").unwrap_or_default().as_bytes());
+            let mut transform_error = None;
+            for point in part {
+                hash.update(point.x.to_le_bytes());
+                hash.update(point.y.to_le_bytes());
+                hash.update(point.z.to_le_bytes());
+                match lonlat_bng::convert_osgb36_to_ll(point.x, point.y) {
+                    Ok((lon, lat)) => points.push([lon, lat]),
+                    Err(error) => {
+                        transform_error = Some(error.to_string());
+                        break;
+                    }
+                }
+            }
+            if let Some(error) = transform_error {
+                rejected.push(RejectedFeature {
+                    source_id: source.id.clone(),
+                    source_feature_id: part_id,
+                    reason: format!("OSTN15 transform: {error}"),
+                });
+                continue;
+            }
+            let geometry = Geometry::Line(points);
+            let bbox = match geometry.bbox() {
+                Ok(bbox) => bbox,
+                Err(error) => {
+                    rejected.push(RejectedFeature {
+                        source_id: source.id.clone(),
+                        source_feature_id: part_id,
+                        reason: error.to_string(),
+                    });
+                    continue;
+                }
+            };
+            let id = stable_id(&source.id, &part_id);
             output.push((
                 CanonicalFeature {
                     id,
