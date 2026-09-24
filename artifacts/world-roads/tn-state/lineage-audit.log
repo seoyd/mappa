@@ -1,0 +1,3 @@
+    Finished `release` profile [optimized] target(s) in 0.12s
+     Running `target/release/audit_tiger_road_lineage data/us_tiger_tn_state_roads.toml artifacts/world-roads/tn-state/state.mgeodb artifacts/world-roads/tn-state/state.rejected.json.gz`
+sources=95 dbf_rows=344502 accepted_raw_ids=307068 accepted_parts=307068 additional_parts=0 rejected_records=37434 rejected_raw_ids=37434 covered_rows=344502

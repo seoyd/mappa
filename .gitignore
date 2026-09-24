@@ -48,6 +48,9 @@
 /artifacts/world-roads/sc-state/state.mgeodb
 /artifacts/world-roads/sc-state/state.pmtiles
 /artifacts/world-water/sc-state/water.mgeodb
+/artifacts/world-roads/tn-state/state.mgeodb
+/artifacts/world-roads/tn-state/state.pmtiles
+/artifacts/world-water/tn-state/water.mgeodb
 /artifacts/world-roads/gb/*.mgeodb
 /artifacts/world-roads/ca/*.mgeodb
 /artifacts/world-roads/ca/on.pmtiles

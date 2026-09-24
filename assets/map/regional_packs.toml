@@ -3,6 +3,30 @@
 # with observed features, not positional accuracy. Archives open on first use.
 # Adding a pack here does not certify its coverage or positional accuracy.
 [[pack]]
+path = "../../artifacts/world-water/tn-state/water.pmtiles"
+manifest = "../../data/us_tiger_tn_state_areawater.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 수면 · 테네시주 95개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/tn-state/roads-west.pmtiles"
+manifest = "../../data/us_tiger_tn_state_roads_west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 서부 · 테네시주 95개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/tn-state/roads-east.pmtiles"
+manifest = "../../data/us_tiger_tn_state_roads_east.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 동부 · 테네시주 95개 카운티 실증"
+
+[[pack]]
 path = "../../artifacts/world-water/sc-state/water.pmtiles"
 manifest = "../../data/us_tiger_sc_state_areawater.toml"
 min_visible_zoom = 10

@@ -1,0 +1,3 @@
+    Finished `release` profile [optimized] target(s) in 0.11s
+     Running `target/release/audit_pmtiles_road_overlap artifacts/world-roads/nc-state/state.pmtiles artifacts/world-roads/tn-state/state.pmtiles`
+shared_nonempty_tiles=325 first_road_lines=4919 second_road_lines=5300 exact_duplicate_lines=91 first_duplicate_tile=Some((11, 545, 808))
