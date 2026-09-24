@@ -1,0 +1,1607 @@
+[
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1104991789370",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102177101409",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "110460979025",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "110460982573",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "110460980014",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1104692463008",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "110460984097",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "110460981674",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102177524952",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11026265994088",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11026265994089",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102178466760",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11026265994098",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102178534752",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102178541770",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102406961343",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179337860",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812657669",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179393792",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179393806",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179729459",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201490082",
+    "reason": "road/path class excluded: Some(\"S1750\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102214752507",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102214752506",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201748192",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201934791",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102203320077",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201924840",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812611702",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812618292",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812645225",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812646971",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812647705",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812649380",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812655308",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812657455",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812679063",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812716261",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812748912",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012813066733",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012813067683",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "110460980759",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "110460980753",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1104363431519",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812748652",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102177530546",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102178466801",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102178539874",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201428132",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201688569",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201690562",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201724539",
+    "reason": "road/path class excluded: Some(\"S1750\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201734461",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201947756",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102203068550",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102203118840",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102214751638",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102214751639",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812613935",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812613525",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812638455",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812631331",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812633065",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812639699",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812635626",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812646723",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812647005",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812648475",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812648527",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812666323",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812654940",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812693800",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812671470",
+    "reason": "road/path class excluded: Some(\"S1820\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812672298",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812715953",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812703456",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812749059",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812748887",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812748900",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812727244",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812748908",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812748657",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012813069408",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012813095789",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "110460981400",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "110460982156",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "110460980918",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "110460981547",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102177525913",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11026265994096",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11026265994097",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201686880",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201693896",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102214753575",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201722155",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1107293017509",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102214751640",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102203322651",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812613716",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812618568",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812629123",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812638456",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "110460981225",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812649737",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812651918",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812651923",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812666331",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812655027",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812656237",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812671144",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812676413",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812697447",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812699288",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812724429",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812748911",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012813063954",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012813068337",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012813069603",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012813069795",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012813095720",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201924683",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "110460981396",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102177529059",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11026265994095",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102178536762",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102178537749",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179327720",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179728077",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102182088235",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102214753577",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201696135",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201736969",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11026263559051",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102214751636",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1104257960790",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1107292938334",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812623282",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812623279",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812613693",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812615353",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812639662",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812631401",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812650312",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812666324",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812651920",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812653578",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812655277",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812693799",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812693022",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812715954",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812715955",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812715962",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179403582",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812707836",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102180728144",
+    "reason": "road/path class excluded: Some(\"S1750\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812722245",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812748876",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812748875",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812722625",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812749056",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812727433",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812729908",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812732558",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812733726",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012813067382",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102172665957",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812649396",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102177273039",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11026265994093",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102178466862",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102178469748",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102178535743",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102178541802",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179330129",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179333528",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179393737",
+    "reason": "road/path class excluded: Some(\"S1750\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201428977",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201688309",
+    "reason": "road/path class excluded: Some(\"S1750\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201692873",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201695662",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1107293017510",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201745440",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201933595",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201958263",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102214751637",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812622578",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812666409",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812650586",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812651438",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812666330",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812666333",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812656523",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812694960",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812695305",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812715964",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812715967",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179404838",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812720586",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812724485",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812725894",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812748899",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812729693",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812729971",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812749063",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812748654",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012813068343",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012813095714",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012813108150",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "110460984101",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1108296184087",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1104979528467",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201949299",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1104357947167",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11026265994090",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1107292831518",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102178730916",
+    "reason": "road/path class excluded: Some(\"S1750\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179327861",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179329887",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179393840",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179393614",
+    "reason": "road/path class excluded: Some(\"S1750\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179930167",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102180769342",
+    "reason": "road/path class excluded: Some(\"S1750\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201488256",
+    "reason": "road/path class excluded: Some(\"S1750\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201682130",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102214753576",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812613477",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "110460980671",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812634453",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812648311",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812666410",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812654234",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812657665",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812659300",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812668439",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812668690",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201693477",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812675308",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812679097",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812715952",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812715963",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812716262",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812719551",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812721857",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812748877",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812749058",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812748913",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812749064",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "110460981041",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812748653",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102177504810",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102406961342",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102178595157",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102178595316",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179335825",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179370617",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179370653",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179393902",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201689882",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201691826",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201737825",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201934368",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201935547",
+    "reason": "road/path class excluded: Some(\"S1750\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812623281",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812623280",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812611541",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812629308",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812634513",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812639700",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812634709",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812636442",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812666315",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812666318",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812650353",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812653039",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812666852",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812683670",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812694926",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812695054",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812697466",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812706723",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102180729536",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812722683",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812749057",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812723233",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812734482",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201951056",
+    "reason": "road/path class excluded: Some(\"S1750\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012813069251",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012813097678",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102178733752",
+    "reason": "road/path class excluded: Some(\"S1750\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012813068852",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102177528076",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11026265994092",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102178537735",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102178541738",
+    "reason": "road/path class excluded: Some(\"S1750\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179393239",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102179393358",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201692576",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201694790",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201695356",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102201929652",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "1102203321936",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812629083",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812635579",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812636462",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812648323",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812666317",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812666411",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812650459",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812666332",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812666890",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812693024",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812683637",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812703974",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812704770",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812724359",
+    "reason": "road/path class excluded: Some(\"S1780\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812724537",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812748909",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812748656",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012812748655",
+    "reason": "road/path class excluded: Some(\"S1710\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012813066073",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  },
+  {
+    "source_id": "us-census-tiger-2025-roads-36061",
+    "source_feature_id": "11012813070768",
+    "reason": "road/path class excluded: Some(\"S1730\")"
+  }
+]

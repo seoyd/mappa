@@ -26,7 +26,7 @@ Microsoft는 전 세계 약 14억 건물 탐지 결과를 공개한다고 설명
 1. Rust 빌드 도구가 원본 SHA-256, 라이선스 manifest, 각 도형의 유효성을 검사하고, 거절 도형을 별도 JSON으로 남긴다. 정규화한 건물은 `Building` 종류와 원본 레코드 해시·원천 버전을 가진다.
 2. Mappa 타일 빌더는 건물 폴리곤을 `building` 레이어로 인코딩하고 Rust 디코더·Metal 렌더러가 이를 별도 색으로 그린다. `MAPPA_DATASET=canonical-proof`와 `MAPPA_CANONICAL_FILE`로 이 실증 파일을 열 수 있다. 기본 세계지도 파일에는 아직 결합하지 않았다.
 3. 현 GeoDB는 파일당 최대 100만 피처이고 빌드 중 피처를 메모리에 모은다. 약 14억 건물을 한 파일로 넣을 수 없다. z9 등 공간 단위 샤딩, 중복 구역 병합, 갱신·배포 인덱스가 필요하다. 모든 원본을 내려받거나 독립 정확도 검사를 수행하지 않았다.
-4. 도로는 별도 원천·연결성 검증이 필요하다. [Microsoft Road Detections](https://github.com/microsoft/RoadDetections)는 전 세계 도로 탐지 자료를 공개하지만 **ODbL**이다. 현 canonical manifest의 공유조건 금지 게이트와 호환되지 않으므로 이 GeoDB에 섞지 않았다. OSM과 ODbL 소스의 독립 레이어·고지·배포 방식을 먼저 설계해야 한다. [Overture Transportation](https://docs.overturemaps.org/attribution/)도 ODbL이다.
+4. 도로는 별도 원천·연결성 검증이 필요하다. [Microsoft Road Detections](https://github.com/microsoft/RoadDetections)와 [Overture Transportation](https://docs.overturemaps.org/attribution/)은 **ODbL**이다. 사용자가 기존 공유조건 금지 게이트 유지를 선택했으므로 canonical GeoDB에 섞지 않는다. [국가별 공식 도로 실증](WORLD_ROADS_PROGRESS.md)에서 미국 Census 한 카운티를 처리했다.
 5. [Overture Places](https://docs.overturemaps.org/guides/places/)는 OSM을 포함하지 않고 다수의 허용형 라이선스 원천을 사용하나, 지명·시설의 소스별 권리와 중복 제거·좌표 검증·원본 파일 확보가 필요하다.
 
 ## 재현

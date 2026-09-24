@@ -1,6 +1,7 @@
 use mappa_map_data::canonical::{
     BBox, GeoDb, SourceManifest, adapt_microsoft_buildings, adapt_naju_road_surfaces,
-    adapt_naju_roads, adapt_sgis_districts, adapt_worldcover_polygons, write_geodb,
+    adapt_naju_roads, adapt_sgis_districts, adapt_us_census_roads, adapt_worldcover_polygons,
+    write_geodb,
 };
 use std::{error::Error, path::Path};
 
@@ -35,6 +36,11 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
             "microsoft-ml-building-footprints" => {
                 let (accepted, invalid) = adapt_microsoft_buildings(source, region)?;
+                records.extend(accepted);
+                rejected.extend(invalid);
+            }
+            "us-census-tiger-roads" => {
+                let (accepted, invalid) = adapt_us_census_roads(source, region)?;
                 records.extend(accepted);
                 rejected.extend(invalid);
             }

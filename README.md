@@ -18,7 +18,7 @@ MVT/PMTiles 교체 가능성은 [MSP 실험 결과](docs/MAP_SPATIAL_PACK_EXPERI
 
 ## 세계지도 (기본 모드)
 
-기본 지도는 Mappa의 Rust 타일 생성기·렌더러가 로컬 파일을 직접 읽어 그린다. 세계 z0–z4는 Natural Earth 1:110m, 전 세계 z5–z7은 1:10m 개략 원본을 쓴다. z6부터 주요 강·하천 중심선과 선별된 도시·주요 도로를 표시한다. 지형·국경·수계·도시·일부 도로의 좌표 원본은 [퍼블릭 도메인 Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/)이고, 외부 지도 서버/API는 호출하지 않는다. 전 세계 건물·역·정밀 도로망은 없다. [지도 레이어·선택 구조](docs/MAP_LAYER_ARCHITECTURE.md)와 [세계지도 검증 결과](docs/WORLD_MAP.md)에 현재 상태를 구분해 기록했다.
+기본 지도는 Mappa의 Rust 타일 생성기·렌더러가 로컬 파일을 직접 읽어 그린다. 세계 z0–z4는 Natural Earth 1:110m, 전 세계 z5–z7은 1:10m 개략 원본을 쓴다. z6부터 주요 강·하천 중심선과 선별된 도시·주요 도로를 표시한다. 지형·국경·수계·도시·일부 도로의 좌표 원본은 [퍼블릭 도메인 Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/)이고, 외부 지도 서버/API는 호출하지 않는다. 기본 세계지도에 전 세계 건물·역·정밀 도로망은 없다. Microsoft 공개 건물 한 구역과 미국 Census 공식 도로 한 카운티를 별도 GeoDB와 로컬 화면으로 검증했다. [건물 현황](docs/WORLD_BUILDINGS_PROGRESS.md), [국가별 도로 현황](docs/WORLD_ROADS_PROGRESS.md), [지도 레이어·선택 구조](docs/MAP_LAYER_ARCHITECTURE.md), [세계지도 검증 결과](docs/WORLD_MAP.md)에 현재 상태를 구분해 기록했다.
 
 ```bash
 cargo run -p mappa-map-demo

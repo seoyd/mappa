@@ -30,6 +30,10 @@ pub enum CanonicalError {
     Manifest(#[from] toml::de::Error),
     #[error("GeoJSON: {0}")]
     GeoJson(#[from] geojson::Error),
+    #[error("Shapefile: {0}")]
+    Shapefile(#[from] shapefile::Error),
+    #[error("dBase: {0}")]
+    Dbase(#[from] shapefile::dbase::Error),
     #[error("binary record: {0}")]
     Binary(#[from] Box<bincode::ErrorKind>),
     #[error("source checksum mismatch: {0}")]
@@ -153,6 +157,7 @@ impl SourceManifest {
                     | "esa-worldcover-water"
                     | "esa-worldcover-tree"
                     | "microsoft-ml-building-footprints"
+                    | "us-census-tiger-roads"
             ) || source.adapter_version != 1
             {
                 return Err(CanonicalError::Corrupt("unsupported source adapter"));
@@ -453,6 +458,156 @@ pub fn adapt_microsoft_buildings(
                 source_feature_sha256: digest,
             },
         ));
+    }
+    output.sort_by_key(|(feature, _)| feature.id);
+    Ok((output, rejected))
+}
+
+fn zip_member(
+    archive: &mut zip::ZipArchive<File>,
+    suffix: &str,
+) -> Result<Vec<u8>, CanonicalError> {
+    let matches = archive
+        .file_names()
+        .filter(|name| name.ends_with(suffix))
+        .map(str::to_owned)
+        .collect::<Vec<_>>();
+    let [name] = matches.as_slice() else {
+        return Err(CanonicalError::Feature(format!(
+            "expected exactly one {suffix} in source ZIP"
+        )));
+    };
+    let mut member = archive
+        .by_name(name)
+        .map_err(|error| CanonicalError::Feature(error.to_string()))?;
+    if member.size() > 64 * 1024 * 1024 {
+        return Err(CanonicalError::Feature(format!("{suffix} exceeds 64 MiB")));
+    }
+    let mut bytes = Vec::with_capacity(member.size() as usize);
+    member.read_to_end(&mut bytes)?;
+    Ok(bytes)
+}
+
+/// Read an official county All Roads ZIP directly in Rust. TIGER/Line's NAD83
+/// coordinates are retained numerically; independent WGS84 datum accuracy is
+/// an explicit pending gate, not a precision claim.
+pub fn adapt_us_census_roads(
+    source: &SourceRecord,
+    region: BBox,
+) -> Result<(AdaptedFeatures, Vec<RejectedFeature>), CanonicalError> {
+    if source.adapter != "us-census-tiger-roads" {
+        return Err(CanonicalError::Feature("wrong TIGER road adapter".into()));
+    }
+    if source_hash(Path::new(&source.file))? != source.sha256.to_lowercase() {
+        return Err(CanonicalError::SourceChecksum(source.id.clone()));
+    }
+    let mut archive = zip::ZipArchive::new(File::open(&source.file)?)
+        .map_err(|error| CanonicalError::Feature(error.to_string()))?;
+    let prj = zip_member(&mut archive, ".prj")?;
+    if !std::str::from_utf8(&prj).is_ok_and(|text| text.contains("GCS_North_American_1983")) {
+        return Err(CanonicalError::Feature(
+            "unexpected TIGER source CRS".into(),
+        ));
+    }
+    let shp = zip_member(&mut archive, ".shp")?;
+    let dbf = zip_member(&mut archive, ".dbf")?;
+    let shape_reader = shapefile::ShapeReader::new(std::io::Cursor::new(shp))?;
+    let attribute_reader = shapefile::dbase::Reader::new(std::io::Cursor::new(dbf))?;
+    let mut reader = shapefile::Reader::new(shape_reader, attribute_reader);
+    let mut output = Vec::new();
+    let mut rejected = Vec::new();
+    let mut raw_ids = BTreeSet::new();
+    for (record_index, record) in reader.iter_shapes_and_records().enumerate() {
+        let (shape, attributes) = record?;
+        let string_field = |field: &str| -> Option<&str> {
+            match attributes.get(field) {
+                Some(shapefile::dbase::FieldValue::Character(Some(value))) => Some(value.trim()),
+                _ => None,
+            }
+        };
+        let source_feature_id = string_field("LINEARID")
+            .filter(|id| !id.is_empty())
+            .ok_or_else(|| CanonicalError::Feature("missing TIGER LINEARID".into()))?
+            .to_owned();
+        if !raw_ids.insert(source_feature_id.clone()) {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id,
+                reason: "duplicate LINEARID in county All Roads".into(),
+            });
+            continue;
+        }
+        let (kind, importance, min_zoom) = match string_field("MTFCC") {
+            Some("S1100") => (FeatureKind::RoadPrimary, 700, 10),
+            Some("S1200") => (FeatureKind::RoadSecondary, 500, 11),
+            Some("S1400" | "S1630" | "S1640") => (FeatureKind::RoadResidential, 200, 12),
+            class => {
+                rejected.push(RejectedFeature {
+                    source_id: source.id.clone(),
+                    source_feature_id,
+                    reason: format!("road/path class excluded: {class:?}"),
+                });
+                continue;
+            }
+        };
+        let name = string_field("FULLNAME")
+            .filter(|name| !name.is_empty() && name.len() <= 128)
+            .map(str::to_owned);
+        let shapefile::Shape::Polyline(line) = shape else {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id,
+                reason: format!("row {}: expected Polyline", record_index + 1),
+            });
+            continue;
+        };
+        for (part_index, part) in line.parts().iter().enumerate() {
+            let part_id = format!("{source_feature_id}:{part_index}");
+            let geometry = Geometry::Line(part.iter().map(|point| [point.x, point.y]).collect());
+            let bbox = match geometry.bbox() {
+                Ok(bbox) => bbox,
+                Err(error) => {
+                    rejected.push(RejectedFeature {
+                        source_id: source.id.clone(),
+                        source_feature_id: part_id,
+                        reason: error.to_string(),
+                    });
+                    continue;
+                }
+            };
+            if !bbox.intersects(region) {
+                continue;
+            }
+            let id = stable_id(&source.id, &part_id);
+            let mut hash = Sha256::new();
+            hash.update(part_id.as_bytes());
+            hash.update(string_field("MTFCC").unwrap_or_default().as_bytes());
+            for point in part {
+                hash.update(point.x.to_le_bytes());
+                hash.update(point.y.to_le_bytes());
+            }
+            output.push((
+                CanonicalFeature {
+                    id,
+                    kind,
+                    geometry,
+                    bbox,
+                    importance,
+                    min_zoom,
+                    max_zoom: 15,
+                    name: name.clone(),
+                    revision: 1,
+                },
+                Provenance {
+                    feature_id: id,
+                    source_id: source.id.clone(),
+                    source_feature_id: part_id,
+                    source_revision: source.source_version.clone(),
+                    adapter_version: source.adapter_version,
+                    source_feature_sha256: hash.finalize().into(),
+                },
+            ));
+        }
     }
     output.sort_by_key(|(feature, _)| feature.id);
     Ok((output, rejected))
@@ -1301,6 +1456,42 @@ adapter_version=1"#,
         modified.sha256 = "0".repeat(64);
         assert!(matches!(
             adapt_microsoft_buildings(&modified, region),
+            Err(CanonicalError::SourceChecksum(_))
+        ));
+    }
+
+    #[test]
+    fn pinned_us_census_roads_keep_classes_and_report_exclusions() {
+        let manifest_path =
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data/us_tiger_manhattan_roads.toml");
+        let manifest = SourceManifest::open(&manifest_path).unwrap();
+        let [west, south, east, north] = manifest.proof_bbox_wgs84;
+        let region = BBox {
+            west,
+            south,
+            east,
+            north,
+        };
+        let (features, rejected) = adapt_us_census_roads(&manifest.source[0], region).unwrap();
+        assert_eq!(features.len(), 1893);
+        assert_eq!(rejected.len(), 321);
+        assert!(
+            features
+                .iter()
+                .any(|(feature, _)| feature.kind == FeatureKind::RoadPrimary)
+        );
+        assert!(
+            features
+                .iter()
+                .any(|(feature, _)| feature.kind == FeatureKind::RoadSecondary)
+        );
+        assert!(features.iter().all(|(feature, provenance)| {
+            feature.id == provenance.feature_id && provenance.source_id == manifest.source[0].id
+        }));
+        let mut modified = manifest.source[0].clone();
+        modified.sha256 = "0".repeat(64);
+        assert!(matches!(
+            adapt_us_census_roads(&modified, region),
             Err(CanonicalError::SourceChecksum(_))
         ));
     }

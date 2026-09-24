@@ -1,0 +1,30 @@
+schema_version = 1
+proof_region = "us-tiger-2025-new-york-county-36061"
+proof_bbox_wgs84 = [-74.026473, 40.684026, -73.907, 40.879047]
+
+[[source]]
+id = "us-census-tiger-2025-roads-36061"
+name = "2025 TIGER/Line All Roads, New York County 36061"
+provider = "U.S. Census Bureau"
+source_version = "2025 TIGER/Line, legal boundaries as of 2025-01-01"
+download_date = "2026-09-24"
+official_url = "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_36061_roads.zip"
+download_page_url = "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html"
+file = "../assets/map/source/public/us_tiger_2025_36061_roads.zip"
+sha256 = "dd3c7163c148f70afb4d004cfbfa0dae221d9b854962973da5ce7e595eb675ca"
+crs = "EPSG:4269 NAD83; numeric degrees retained; WGS84 datum transform and positional accuracy pending"
+format = "ZIP Shapefile, All Roads"
+coverage = "New York County (36061), source extent -74.026473–-73.907 E, 40.684026–40.879047 N"
+resolution = "official TIGER/Line linear feature geometry; source accuracy varies"
+update_frequency = "annual publication; pinned 2025 snapshot"
+license_id = "US-GOV-PUBLIC-DOMAIN"
+license_url = "https://www2.census.gov/geo/pdfs/maps-data/data/tiger/tgrshp2025/TGRSHP2025_TechDoc.pdf"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "U.S. Census Bureau, 2025 TIGER/Line All Roads; Mappa modifications"
+share_alike = false
+adapter = "us-census-tiger-roads"
+adapter_version = 1

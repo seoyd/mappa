@@ -22,6 +22,8 @@ mvt = "0.15.0"
 tokio.workspace = true
 mlt-core = { version = "0.14.5", optional = true, default-features = false }
 flate2 = "1.1.10"
+shapefile = "0.9.0"
+zip = { version = "1.1.4", default-features = false, features = ["deflate"] }
 
 [features]
 mlt-eval = ["dep:mlt-core"]
