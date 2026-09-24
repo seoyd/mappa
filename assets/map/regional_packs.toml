@@ -3,6 +3,30 @@
 # with observed features, not positional accuracy. Archives open on first use.
 # Adding a pack here does not certify its coverage or positional accuracy.
 [[pack]]
+path = "../../artifacts/world-water/pa-state/water.pmtiles"
+manifest = "../../data/us_tiger_pa_state_areawater.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 수면 · 펜실베이니아주 67개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/pa-state/roads-west.pmtiles"
+manifest = "../../data/us_tiger_pa_state_roads_west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 서부 · 펜실베이니아주 67개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/pa-state/roads-east.pmtiles"
+manifest = "../../data/us_tiger_pa_state_roads_east.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 동부 · 펜실베이니아주 67개 카운티 실증"
+
+[[pack]]
 path = "../../artifacts/world-water/dc/water.pmtiles"
 manifest = "../../data/us_tiger_dc_areawater.toml"
 min_visible_zoom = 10

@@ -2511,7 +2511,7 @@ mod tests {
             .lines()
             .skip(1)
             .count();
-        assert_eq!(manager.regional.len(), 39 + audited_gb_grids);
+        assert_eq!(manager.regional.len(), 42 + audited_gb_grids);
         assert!(manager.regional.iter().any(|pack| {
             pack.label
                 .contains("Contains Ordnance Survey data © Crown copyright")
