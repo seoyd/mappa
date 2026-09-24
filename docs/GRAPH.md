@@ -1,5 +1,30 @@
 # Implementation graph
 
+## v0.3C 자체 GeoDB 지역 실증 (2026-09-24)
+
+`S0 → S1 → S2 → S3 → S4 → S5 → S8 → S9 → S11 → S12 → S13 → S14 → S15 → S16`; 다원천의 `S6 → S7`과 수정 이력은 입력이 확보된 뒤 진행한다. 기존 구현 graph는 아래에 유지한다.
+
+| Node | Input → Output | Dependency | Invariant | Test / Gate | Status |
+|---|---|---|---|---|---|
+| S0 Source discovery | 공식 후보 → 목록 | 없음 | 상용 지도 역추출 금지 | [원천 조사](MAP_SOURCES.md) | PASS_REGION |
+| S1 License audit | 후보 조건 → 승인/보류 | S0 | 미확인 권리 입력 금지 | [matrix](MAP_LICENSES.md) | PASS_ROADS / BUILDING_PENDING |
+| S2 Manifest | 승인 2개 레이어 → SHA·버전 잠금 | S1 | 입력 재현 가능 | `data/sources.toml` | PASS_ROADS |
+| S3 Adapter | 나주 GeoJSON → canonical 후보 | S2 | raw 필드가 builder로 새지 않음 | source checksum·형상 검사 | PASS_ROADS |
+| S4 Schema | 후보 → WGS84 f64 feature | S3 | Mappa ID ≠ 원본 gid | GeoDB roundtrip | PASS_ROADS |
+| S5 Validation | geometry → 유효 feature | S4 | NaN·퇴화 선·비정상 polygon 거부 | unit tests + [17건 거부 목록](../artifacts/map-v0.3c/naju-roads.rejected.json) | PARTIAL: 수리 정책 없음 |
+| S6 Matching | 다원천 후보 → 동일 객체 | S5 | 불확실한 병합 금지 | 두 번째 승인 원천 필요 | NOT_STARTED |
+| S7 Fusion | 매칭 → 단일 feature | S6 | deterministic conflict 기록 | 두 번째 승인 원천 필요 | NOT_STARTED |
+| S8 GeoDB | feature → versioned binary/index | S5 | checksum·bounds·query | roundtrip·corruption test | PASS_ROADS |
+| S9 LOD | GeoDB → 줌별 도로 선택 | S8 | 저줌에 지역 밖 지형 추정 금지 | z10–z15 생성 | PARTIAL: 일반화 없음 |
+| S10 Provenance | feature → lineage | S8 | runtime 타일에서 제외 | 8,304건 추적·decode | PARTIAL: revision 체인 없음 |
+| S11 Tiles | GeoDB → PMTiles | S8,S9 | raw/OSM/NE 미입력 | 65 tiles, 모든 줌 decode | PASS_ROADS |
+| S12 Renderer | PMTiles → Mac 화면 | S11 | 로컬 한 파일만 열기 | z14·z15 Metal capture | PASS_ROADS |
+| S13 Fidelity | 화면/원본 → 오차 | S12 | 독립 기준점으로 판정 | [품질 보고](MAP_FIDELITY_V0_3C.md) | PARTIAL / CRS_UNVERIFIED |
+| S14 Buildings | 건물 원천 → 경계·완성도 | S13 | 실제 geometry만 허용 | 승인 파일 미확보 | NO_GO_SOURCE_COVERAGE |
+| S15 Size/speed | 산출물 → 수치 | S11,S12 | Mac/모바일 구분 | [측정](BENCHMARK_MAP_V0_3C.md) | PARTIAL / ROADS_ONLY |
+| S16 Regional gate | S0–S15 → 확장 판정 | 전부 | 모든 필수 레이어·정확도 통과 | 독립 A/B 미완료 | NO_GO_SOURCE_COVERAGE |
+
+
 Dependency: `G0 → G1 → {G2,G3} → G4 → G5 → G6 → G7 → G8`. Status는 해당 gate 결과가 확인된 뒤 변경한다.
 
 v0.2 경로: `G8 → G9 → {G10 → G12 → G13, G11} → G14 → G15 → G16 → G17`. `PASS_CODE`는 코드/가짜 어댑터/로컬 DB 검증만 완료했다는 뜻이다. 실제 기기 실행은 별도 gate다.

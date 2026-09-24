@@ -1,0 +1,940 @@
+//! Build-time canonical geography. Raw source fields end at the adapter boundary.
+
+use geo::{Coord, LineString, Polygon, Validation};
+use geojson::{GeoJson, GeometryValue};
+use rstar::{AABB, RTree, RTreeObject};
+use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
+use std::{
+    collections::BTreeSet,
+    fs::{self, File, OpenOptions},
+    io::{Read, Seek, SeekFrom, Write},
+    path::Path,
+    str::FromStr,
+};
+use thiserror::Error;
+
+const MAGIC: &[u8; 8] = b"MAPPAGEO";
+const SCHEMA_VERSION: u32 = 1;
+const HEADER_BYTES: u64 = 40;
+const INDEX_BYTES: u64 = 56;
+const MAX_FEATURES: u32 = 1_000_000;
+const MAX_RECORD_BYTES: u32 = 8 * 1024 * 1024;
+
+#[derive(Debug, Error)]
+pub enum CanonicalError {
+    #[error("I/O: {0}")]
+    Io(#[from] std::io::Error),
+    #[error("manifest: {0}")]
+    Manifest(#[from] toml::de::Error),
+    #[error("GeoJSON: {0}")]
+    GeoJson(#[from] geojson::Error),
+    #[error("binary record: {0}")]
+    Binary(#[from] Box<bincode::ErrorKind>),
+    #[error("source checksum mismatch: {0}")]
+    SourceChecksum(String),
+    #[error("license gate rejected source: {0}")]
+    License(String),
+    #[error("invalid source feature: {0}")]
+    Feature(String),
+    #[error("corrupt MappaGeoDB: {0}")]
+    Corrupt(&'static str),
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct SourceManifest {
+    pub schema_version: u32,
+    pub proof_region: String,
+    pub proof_bbox_wgs84: [f64; 4],
+    pub source: Vec<SourceRecord>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct SourceRecord {
+    pub id: String,
+    pub name: String,
+    pub provider: String,
+    pub source_version: String,
+    pub download_date: String,
+    pub official_url: String,
+    pub download_page_url: String,
+    pub file: String,
+    pub sha256: String,
+    pub crs: String,
+    pub format: String,
+    pub coverage: String,
+    pub resolution: String,
+    pub update_frequency: String,
+    pub license_id: String,
+    pub license_url: String,
+    pub license_status: String,
+    pub commercial_use: bool,
+    pub modification: bool,
+    pub redistribution: bool,
+    pub attribution_required: bool,
+    pub share_alike: bool,
+    pub adapter: String,
+    pub adapter_version: u32,
+}
+
+impl SourceManifest {
+    pub fn open(path: &Path) -> Result<Self, CanonicalError> {
+        let mut manifest: Self = toml::from_str(&fs::read_to_string(path)?)?;
+        if manifest.schema_version != SCHEMA_VERSION || manifest.source.is_empty() {
+            return Err(CanonicalError::Corrupt(
+                "unsupported or empty source manifest",
+            ));
+        }
+        validate_bbox(manifest.proof_bbox_wgs84)?;
+        if manifest.proof_bbox_wgs84[0] == manifest.proof_bbox_wgs84[2]
+            || manifest.proof_bbox_wgs84[1] == manifest.proof_bbox_wgs84[3]
+        {
+            return Err(CanonicalError::Corrupt("empty proof region"));
+        }
+        let mut ids = BTreeSet::new();
+        for source in &mut manifest.source {
+            if !Path::new(&source.file).is_absolute() {
+                source.file = path
+                    .parent()
+                    .unwrap_or_else(|| Path::new("."))
+                    .join(&source.file)
+                    .to_string_lossy()
+                    .into_owned();
+            }
+            if source.id.is_empty() || !ids.insert(source.id.as_str()) {
+                return Err(CanonicalError::Corrupt("duplicate or empty source ID"));
+            }
+            if !matches!(
+                source.license_status.as_str(),
+                "APPROVED" | "APPROVED_WITH_ATTRIBUTION"
+            ) || !source.commercial_use
+                || !source.modification
+                || !source.redistribution
+                || source.share_alike
+                || (source.attribution_required
+                    && source.license_status != "APPROVED_WITH_ATTRIBUTION")
+            {
+                return Err(CanonicalError::License(source.id.clone()));
+            }
+            if source.sha256.len() != 64
+                || !source.sha256.bytes().all(|byte| byte.is_ascii_hexdigit())
+            {
+                return Err(CanonicalError::Corrupt("invalid source SHA-256"));
+            }
+            if !matches!(
+                source.adapter.as_str(),
+                "naju-road-centerline" | "naju-road-surface"
+            ) || source.adapter_version != 1
+            {
+                return Err(CanonicalError::Corrupt("unsupported source adapter"));
+            }
+        }
+        Ok(manifest)
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
+pub struct BBox {
+    pub west: f64,
+    pub south: f64,
+    pub east: f64,
+    pub north: f64,
+}
+
+impl BBox {
+    fn intersects(self, other: Self) -> bool {
+        self.west <= other.east
+            && self.east >= other.west
+            && self.south <= other.north
+            && self.north >= other.south
+    }
+}
+
+fn validate_bbox(raw: [f64; 4]) -> Result<BBox, CanonicalError> {
+    let [west, south, east, north] = raw;
+    if !raw.iter().all(|v| v.is_finite())
+        || west < -180.0
+        || east > 180.0
+        || south < -85.051_128_78
+        || north > 85.051_128_78
+        || west > east
+        || south > north
+    {
+        return Err(CanonicalError::Corrupt("invalid WGS84 proof bounds"));
+    }
+    Ok(BBox {
+        west,
+        south,
+        east,
+        north,
+    })
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub enum FeatureKind {
+    RoadPrimary,
+    RoadSecondary,
+    RoadResidential,
+    RoadSurface,
+    Building,
+    Water,
+    Park,
+    Rail,
+    Place,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub enum Geometry {
+    Point([f64; 2]),
+    Line(Vec<[f64; 2]>),
+    Polygon(Vec<Vec<[f64; 2]>>),
+}
+
+impl Geometry {
+    fn bbox(&self) -> Result<BBox, CanonicalError> {
+        let coordinates: Vec<[f64; 2]> = match self {
+            Self::Point(point) => vec![*point],
+            Self::Line(line) => line.clone(),
+            Self::Polygon(rings) => rings.iter().flatten().copied().collect(),
+        };
+        let mut bounds = BBox {
+            west: f64::INFINITY,
+            south: f64::INFINITY,
+            east: f64::NEG_INFINITY,
+            north: f64::NEG_INFINITY,
+        };
+        for [lon, lat] in &coordinates {
+            if !lon.is_finite()
+                || !lat.is_finite()
+                || !(-180.0..180.0).contains(lon)
+                || !(-85.051_128_78..=85.051_128_78).contains(lat)
+            {
+                return Err(CanonicalError::Feature(
+                    "coordinate outside map range".into(),
+                ));
+            }
+            bounds.west = bounds.west.min(*lon);
+            bounds.east = bounds.east.max(*lon);
+            bounds.south = bounds.south.min(*lat);
+            bounds.north = bounds.north.max(*lat);
+        }
+        if coordinates.is_empty() || bounds.east - bounds.west >= 180.0 {
+            return Err(CanonicalError::Feature(
+                "empty or antimeridian geometry".into(),
+            ));
+        }
+        match self {
+            Self::Point(_) => {}
+            Self::Line(line) => {
+                if line.len() < 2 || line.windows(2).any(|pair| pair[0] == pair[1]) {
+                    return Err(CanonicalError::Feature("degenerate line".into()));
+                }
+            }
+            Self::Polygon(rings) => {
+                if rings.is_empty()
+                    || rings
+                        .iter()
+                        .any(|ring| ring.len() < 4 || ring.first() != ring.last())
+                {
+                    return Err(CanonicalError::Feature("unclosed polygon ring".into()));
+                }
+                let to_line = |ring: &Vec<[f64; 2]>| -> LineString<f64> {
+                    ring.iter().map(|p| Coord { x: p[0], y: p[1] }).collect()
+                };
+                let polygon =
+                    Polygon::new(to_line(&rings[0]), rings[1..].iter().map(to_line).collect());
+                polygon
+                    .check_validation()
+                    .map_err(|_| CanonicalError::Feature("invalid polygon topology".into()))?;
+            }
+        }
+        Ok(bounds)
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct CanonicalFeature {
+    pub id: u128,
+    pub kind: FeatureKind,
+    pub geometry: Geometry,
+    pub bbox: BBox,
+    pub importance: u16,
+    pub min_zoom: u8,
+    pub max_zoom: u8,
+    pub name: Option<String>,
+    pub revision: u32,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct Provenance {
+    pub feature_id: u128,
+    pub source_id: String,
+    pub source_feature_id: String,
+    pub source_revision: String,
+    pub adapter_version: u32,
+    pub source_feature_sha256: [u8; 32],
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct RejectedFeature {
+    pub source_id: String,
+    pub source_feature_id: String,
+    pub reason: String,
+}
+
+pub type AdaptedFeatures = Vec<(CanonicalFeature, Provenance)>;
+
+fn source_hash(path: &Path) -> Result<String, CanonicalError> {
+    let mut file = File::open(path)?;
+    let mut hasher = Sha256::new();
+    let mut buffer = [0u8; 64 * 1024];
+    loop {
+        let read = file.read(&mut buffer)?;
+        if read == 0 {
+            break;
+        }
+        hasher.update(&buffer[..read]);
+    }
+    Ok(format!("{:x}", hasher.finalize()))
+}
+
+fn stable_id(source_id: &str, feature_id: &str) -> u128 {
+    let mut hash = Sha256::new();
+    hash.update(source_id.as_bytes());
+    hash.update([0]);
+    hash.update(feature_id.as_bytes());
+    let digest = hash.finalize();
+    u128::from_be_bytes(digest[..16].try_into().expect("fixed SHA-256 prefix"))
+}
+
+pub fn adapt_naju_roads(
+    source: &SourceRecord,
+    region: BBox,
+) -> Result<AdaptedFeatures, CanonicalError> {
+    if source_hash(Path::new(&source.file))? != source.sha256.to_lowercase() {
+        return Err(CanonicalError::SourceChecksum(source.id.clone()));
+    }
+    let GeoJson::FeatureCollection(collection) =
+        GeoJson::from_str(&fs::read_to_string(&source.file)?)?
+    else {
+        return Err(CanonicalError::Feature("expected FeatureCollection".into()));
+    };
+    let mut output = Vec::new();
+    let mut raw_ids = BTreeSet::new();
+    for raw in collection.features {
+        let source_feature_id = raw
+            .property("gid")
+            .and_then(|value| value.as_i64())
+            .ok_or_else(|| CanonicalError::Feature("missing government road gid".into()))?
+            .to_string();
+        if !raw_ids.insert(source_feature_id.clone()) {
+            return Err(CanonicalError::Feature(format!(
+                "duplicate gid {source_feature_id}"
+            )));
+        }
+        let width = raw
+            .property("rdl_wid")
+            .and_then(|v| v.as_i64())
+            .unwrap_or(0);
+        let Some(geojson::Geometry {
+            value: GeometryValue::LineString { coordinates },
+            ..
+        }) = raw.geometry.as_ref()
+        else {
+            return Err(CanonicalError::Feature(format!(
+                "gid {source_feature_id}: expected LineString"
+            )));
+        };
+        let points = coordinates
+            .iter()
+            .map(|position| {
+                let [lon, lat] = position.as_slice() else {
+                    return Err(CanonicalError::Feature(format!(
+                        "gid {source_feature_id}: invalid coordinate"
+                    )));
+                };
+                Ok([*lon, *lat])
+            })
+            .collect::<Result<Vec<_>, CanonicalError>>()?;
+        let geometry = Geometry::Line(points);
+        let bbox = geometry.bbox().map_err(|error| {
+            CanonicalError::Feature(format!("gid {source_feature_id}: {error}"))
+        })?;
+        if !bbox.intersects(region) {
+            continue;
+        }
+        let id = stable_id(&source.id, &source_feature_id);
+        let (kind, importance, min_zoom) = if width >= 20 {
+            (FeatureKind::RoadPrimary, 700, 10)
+        } else if width >= 10 {
+            (FeatureKind::RoadSecondary, 500, 11)
+        } else {
+            (FeatureKind::RoadResidential, 200, 12)
+        };
+        let mut feature_hash = Sha256::new();
+        feature_hash.update(
+            serde_json::to_vec(&raw)
+                .map_err(|_| CanonicalError::Corrupt("source serialization"))?,
+        );
+        output.push((
+            CanonicalFeature {
+                id,
+                kind,
+                geometry,
+                bbox,
+                importance,
+                min_zoom,
+                max_zoom: 15,
+                name: None,
+                revision: 1,
+            },
+            Provenance {
+                feature_id: id,
+                source_id: source.id.clone(),
+                source_feature_id,
+                source_revision: source.source_version.clone(),
+                adapter_version: source.adapter_version,
+                source_feature_sha256: feature_hash.finalize().into(),
+            },
+        ));
+    }
+    output.sort_by_key(|(feature, _)| feature.id);
+    Ok(output)
+}
+
+/// Import the separate road-area layer from the same government ZIP. Invalid
+/// polygons are reported for audit and never silently repaired.
+pub fn adapt_naju_road_surfaces(
+    source: &SourceRecord,
+    region: BBox,
+) -> Result<(AdaptedFeatures, Vec<RejectedFeature>), CanonicalError> {
+    if source_hash(Path::new(&source.file))? != source.sha256.to_lowercase() {
+        return Err(CanonicalError::SourceChecksum(source.id.clone()));
+    }
+    let GeoJson::FeatureCollection(collection) =
+        GeoJson::from_str(&fs::read_to_string(&source.file)?)?
+    else {
+        return Err(CanonicalError::Feature("expected FeatureCollection".into()));
+    };
+    let mut output = Vec::new();
+    let mut rejected = Vec::new();
+    let mut raw_ids = BTreeSet::new();
+    for raw in collection.features {
+        let source_feature_id = raw
+            .property("gid")
+            .and_then(|value| value.as_i64())
+            .ok_or_else(|| CanonicalError::Feature("missing road-surface gid".into()))?
+            .to_string();
+        if !raw_ids.insert(source_feature_id.clone()) {
+            return Err(CanonicalError::Feature(format!(
+                "duplicate surface gid {source_feature_id}"
+            )));
+        }
+        let Some(raw_geometry) = raw.geometry.as_ref() else {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id,
+                reason: "missing polygon geometry".into(),
+            });
+            continue;
+        };
+        let parts: Vec<_> = match &raw_geometry.value {
+            GeometryValue::Polygon { coordinates } => vec![coordinates],
+            GeometryValue::MultiPolygon { coordinates } => coordinates.iter().collect(),
+            _ => {
+                rejected.push(RejectedFeature {
+                    source_id: source.id.clone(),
+                    source_feature_id,
+                    reason: "expected Polygon or MultiPolygon".into(),
+                });
+                continue;
+            }
+        };
+        let mut feature_hash = Sha256::new();
+        feature_hash.update(
+            serde_json::to_vec(&raw)
+                .map_err(|_| CanonicalError::Corrupt("source serialization"))?,
+        );
+        let source_feature_sha256: [u8; 32] = feature_hash.finalize().into();
+        for (part_index, part) in parts.iter().enumerate() {
+            let part_id = if parts.len() == 1 {
+                source_feature_id.clone()
+            } else {
+                format!("{source_feature_id}:{part_index}")
+            };
+            let rings = part
+                .iter()
+                .map(|ring| {
+                    ring.iter()
+                        .map(|position| {
+                            let [lon, lat] = position.as_slice() else {
+                                return Err(CanonicalError::Feature(format!(
+                                    "surface {part_id}: invalid coordinate"
+                                )));
+                            };
+                            Ok([*lon, *lat])
+                        })
+                        .collect::<Result<Vec<_>, CanonicalError>>()
+                })
+                .collect::<Result<Vec<_>, CanonicalError>>()?;
+            let geometry = Geometry::Polygon(rings);
+            let bbox = match geometry.bbox() {
+                Ok(bbox) => bbox,
+                Err(error) => {
+                    rejected.push(RejectedFeature {
+                        source_id: source.id.clone(),
+                        source_feature_id: part_id,
+                        reason: error.to_string(),
+                    });
+                    continue;
+                }
+            };
+            if !bbox.intersects(region) {
+                continue;
+            }
+            let id = stable_id(&source.id, &part_id);
+            output.push((
+                CanonicalFeature {
+                    id,
+                    kind: FeatureKind::RoadSurface,
+                    geometry,
+                    bbox,
+                    importance: 100,
+                    min_zoom: 13,
+                    max_zoom: 15,
+                    name: None,
+                    revision: 1,
+                },
+                Provenance {
+                    feature_id: id,
+                    source_id: source.id.clone(),
+                    source_feature_id: part_id,
+                    source_revision: source.source_version.clone(),
+                    adapter_version: source.adapter_version,
+                    source_feature_sha256,
+                },
+            ));
+        }
+    }
+    output.sort_by_key(|(feature, _)| feature.id);
+    rejected.sort_by(|a, b| a.source_feature_id.cmp(&b.source_feature_id));
+    Ok((output, rejected))
+}
+
+#[derive(Clone, Copy)]
+struct IndexEntry {
+    id: u128,
+    offset: u64,
+    bbox: BBox,
+}
+
+impl RTreeObject for IndexEntry {
+    type Envelope = AABB<[f64; 2]>;
+    fn envelope(&self) -> Self::Envelope {
+        AABB::from_corners(
+            [self.bbox.west, self.bbox.south],
+            [self.bbox.east, self.bbox.north],
+        )
+    }
+}
+
+#[derive(Serialize, Deserialize)]
+struct Meta {
+    sources: Vec<String>,
+    provenance: Vec<Provenance>,
+}
+
+fn write_u32(file: &mut File, value: u32) -> Result<(), CanonicalError> {
+    Ok(file.write_all(&value.to_le_bytes())?)
+}
+fn write_u64(file: &mut File, value: u64) -> Result<(), CanonicalError> {
+    Ok(file.write_all(&value.to_le_bytes())?)
+}
+fn read_u32(file: &mut File) -> Result<u32, CanonicalError> {
+    let mut bytes = [0; 4];
+    file.read_exact(&mut bytes)?;
+    Ok(u32::from_le_bytes(bytes))
+}
+fn read_u64(file: &mut File) -> Result<u64, CanonicalError> {
+    let mut bytes = [0; 8];
+    file.read_exact(&mut bytes)?;
+    Ok(u64::from_le_bytes(bytes))
+}
+
+/// Write a seekable, versioned, checksummed build database. Its source lineage stays here,
+/// outside runtime vector tiles.
+pub fn write_geodb(
+    output: &Path,
+    records: &[(CanonicalFeature, Provenance)],
+) -> Result<(), CanonicalError> {
+    let count =
+        u32::try_from(records.len()).map_err(|_| CanonicalError::Corrupt("too many features"))?;
+    if count > MAX_FEATURES {
+        return Err(CanonicalError::Corrupt("too many features"));
+    }
+    let temporary = output.with_extension("mgeodb.tmp");
+    let mut file = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .create(true)
+        .truncate(true)
+        .open(&temporary)?;
+    file.write_all(&[0; HEADER_BYTES as usize])?;
+    let mut index = Vec::with_capacity(records.len());
+    let mut ids = BTreeSet::new();
+    for (feature, provenance) in records {
+        if feature.id != provenance.feature_id
+            || !ids.insert(feature.id)
+            || feature.bbox != feature.geometry.bbox()?
+        {
+            return Err(CanonicalError::Corrupt(
+                "duplicate ID, lineage, or invalid geometry",
+            ));
+        }
+        let offset = file.stream_position()?;
+        let encoded = bincode::serialize(feature)?;
+        let size = u32::try_from(encoded.len())
+            .map_err(|_| CanonicalError::Corrupt("record too large"))?;
+        if size > MAX_RECORD_BYTES {
+            return Err(CanonicalError::Corrupt("record too large"));
+        }
+        write_u32(&mut file, size)?;
+        file.write_all(&encoded)?;
+        index.push(IndexEntry {
+            id: feature.id,
+            offset,
+            bbox: feature.bbox,
+        });
+    }
+    let index_offset = file.stream_position()?;
+    for entry in &index {
+        file.write_all(&entry.id.to_le_bytes())?;
+        write_u64(&mut file, entry.offset)?;
+        for coordinate in [
+            entry.bbox.west,
+            entry.bbox.south,
+            entry.bbox.east,
+            entry.bbox.north,
+        ] {
+            file.write_all(&coordinate.to_le_bytes())?;
+        }
+    }
+    let provenance_offset = file.stream_position()?;
+    let meta = Meta {
+        sources: records
+            .iter()
+            .map(|(_, p)| p.source_id.clone())
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect(),
+        provenance: records.iter().map(|(_, p)| p.clone()).collect(),
+    };
+    let encoded_meta = bincode::serialize(&meta)?;
+    write_u64(&mut file, encoded_meta.len() as u64)?;
+    file.write_all(&encoded_meta)?;
+    let footer_offset = file.stream_position()?;
+    file.seek(SeekFrom::Start(0))?;
+    file.write_all(MAGIC)?;
+    write_u32(&mut file, SCHEMA_VERSION)?;
+    write_u32(&mut file, count)?;
+    write_u64(&mut file, index_offset)?;
+    write_u64(&mut file, provenance_offset)?;
+    write_u64(&mut file, footer_offset)?;
+    file.flush()?;
+    file.seek(SeekFrom::Start(0))?;
+    let mut hasher = Sha256::new();
+    let mut remaining = footer_offset;
+    let mut buffer = [0u8; 64 * 1024];
+    while remaining > 0 {
+        let limit = remaining.min(buffer.len() as u64) as usize;
+        let read = file.read(&mut buffer[..limit])?;
+        if read == 0 {
+            return Err(CanonicalError::Corrupt("truncated write"));
+        }
+        hasher.update(&buffer[..read]);
+        remaining -= read as u64;
+    }
+    file.write_all(&hasher.finalize())?;
+    file.flush()?;
+    fs::rename(temporary, output)?;
+    Ok(())
+}
+
+pub struct GeoDb {
+    file: File,
+    index: RTree<IndexEntry>,
+    pub sources: Vec<String>,
+    pub provenance: Vec<Provenance>,
+}
+
+impl GeoDb {
+    pub fn open(path: &Path) -> Result<Self, CanonicalError> {
+        let mut file = File::open(path)?;
+        let length = file.metadata()?.len();
+        if length < HEADER_BYTES + 32 {
+            return Err(CanonicalError::Corrupt("short file"));
+        }
+        let mut magic = [0; 8];
+        file.read_exact(&mut magic)?;
+        if &magic != MAGIC {
+            return Err(CanonicalError::Corrupt("bad magic"));
+        }
+        if read_u32(&mut file)? != SCHEMA_VERSION {
+            return Err(CanonicalError::Corrupt("unsupported version"));
+        }
+        let count = read_u32(&mut file)?;
+        if count > MAX_FEATURES {
+            return Err(CanonicalError::Corrupt("feature count limit"));
+        }
+        let index_offset = read_u64(&mut file)?;
+        let provenance_offset = read_u64(&mut file)?;
+        let footer_offset = read_u64(&mut file)?;
+        if index_offset < HEADER_BYTES
+            || provenance_offset != index_offset + u64::from(count) * INDEX_BYTES
+            || provenance_offset + 8 > footer_offset
+            || footer_offset + 32 != length
+        {
+            return Err(CanonicalError::Corrupt("invalid section offsets"));
+        }
+        file.seek(SeekFrom::Start(0))?;
+        let mut hasher = Sha256::new();
+        let mut remaining = footer_offset;
+        let mut buffer = [0u8; 64 * 1024];
+        while remaining > 0 {
+            let limit = remaining.min(buffer.len() as u64) as usize;
+            let read = file.read(&mut buffer[..limit])?;
+            if read == 0 {
+                return Err(CanonicalError::Corrupt("truncated payload"));
+            }
+            hasher.update(&buffer[..read]);
+            remaining -= read as u64;
+        }
+        let mut digest = [0; 32];
+        file.read_exact(&mut digest)?;
+        if hasher.finalize().as_slice() != digest {
+            return Err(CanonicalError::Corrupt("checksum mismatch"));
+        }
+        file.seek(SeekFrom::Start(index_offset))?;
+        let mut entries = Vec::with_capacity(count as usize);
+        for _ in 0..count {
+            let mut id_bytes = [0; 16];
+            file.read_exact(&mut id_bytes)?;
+            let id = u128::from_le_bytes(id_bytes);
+            let offset = read_u64(&mut file)?;
+            let mut values = [0.0; 4];
+            for value in &mut values {
+                let mut bytes = [0; 8];
+                file.read_exact(&mut bytes)?;
+                *value = f64::from_le_bytes(bytes);
+            }
+            if offset < HEADER_BYTES || offset >= index_offset || validate_bbox(values).is_err() {
+                return Err(CanonicalError::Corrupt("invalid index entry"));
+            }
+            entries.push(IndexEntry {
+                id,
+                offset,
+                bbox: BBox {
+                    west: values[0],
+                    south: values[1],
+                    east: values[2],
+                    north: values[3],
+                },
+            });
+        }
+        let metadata_size = read_u64(&mut file)?;
+        if metadata_size != footer_offset - provenance_offset - 8 {
+            return Err(CanonicalError::Corrupt("invalid provenance length"));
+        }
+        let mut metadata = vec![0; metadata_size as usize];
+        file.read_exact(&mut metadata)?;
+        let meta: Meta = bincode::deserialize(&metadata)?;
+        if meta.provenance.len() != count as usize {
+            return Err(CanonicalError::Corrupt("lineage count mismatch"));
+        }
+        Ok(Self {
+            file,
+            index: RTree::bulk_load(entries),
+            sources: meta.sources,
+            provenance: meta.provenance,
+        })
+    }
+
+    pub fn feature_count(&self) -> usize {
+        self.index.size()
+    }
+
+    pub fn query(&mut self, bounds: BBox) -> Result<Vec<CanonicalFeature>, CanonicalError> {
+        let mut matches: Vec<_> = self
+            .index
+            .locate_in_envelope_intersecting(&AABB::from_corners(
+                [bounds.west, bounds.south],
+                [bounds.east, bounds.north],
+            ))
+            .copied()
+            .collect();
+        matches.sort_by_key(|entry| entry.id);
+        let mut output = Vec::with_capacity(matches.len());
+        for entry in matches {
+            self.file.seek(SeekFrom::Start(entry.offset))?;
+            let size = read_u32(&mut self.file)?;
+            if size > MAX_RECORD_BYTES {
+                return Err(CanonicalError::Corrupt("invalid record size"));
+            }
+            let mut bytes = vec![0; size as usize];
+            self.file.read_exact(&mut bytes)?;
+            let feature: CanonicalFeature = bincode::deserialize(&bytes)?;
+            if feature.id != entry.id
+                || feature.bbox != entry.bbox
+                || feature.geometry.bbox()? != entry.bbox
+            {
+                return Err(CanonicalError::Corrupt("record/index mismatch"));
+            }
+            output.push(feature);
+        }
+        Ok(output)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn temporary(name: &str) -> std::path::PathBuf {
+        std::env::temp_dir().join(format!(
+            "mappa-geodb-{name}-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ))
+    }
+
+    #[test]
+    fn license_gate_rejects_unreviewed_source() {
+        let manifest = temporary("sources.toml");
+        fs::write(
+            &manifest,
+            r#"schema_version=1
+proof_region="test"
+proof_bbox_wgs84=[126.0,34.0,127.0,35.0]
+[[source]]
+id="x"
+name="x"
+provider="x"
+source_version="1"
+download_date="2026-09-24"
+official_url="https://example.com"
+download_page_url="https://example.com"
+file="x"
+sha256="0000000000000000000000000000000000000000000000000000000000000000"
+crs="EPSG:4326"
+format="GeoJSON"
+coverage="test"
+resolution="unknown"
+update_frequency="unknown"
+license_id="UNKNOWN"
+license_status="NEEDS_REVIEW"
+license_url="https://example.com"
+commercial_use=false
+modification=false
+redistribution=false
+attribution_required=false
+share_alike=false
+adapter="naju-road-centerline"
+adapter_version=1"#,
+        )
+        .unwrap();
+        assert!(matches!(
+            SourceManifest::open(&manifest),
+            Err(CanonicalError::License(_))
+        ));
+        let manifest_text = fs::read_to_string(&manifest).unwrap();
+        fs::write(&manifest, manifest_text.replace("NEEDS_REVIEW", "APPROVED")).unwrap();
+        assert!(matches!(
+            SourceManifest::open(&manifest),
+            Err(CanonicalError::License(_))
+        ));
+        fs::remove_file(manifest).unwrap();
+    }
+
+    #[test]
+    fn adapter_rejects_a_source_checksum_change() {
+        let manifest_path = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data/sources.toml");
+        let manifest = SourceManifest::open(&manifest_path).unwrap();
+        let mut source = manifest.source[0].clone();
+        source.sha256 = "0".repeat(64);
+        let [west, south, east, north] = manifest.proof_bbox_wgs84;
+        assert!(matches!(
+            adapt_naju_roads(
+                &source,
+                BBox {
+                    west,
+                    south,
+                    east,
+                    north
+                }
+            ),
+            Err(CanonicalError::SourceChecksum(_))
+        ));
+    }
+
+    #[test]
+    fn geodb_roundtrip_query_and_corruption_gate() {
+        let path = temporary("roundtrip.mgeodb");
+        let geometry = Geometry::Line(vec![[126.7, 35.0], [126.701, 35.001]]);
+        let bbox = geometry.bbox().unwrap();
+        let feature = CanonicalFeature {
+            id: 42,
+            kind: FeatureKind::RoadResidential,
+            geometry,
+            bbox,
+            importance: 200,
+            min_zoom: 12,
+            max_zoom: 15,
+            name: None,
+            revision: 1,
+        };
+        let provenance = Provenance {
+            feature_id: 42,
+            source_id: "fixture".into(),
+            source_feature_id: "1".into(),
+            source_revision: "v1".into(),
+            adapter_version: 1,
+            source_feature_sha256: [7; 32],
+        };
+        write_geodb(&path, &[(feature.clone(), provenance.clone())]).unwrap();
+        let mut db = GeoDb::open(&path).unwrap();
+        assert_eq!(db.sources, vec!["fixture"]);
+        assert_eq!(db.provenance, vec![provenance]);
+        assert_eq!(
+            db.query(BBox {
+                west: 126.6,
+                south: 34.9,
+                east: 126.8,
+                north: 35.1
+            })
+            .unwrap(),
+            vec![feature]
+        );
+        assert!(
+            db.query(BBox {
+                west: 125.0,
+                south: 34.0,
+                east: 125.1,
+                north: 34.1
+            })
+            .unwrap()
+            .is_empty()
+        );
+        drop(db);
+        let mut bytes = fs::read(&path).unwrap();
+        bytes[50] ^= 1;
+        fs::write(&path, bytes).unwrap();
+        assert!(matches!(
+            GeoDb::open(&path),
+            Err(CanonicalError::Corrupt("checksum mismatch"))
+        ));
+        fs::remove_file(path).unwrap();
+    }
+}

@@ -1,0 +1,55 @@
+schema_version = 1
+proof_region = "naju-center"
+proof_bbox_wgs84 = [126.69, 34.99, 126.78, 35.08]
+
+[[source]]
+id = "naju-road-centerline-2023"
+name = "나주시 도로(차도) 도로중심선"
+provider = "나주시"
+source_version = "2023-01-01"
+download_date = "2026-09-24"
+official_url = "https://www.data.go.kr/data/15123619/fileData.do"
+download_page_url = "https://www.data.go.kr/data/15123619/fileData.do"
+file = "../assets/map/source/public/naju_centerline_wgs84.geojson"
+sha256 = "77b3d9bfd17f1bd5acac6184b002f580c5f251e7b3b79eac90224677585f9124"
+crs = "EPSG:4326 (derived from assumed EPSG:5186; provider confirmation pending)"
+format = "GeoJSON"
+coverage = "Naju subset; converted coordinates span 126.674854–126.807885 E, 34.967209–35.071595 N"
+resolution = "vector centerline; positional accuracy not published"
+update_frequency = "not verified; source snapshot dated 2023-01-01"
+license_id = "DATA-GO-KR-UNRESTRICTED"
+license_url = "https://www.data.go.kr/data/15123619/fileData.do"
+license_status = "APPROVED"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = false
+share_alike = false
+adapter = "naju-road-centerline"
+adapter_version = 1
+
+[[source]]
+id = "naju-road-surface-2023"
+name = "나주시 도로(차도) 도로면"
+provider = "나주시"
+source_version = "2023-01-01"
+download_date = "2026-09-24"
+official_url = "https://www.data.go.kr/data/15123619/fileData.do"
+download_page_url = "https://www.data.go.kr/data/15123619/fileData.do"
+file = "../assets/map/source/public/naju_surface_wgs84.geojson"
+sha256 = "4d3a9c2b77c45f6e61205504037158e8cb730503dd7c13b02fe9553119739a5c"
+crs = "EPSG:4326 (derived from assumed EPSG:5186; provider confirmation pending)"
+format = "GeoJSON"
+coverage = "Naju road-area polygons; converted coordinates span 126.674836–126.807953 E, 34.967209–35.071619 N"
+resolution = "vector road surface; positional accuracy not published"
+update_frequency = "not verified; source snapshot dated 2023-01-01"
+license_id = "DATA-GO-KR-UNRESTRICTED"
+license_url = "https://www.data.go.kr/data/15123619/fileData.do"
+license_status = "APPROVED"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = false
+share_alike = false
+adapter = "naju-road-surface"
+adapter_version = 1

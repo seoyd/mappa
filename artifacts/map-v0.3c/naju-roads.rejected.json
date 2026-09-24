@@ -1,0 +1,87 @@
+[
+  {
+    "source_id": "naju-road-surface-2023",
+    "source_feature_id": "1228",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "naju-road-surface-2023",
+    "source_feature_id": "1372",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "naju-road-surface-2023",
+    "source_feature_id": "1379",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "naju-road-surface-2023",
+    "source_feature_id": "440",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "naju-road-surface-2023",
+    "source_feature_id": "5113",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "naju-road-surface-2023",
+    "source_feature_id": "6351",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "naju-road-surface-2023",
+    "source_feature_id": "6703",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "naju-road-surface-2023",
+    "source_feature_id": "6731",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "naju-road-surface-2023",
+    "source_feature_id": "6910",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "naju-road-surface-2023",
+    "source_feature_id": "6929",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "naju-road-surface-2023",
+    "source_feature_id": "7038",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "naju-road-surface-2023",
+    "source_feature_id": "7058",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "naju-road-surface-2023",
+    "source_feature_id": "7073",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "naju-road-surface-2023",
+    "source_feature_id": "7074",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "naju-road-surface-2023",
+    "source_feature_id": "7124",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "naju-road-surface-2023",
+    "source_feature_id": "7240",
+    "reason": "invalid source feature: invalid polygon topology"
+  },
+  {
+    "source_id": "naju-road-surface-2023",
+    "source_feature_id": "868",
+    "reason": "invalid source feature: invalid polygon topology"
+  }
+]

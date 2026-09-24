@@ -7,6 +7,7 @@ use std::{io::Read, path::Path, str::FromStr};
 use thiserror::Error;
 
 pub mod builder;
+pub mod canonical;
 
 pub const EXTENT: f32 = 4096.0;
 pub const MAX_TILE_BYTES: usize = 4 * 1024 * 1024;
@@ -185,6 +186,7 @@ pub struct LocalPmTiles {
     pub max_zoom: u8,
     pub bounds: [f64; 4],
     pub center: [f64; 2],
+    pub attribution: Option<String>,
 }
 
 impl LocalPmTiles {
@@ -232,12 +234,20 @@ impl LocalPmTiles {
             header.max_latitude,
         ];
         let center = [header.center_longitude, header.center_latitude];
+        let attribution = reader
+            .get_metadata()
+            .await
+            .ok()
+            .and_then(|metadata| serde_json::from_str::<serde_json::Value>(&metadata).ok())
+            .and_then(|metadata| metadata.get("attribution")?.as_str().map(str::to_owned))
+            .filter(|value| !value.is_empty() && value.len() <= 512);
         Ok(Self {
             reader,
             min_zoom,
             max_zoom,
             bounds,
             center,
+            attribution,
         })
     }
 }

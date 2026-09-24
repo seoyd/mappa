@@ -27,7 +27,7 @@ pub struct TileKey {
 
 impl TileKey {
     pub fn new(z: u8, x: u32, y: u32) -> Result<Self, MapError> {
-        if z > 14 || x >= (1u32 << z) || y >= (1u32 << z) {
+        if z > 15 || x >= (1u32 << z) || y >= (1u32 << z) {
             return Err(MapError::InvalidTile);
         }
         Ok(Self { z, x, y })
@@ -183,7 +183,7 @@ impl MapCamera {
 
     /// A tile's canonical storage key and unwrapped world copy placement.
     pub fn visible_tiles(&self, max_data_zoom: u8, margin: i32) -> Vec<VisibleTile> {
-        let z = (self.zoom.floor() as u8).min(max_data_zoom).min(14);
+        let z = (self.zoom.floor() as u8).min(max_data_zoom).min(15);
         let count = 1i32 << z;
         let world = self.world_size_px();
         let left = self.center.x - self.width_px as f64 / (2.0 * world);

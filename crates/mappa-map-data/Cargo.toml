@@ -12,6 +12,11 @@ mvt-reader = "2.5.0"
 geo = { version = "0.33.1", default-features = false }
 geojson = "1.0.0"
 serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.9.12"
+sha2 = "0.10.9"
+bincode = "1.3.3"
+rstar = "0.12.2"
 mvt = "0.15.0"
 tokio.workspace = true
 mlt-core = { version = "0.14.5", optional = true, default-features = false }

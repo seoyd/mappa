@@ -14,6 +14,7 @@ use crate::PlaceKind;
 
 type DynError = Box<dyn std::error::Error + Send + Sync>;
 
+pub mod canonical_tiles;
 pub mod first_party;
 
 fn read_geometries(path: &Path) -> Result<Vec<Geometry<f64>>, DynError> {
@@ -115,10 +116,10 @@ fn add_ring(
     Ok(true)
 }
 
-fn add_polygons(
+fn add_polygons<'a>(
     tile: &mut Tile,
     name: &str,
-    geoms: &[Geometry<f64>],
+    geoms: impl IntoIterator<Item = &'a Geometry<f64>>,
     rect: Rect<f64>,
     key: TileKey,
 ) -> Result<usize, DynError> {

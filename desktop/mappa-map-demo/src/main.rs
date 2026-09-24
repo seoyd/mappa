@@ -44,6 +44,23 @@ fn first_party_mode() -> bool {
     std::env::var("MAPPA_DATASET").is_ok_and(|value| value == "first-party")
 }
 
+fn canonical_proof_mode() -> bool {
+    std::env::var("MAPPA_DATASET").is_ok_and(|value| value == "canonical-proof")
+}
+
+fn isolated_mode() -> bool {
+    first_party_mode() || canonical_proof_mode()
+}
+
+fn canonical_proof_file() -> PathBuf {
+    std::env::var_os("MAPPA_CANONICAL_FILE")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| {
+            Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("../../artifacts/map-v0.3c/naju-roads.pmtiles")
+        })
+}
+
 fn first_party_file() -> PathBuf {
     std::env::var_os("MAPPA_FIRST_PARTY_FILE")
         .map(PathBuf::from)
@@ -54,7 +71,7 @@ fn first_party_file() -> PathBuf {
 
 fn map_style(index: usize) -> MapStyle {
     let mut style = STYLES[index];
-    if first_party_mode() {
+    if isolated_mode() {
         // An unrecorded area has unknown geography, not ocean or land.
         style.ocean = [0.91, 0.93, 0.94, 1.0];
     }
@@ -261,15 +278,24 @@ impl TileManager {
     async fn open() -> Result<Self, DynError> {
         if !world_mode()
             && !first_party_mode()
+            && !canonical_proof_mode()
             && !public_roads_mode()
             && std::env::var("MAPPA_DATASET").as_deref() != Ok("legacy-osm")
         {
             return Err(
-                "MAPPA_DATASET must be world, first-party, public-naju, or legacy-osm".into(),
+                "MAPPA_DATASET must be world, first-party, canonical-proof, public-naju, or legacy-osm".into(),
             );
         }
-        if first_party_mode() {
-            let survey = Arc::new(LocalPmTiles::open(first_party_file()).await?);
+        if isolated_mode() {
+            let file = if canonical_proof_mode() {
+                canonical_proof_file()
+            } else {
+                first_party_file()
+            };
+            let survey = Arc::new(LocalPmTiles::open(file).await?);
+            if canonical_proof_mode() && survey.attribution.is_none() {
+                return Err("canonical proof archive has no source attribution".into());
+            }
             return Ok(Self {
                 source: survey.clone(),
                 detail: survey.clone(),
@@ -333,7 +359,7 @@ impl TileManager {
 
     fn visible_labels(&self, camera: &MapCamera, visible: &[VisibleTile]) -> Vec<ScreenLabel> {
         let mut labels = Vec::new();
-        if !first_party_mode()
+        if !isolated_mode()
             && (camera.zoom < 6.0
                 || (world_mode() && visible.first().is_some_and(|tile| tile.key.z <= 4)))
         {
@@ -422,7 +448,7 @@ impl TileManager {
         {
             if !world_mode()
                 && !public_roads_mode()
-                && !first_party_mode()
+                && !isolated_mode()
                 && visible.first().is_some_and(|tile| tile.key.z >= 11)
             {
                 accepted.push(ScreenLabel {
@@ -435,7 +461,7 @@ impl TileManager {
             }
             if !world_mode()
                 && !public_roads_mode()
-                && !first_party_mode()
+                && !isolated_mode()
                 && visible.first().is_some_and(|tile| tile.key.z >= 12)
             {
                 accepted.push(ScreenLabel {
@@ -449,6 +475,8 @@ impl TileManager {
             accepted.push(ScreenLabel {
                 name: if first_party_mode() {
                     "Mappa 직접 기록 · 미기록 지역은 빈 화면".to_owned()
+                } else if canonical_proof_mode() {
+                    self.source.attribution.clone().unwrap_or_default()
                 } else if world_mode() {
                     "지형: Natural Earth · Mappa 렌더링".to_owned()
                 } else if public_roads_mode() {
@@ -1519,6 +1547,8 @@ impl ApplicationHandler<UserEvent> for App {
             Window::default_attributes()
                 .with_title(if first_party_mode() {
                     "Mappa 직접 기록 지도 — 미기록 지역은 비어 있음"
+                } else if canonical_proof_mode() {
+                    "Mappa 자체 지도 실증 — 나주 도로 / 미구축 지역은 비어 있음"
                 } else if world_mode() {
                     "Mappa 세계지도 — 1 Arcade · 2 Lagoon · 3 Candy · 4 Sunset"
                 } else {
@@ -1843,6 +1873,21 @@ mod tests {
             assert!(manager.countries.is_empty());
             let camera = MapCamera::new(0.0, 0.0, 10.4, 1200, 720, 1.0).unwrap();
             assert_eq!(manager.max_zoom_for(&camera), 14);
+            return;
+        }
+        if canonical_proof_mode() {
+            assert!(Arc::ptr_eq(&manager.source, &manager.street));
+            assert!(manager.countries.is_empty());
+            assert!(
+                manager
+                    .source
+                    .attribution
+                    .as_deref()
+                    .unwrap()
+                    .contains("나주시")
+            );
+            let camera = MapCamera::new(126.715, 35.025, 15.2, 1200, 720, 1.0).unwrap();
+            assert_eq!(manager.max_zoom_for(&camera), 15);
             return;
         }
         let seoul = (126.978_291, 37.566_679);

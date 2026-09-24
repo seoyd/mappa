@@ -1,5 +1,17 @@
 # Mappa (Rust 오프라인 세계지도 / 실기기 검증 진행 중)
 
+## 자체 GeoDB 지역 실증 (v0.3C)
+
+나주 10km 안팎의 도로 중심선·도로면을 [출처·라이선스 manifest](data/sources.toml) → Rust 어댑터 → MappaGeoDB → 자체 z10–z15 PMTiles → 기존 Rust 렌더러로 연결했다. 이 경로는 OSM/Natural Earth를 읽지 않고 운영 중 지도 API 비용이 없다. **현재 도로만 있는 PARTIAL 시안**이다. 건물·수면·지명과 독립 좌표 검증이 없어 실제 위치까지 완성된 자체 세계지도라고 판단하지 않는다. [방향](docs/MAP_PHILOSOPHY.md), [원천](docs/MAP_SOURCES.md), [품질 판정](docs/MAP_FIDELITY_V0_3C.md), [측정](docs/BENCHMARK_MAP_V0_3C.md)을 함께 확인한다.
+
+```bash
+cargo run -p mappa-map-data --bin build_canonical_proof -- data/sources.toml artifacts/map-v0.3c/naju-roads.mgeodb
+cargo run -p mappa-map-data --bin build_canonical_tiles -- data/sources.toml artifacts/map-v0.3c/naju-roads.mgeodb artifacts/map-v0.3c/naju-roads.pmtiles
+MAPPA_DATASET=canonical-proof cargo run -p mappa-map-demo -- --street-demo 126.715 35.025 15.2
+```
+
+현재 기본 세계지도는 기존 Natural Earth 기반이다. `canonical-proof`를 명시해야 새 자체 GeoDB 시안을 연다.
+
 ## 세계지도 (기본 모드)
 
 기본 지도는 Mappa의 Rust 타일 생성기·렌더러가 로컬 파일을 직접 읽어 그린다. 세계 z0–z4, 전 세계 z5–z7, 동아시아 z5–z7의 세 단계를 쓴다. 지형·국경·도시의 원본은 [퍼블릭 도메인 Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/)이고, 외부 지도 서버/API는 호출하지 않는다. 상세 단계와 실제 검증 결과는 [세계지도 보고서](docs/WORLD_MAP.md)에 있다.
