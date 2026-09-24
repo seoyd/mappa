@@ -3,6 +3,62 @@
 # with observed features, not positional accuracy. Archives open on first use.
 # Adding a pack here does not certify its coverage or positional accuracy.
 [[pack]]
+path = "../../artifacts/world-water/fl-state/water-west.pmtiles"
+manifest = "../../data/us_tiger_fl_state_areawater_west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 수역 서부 · 플로리다주 67개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-water/fl-state/water-east-west.pmtiles"
+manifest = "../../data/us_tiger_fl_state_areawater_east_west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 수역 중동부 · 플로리다주 67개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-water/fl-state/water-east-east.pmtiles"
+manifest = "../../data/us_tiger_fl_state_areawater_east_east.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 수역 동부 · 플로리다주 67개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/fl-state/roads-west.pmtiles"
+manifest = "../../data/us_tiger_fl_state_roads_west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 서부 · 플로리다주 67개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/fl-state/roads-east-west.pmtiles"
+manifest = "../../data/us_tiger_fl_state_roads_east_west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 중서부 · 플로리다주 67개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/fl-state/roads-east-east-west.pmtiles"
+manifest = "../../data/us_tiger_fl_state_roads_east_east_west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 중동부 · 플로리다주 67개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/fl-state/roads-east-east-east.pmtiles"
+manifest = "../../data/us_tiger_fl_state_roads_east_east_east.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 동부 · 플로리다주 67개 카운티 실증"
+
+[[pack]]
 path = "../../artifacts/world-water/ar-state/water.pmtiles"
 manifest = "../../data/us_tiger_ar_state_areawater.toml"
 min_visible_zoom = 10

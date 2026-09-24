@@ -201,6 +201,34 @@ sha256 = "3268439deea9a598cfdfad068837ebac6026db9fefe93a4aea0202d9e855157e"
 download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25/3268439deea9a598cfdfad068837ebac6026db9fefe93a4aea0202d9e855157e.pmtiles"
 
 [[pack]]
+path = "artifacts/world-roads/fl-state/roads-east-east-east.pmtiles"
+manifest = "data/us_tiger_fl_state_roads_east_east_east.toml"
+manifest_sha256 = "a2cd3d7f5ed24dfa61f9b7b5f9f4e37cdf03824d7b922bc7d3e360704024eaa8"
+bytes = 18888005
+sha256 = "e4b15abcc1fa07a13395194af779719f22530767084c197bf1359e1b599a4c55"
+
+[[pack]]
+path = "artifacts/world-roads/fl-state/roads-east-east-west.pmtiles"
+manifest = "data/us_tiger_fl_state_roads_east_east_west.toml"
+manifest_sha256 = "8764b0baa487105a7f436e8c4105c28276b80fd48fd2263855a666e6e3075d5b"
+bytes = 35273123
+sha256 = "69278672b7ed2beaa1ac79f0ed638dcb28d1eec716072c16bf1d42d7aa916db2"
+
+[[pack]]
+path = "artifacts/world-roads/fl-state/roads-east-west.pmtiles"
+manifest = "data/us_tiger_fl_state_roads_east_west.toml"
+manifest_sha256 = "5f704b78a0852c69b20e17a8ef55e2f4bc0f1e0c7f7671c09abed3afa8e2ed04"
+bytes = 38704278
+sha256 = "6af3d8e18f75850c93d6a06feabc313a389e653b1a5ab8c40130926a97728092"
+
+[[pack]]
+path = "artifacts/world-roads/fl-state/roads-west.pmtiles"
+manifest = "data/us_tiger_fl_state_roads_west.toml"
+manifest_sha256 = "1cefe14a26ec6c17f76ef6090bd303f41013cefa5b65430f7b0452ad0477b5fb"
+bytes = 17773620
+sha256 = "b542d83cfc448ed80ec7ef6dc8a1e5a8f38397aea2c648b2c9964447826fbc76"
+
+[[pack]]
 path = "artifacts/world-roads/fr-paris/roads.pmtiles"
 manifest = "data/ign_bdtopo_paris_roads.toml"
 manifest_sha256 = "1cb15bf94418105d66db25be5094a5cb00a443ac4230a93aa4e5216b8572d440"
@@ -959,6 +987,27 @@ manifest_sha256 = "1df47db6217199d44b7e025313a1baf6f5436ac747375038aa90b8c644882
 bytes = 241554
 sha256 = "8488719e7e5c854e01049ffbbdabcf598679eab8f8ba35ac39b9c45a474e0f1f"
 download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25/8488719e7e5c854e01049ffbbdabcf598679eab8f8ba35ac39b9c45a474e0f1f.pmtiles"
+
+[[pack]]
+path = "artifacts/world-water/fl-state/water-east-east.pmtiles"
+manifest = "data/us_tiger_fl_state_areawater_east_east.toml"
+manifest_sha256 = "20dbd90fb1fb68eecf3efb06cb3fad5b52156b299b2f7592dd0ef9a1080b9423"
+bytes = 31212491
+sha256 = "2f64de4a21a7396cc684a16d519986d377458dce36b397deeae01b4978eb44e8"
+
+[[pack]]
+path = "artifacts/world-water/fl-state/water-east-west.pmtiles"
+manifest = "data/us_tiger_fl_state_areawater_east_west.toml"
+manifest_sha256 = "770f08bb0ec98ce69f96605ca6bdaf088adf477302e41adfbe076a353e01036b"
+bytes = 22169681
+sha256 = "9af28a4d9ed2a511cebe812e06c05978c6e54b8ba5a4ad507fd605434e22e09a"
+
+[[pack]]
+path = "artifacts/world-water/fl-state/water-west.pmtiles"
+manifest = "data/us_tiger_fl_state_areawater_west.toml"
+manifest_sha256 = "83e30ec131055640bac222bf78078aaa1a1917bb4eef4363f84f12327497d6fa"
+bytes = 9960815
+sha256 = "b9f338ddc37f0e041955a96a606f284593fcb29e9d90b65abecafc48064ff126"
 
 [[pack]]
 path = "artifacts/world-water/fr-paris/water.pmtiles"
