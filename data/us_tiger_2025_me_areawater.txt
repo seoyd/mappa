@@ -1,0 +1,18 @@
+# Official Census TIGER2025/AREAWATER directory; observed 2026-09-25; listing SHA-256 7ff2c148d714eacb01a0a1cccdfa3b8b03ed5861afe14e30971d5cc95e791945.
+# https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/
+tl_2025_23001_areawater.zip
+tl_2025_23003_areawater.zip
+tl_2025_23005_areawater.zip
+tl_2025_23007_areawater.zip
+tl_2025_23009_areawater.zip
+tl_2025_23011_areawater.zip
+tl_2025_23013_areawater.zip
+tl_2025_23015_areawater.zip
+tl_2025_23017_areawater.zip
+tl_2025_23019_areawater.zip
+tl_2025_23021_areawater.zip
+tl_2025_23023_areawater.zip
+tl_2025_23025_areawater.zip
+tl_2025_23027_areawater.zip
+tl_2025_23029_areawater.zip
+tl_2025_23031_areawater.zip
