@@ -3,6 +3,30 @@
 # with observed features, not positional accuracy. Archives open on first use.
 # Adding a pack here does not certify its coverage or positional accuracy.
 [[pack]]
+path = "../../artifacts/world-water/sc-state/water.pmtiles"
+manifest = "../../data/us_tiger_sc_state_areawater.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 수면 · 사우스캐롤라이나주 46개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/sc-state/roads-west.pmtiles"
+manifest = "../../data/us_tiger_sc_state_roads_west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 서부 · 사우스캐롤라이나주 46개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/sc-state/roads-east.pmtiles"
+manifest = "../../data/us_tiger_sc_state_roads_east.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 동부 · 사우스캐롤라이나주 46개 카운티 실증"
+
+[[pack]]
 path = "../../artifacts/world-water/nc-state/water.pmtiles"
 manifest = "../../data/us_tiger_nc_state_areawater.toml"
 min_visible_zoom = 10

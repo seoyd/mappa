@@ -631,6 +631,20 @@ bytes = 5631726
 sha256 = "a2c8bbde19d5a3d5d803a11969441ff854b700cbefb2e6666729a6506f8c25e2"
 
 [[pack]]
+path = "artifacts/world-roads/sc-state/roads-east.pmtiles"
+manifest = "data/us_tiger_sc_state_roads_east.toml"
+manifest_sha256 = "9abe4317e9ae8b624591b2d6518e26e87a26960d8da9a3a10321b9dd3c0d4761"
+bytes = 39414324
+sha256 = "aa7ca8913473dace8f0bd5feaa6b609fea56454d079734a2db1e1111faf056c0"
+
+[[pack]]
+path = "artifacts/world-roads/sc-state/roads-west.pmtiles"
+manifest = "data/us_tiger_sc_state_roads_west.toml"
+manifest_sha256 = "3e716addb9abd858342c05fddf1af3dbe5056061eb59a4274330e474c005b192"
+bytes = 28472530
+sha256 = "2a239edb1bd187ee92acd5812ea338f96625fa68f35f4ee6aebd5c3629d7fc0d"
+
+[[pack]]
 path = "artifacts/world-roads/va-state/roads-east-east.pmtiles"
 manifest = "data/us_tiger_va_state_roads_east_east.toml"
 manifest_sha256 = "e6a16418619c53004364e665eae27d05c05578fbace7d751bfd7cad860c31811"
@@ -755,6 +769,13 @@ manifest = "data/us_tiger_pa_state_areawater.toml"
 manifest_sha256 = "6836e70b8901a85c9889541f844c600a6ca87c6bbd1dad8f4b67c1bca126b112"
 bytes = 29540681
 sha256 = "21ec149352bbb9aacfa521481df69a55579b1abb6940aa48ee5c196bc40275c5"
+
+[[pack]]
+path = "artifacts/world-water/sc-state/water.pmtiles"
+manifest = "data/us_tiger_sc_state_areawater.toml"
+manifest_sha256 = "9542dfe82667413408b6ccb93003b077c61b8b150b167df2eb4b39d66ca03446"
+bytes = 17987173
+sha256 = "e061498cfa42fc2dd887397af1d58ab20ea11ff9e02deed21c5902fbb705860c"
 
 [[pack]]
 path = "artifacts/world-water/va-state/water.pmtiles"

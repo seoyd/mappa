@@ -1,0 +1,3 @@
+    Finished `release` profile [optimized] target(s) in 0.12s
+     Running `target/release/shard_canonical_pmtiles data/us_tiger_sc_state_roads.toml artifacts/world-roads/sc-state/state.pmtiles artifacts/world-roads/sc-state/roads`
+split_lon=-81.2109375 z10_split_x=281 west_tiles=36981 east_tiles=56025 byte_identical_tiles=93006 west_bytes=28472530 east_bytes=39414324
