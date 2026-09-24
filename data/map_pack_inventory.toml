@@ -670,6 +670,7 @@ manifest = "data/us_tiger_la_state_roads_east.toml"
 manifest_sha256 = "db66dba157ffead59357b71c8706f53a0935f3ac901f63db4d6604ccba373474"
 bytes = 22125903
 sha256 = "788a90e4730ccbb3e32ff6e83d0c3769852c6405d917542adc1cce4097cf7c83"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-la/788a90e4730ccbb3e32ff6e83d0c3769852c6405d917542adc1cce4097cf7c83.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/la-state/roads-west.pmtiles"
@@ -677,6 +678,7 @@ manifest = "data/us_tiger_la_state_roads_west.toml"
 manifest_sha256 = "57f269b384d27022811a98cf132bece8001e56e7ce9c6be9dc80278fe900d376"
 bytes = 36370731
 sha256 = "72d6ede88c06ae35180624f3ebb0b92649e4fff34ceed38e8be074b6dc1b656b"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-la/72d6ede88c06ae35180624f3ebb0b92649e4fff34ceed38e8be074b6dc1b656b.pmtiles"
 
 [[pack]]
 path = "artifacts/world-roads/ma-state/state.pmtiles"
@@ -972,6 +974,7 @@ manifest = "data/us_tiger_la_state_areawater.toml"
 manifest_sha256 = "2874d8512a3fa8c02690980e447d7c5150d52acf988b911fe7befe08e611ce70"
 bytes = 46661421
 sha256 = "197db1e1eda6de15c9b5d60ffa9fcd03e602778b9f22ca5dd365790475b4f89d"
+download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-la/197db1e1eda6de15c9b5d60ffa9fcd03e602778b9f22ca5dd365790475b4f89d.pmtiles"
 
 [[pack]]
 path = "artifacts/world-water/ma-state/water.pmtiles"
