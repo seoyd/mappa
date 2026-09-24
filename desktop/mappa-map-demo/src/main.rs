@@ -407,6 +407,7 @@ impl TileManager {
                                 PlaceKind::City => LabelKind::City,
                                 PlaceKind::Station => LabelKind::Station,
                                 PlaceKind::Civic => LabelKind::Civic,
+                                PlaceKind::District => LabelKind::City,
                             },
                         });
                     }

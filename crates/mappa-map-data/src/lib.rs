@@ -55,6 +55,7 @@ pub enum PlaceKind {
     City,
     Station,
     Civic,
+    District,
 }
 
 #[derive(Debug)]
@@ -360,6 +361,7 @@ fn decode_place(
         Some(mvt_reader::feature::Value::String(kind)) if kind == "city" => PlaceKind::City,
         Some(mvt_reader::feature::Value::String(kind)) if kind == "station" => PlaceKind::Station,
         Some(mvt_reader::feature::Value::String(kind)) if kind == "civic" => PlaceKind::Civic,
+        Some(mvt_reader::feature::Value::String(kind)) if kind == "district" => PlaceKind::District,
         _ => return Err(MapDataError::InvalidGeometry),
     };
     Ok(MapPlace {

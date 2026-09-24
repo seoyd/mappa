@@ -2,7 +2,9 @@
 
 ## 자체 GeoDB 지역 실증 (v0.3C)
 
-나주 10km 안팎의 도로 중심선·도로면을 [출처·라이선스 manifest](data/sources.toml) → Rust 어댑터 → MappaGeoDB → 자체 z10–z15 PMTiles → 기존 Rust 렌더러로 연결했다. 이 경로는 OSM/Natural Earth를 읽지 않고 운영 중 지도 API 비용이 없다. **현재 도로만 있는 PARTIAL 시안**이다. 건물·수면·지명과 독립 좌표 검증이 없어 실제 위치까지 완성된 자체 세계지도라고 판단하지 않는다. [방향](docs/MAP_PHILOSOPHY.md), [원천](docs/MAP_SOURCES.md), [품질 판정](docs/MAP_FIDELITY_V0_3C.md), [측정](docs/BENCHMARK_MAP_V0_3C.md)을 함께 확인한다.
+나주 10km 안팎의 도로 중심선·도로면과 공식 SGIS 읍면동 지명 14개를 [출처·라이선스 manifest](data/sources.toml) → Rust 어댑터 → MappaGeoDB → 자체 z10–z15 PMTiles → 기존 Rust 렌더러로 연결했다. 이 경로는 OSM/Natural Earth를 읽지 않고 운영 중 지도 API 비용이 없다. **현재 도로와 읍면동 이름만 있는 PARTIAL 시안**이다. 건물·수면·역·공공기관과 독립 도로 좌표 검증이 없어 실제 위치까지 완성된 자체 세계지도라고 판단하지 않는다. [방향](docs/MAP_PHILOSOPHY.md), [원천](docs/MAP_SOURCES.md), [품질 판정](docs/MAP_FIDELITY_V0_3C.md), [측정](docs/BENCHMARK_MAP_V0_3C.md)을 함께 확인한다.
+
+[나주 도로와 송월동 지명 시안](artifacts/map-v0.3c/naju-district-z14.png)
 
 ```bash
 cargo run -p mappa-map-data --bin build_canonical_proof -- data/sources.toml artifacts/map-v0.3c/naju-roads.mgeodb

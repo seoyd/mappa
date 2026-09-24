@@ -1,6 +1,6 @@
 //! Build-time canonical geography. Raw source fields end at the adapter boundary.
 
-use geo::{Coord, LineString, Polygon, Validation};
+use geo::{BooleanOps, Coord, InteriorPoint, LineString, MultiPolygon, Polygon, Rect, Validation};
 use geojson::{GeoJson, GeometryValue};
 use rstar::{AABB, RTree, RTreeObject};
 use serde::{Deserialize, Serialize};
@@ -123,7 +123,7 @@ impl SourceManifest {
             }
             if !matches!(
                 source.adapter.as_str(),
-                "naju-road-centerline" | "naju-road-surface"
+                "naju-road-centerline" | "naju-road-surface" | "sgis-admin-district"
             ) || source.adapter_version != 1
             {
                 return Err(CanonicalError::Corrupt("unsupported source adapter"));
@@ -181,6 +181,7 @@ pub enum FeatureKind {
     Park,
     Rail,
     Place,
+    PlaceDistrict,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -519,6 +520,112 @@ pub fn adapt_naju_road_surfaces(
     output.sort_by_key(|(feature, _)| feature.id);
     rejected.sort_by(|a, b| a.source_feature_id.cmp(&b.source_feature_id));
     Ok((output, rejected))
+}
+
+/// Locate an official district name inside the part of its boundary that falls
+/// within the proof region. The source polygon is not retained as a road or land layer.
+pub fn adapt_sgis_districts(
+    source: &SourceRecord,
+    region: BBox,
+) -> Result<AdaptedFeatures, CanonicalError> {
+    if source_hash(Path::new(&source.file))? != source.sha256.to_lowercase() {
+        return Err(CanonicalError::SourceChecksum(source.id.clone()));
+    }
+    let GeoJson::FeatureCollection(collection) =
+        GeoJson::from_str(&fs::read_to_string(&source.file)?)?
+    else {
+        return Err(CanonicalError::Feature("expected FeatureCollection".into()));
+    };
+    let clip = Rect::new(
+        Coord {
+            x: region.west,
+            y: region.south,
+        },
+        Coord {
+            x: region.east,
+            y: region.north,
+        },
+    )
+    .to_polygon();
+    let expected_date = source.source_version.replace('-', "");
+    let mut output = Vec::new();
+    let mut raw_ids = BTreeSet::new();
+    for raw in collection.features {
+        let source_feature_id = raw
+            .property("ADM_CD")
+            .and_then(|value| value.as_str())
+            .filter(|value| !value.is_empty())
+            .ok_or_else(|| CanonicalError::Feature("missing SGIS ADM_CD".into()))?
+            .to_owned();
+        if !raw_ids.insert(source_feature_id.clone()) {
+            return Err(CanonicalError::Feature(format!(
+                "duplicate SGIS ADM_CD {source_feature_id}"
+            )));
+        }
+        let name = raw
+            .property("ADM_NM")
+            .and_then(|value| value.as_str())
+            .filter(|value| !value.is_empty() && value.len() <= 128)
+            .ok_or_else(|| CanonicalError::Feature("missing SGIS ADM_NM".into()))?
+            .to_owned();
+        if raw.property("BASE_DATE").and_then(|value| value.as_str()) != Some(&expected_date) {
+            return Err(CanonicalError::Feature(format!(
+                "SGIS {source_feature_id}: source date mismatch"
+            )));
+        }
+        let raw_geometry = raw
+            .geometry
+            .as_ref()
+            .ok_or_else(|| CanonicalError::Feature("missing SGIS geometry".into()))?;
+        let shape: geo::Geometry<f64> = (&raw_geometry.value)
+            .try_into()
+            .map_err(|_| CanonicalError::Feature("invalid SGIS polygon".into()))?;
+        let polygons = match shape {
+            geo::Geometry::Polygon(polygon) => MultiPolygon(vec![polygon]),
+            geo::Geometry::MultiPolygon(polygons) => polygons,
+            _ => return Err(CanonicalError::Feature("expected SGIS polygon".into())),
+        };
+        polygons.check_validation().map_err(|_| {
+            CanonicalError::Feature(format!(
+                "SGIS {source_feature_id}: invalid polygon topology"
+            ))
+        })?;
+        let clipped = polygons.intersection(&clip);
+        let Some(point) = clipped.interior_point() else {
+            continue;
+        };
+        let geometry = Geometry::Point([point.x(), point.y()]);
+        let bbox = geometry.bbox()?;
+        let id = stable_id(&source.id, &source_feature_id);
+        let mut feature_hash = Sha256::new();
+        feature_hash.update(
+            serde_json::to_vec(&raw)
+                .map_err(|_| CanonicalError::Corrupt("source serialization"))?,
+        );
+        output.push((
+            CanonicalFeature {
+                id,
+                kind: FeatureKind::PlaceDistrict,
+                geometry,
+                bbox,
+                importance: 200,
+                min_zoom: 12,
+                max_zoom: 15,
+                name: Some(name),
+                revision: 1,
+            },
+            Provenance {
+                feature_id: id,
+                source_id: source.id.clone(),
+                source_feature_id,
+                source_revision: source.source_version.clone(),
+                adapter_version: source.adapter_version,
+                source_feature_sha256: feature_hash.finalize().into(),
+            },
+        ));
+    }
+    output.sort_by_key(|(feature, _)| feature.id);
+    Ok(output)
 }
 
 #[derive(Clone, Copy)]
@@ -877,6 +984,37 @@ adapter_version=1"#,
             ),
             Err(CanonicalError::SourceChecksum(_))
         ));
+    }
+
+    #[test]
+    fn official_district_names_are_inside_the_proof_region() {
+        let manifest_path = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data/sources.toml");
+        let manifest = SourceManifest::open(&manifest_path).unwrap();
+        let source = manifest
+            .source
+            .iter()
+            .find(|source| source.adapter == "sgis-admin-district")
+            .unwrap();
+        let [west, south, east, north] = manifest.proof_bbox_wgs84;
+        let region = BBox {
+            west,
+            south,
+            east,
+            north,
+        };
+        let features = adapt_sgis_districts(source, region).unwrap();
+        assert_eq!(features.len(), 14);
+        assert!(
+            features
+                .iter()
+                .any(|(feature, _)| feature.name.as_deref() == Some("송월동"))
+        );
+        for (feature, provenance) in features {
+            assert_eq!(feature.kind, FeatureKind::PlaceDistrict);
+            assert!(region.intersects(feature.bbox));
+            assert_eq!(provenance.feature_id, feature.id);
+            assert_eq!(provenance.source_id, source.id);
+        }
     }
 
     #[test]

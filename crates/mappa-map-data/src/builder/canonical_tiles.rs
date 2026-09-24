@@ -1,8 +1,9 @@
 //! Runtime tiles built only from MappaGeoDB, never from a raw source or a base map.
 
-use super::{DynError, add_lines_with_buffer, add_polygons};
+use super::{DynError, PlaceSource, add_lines_with_buffer, add_places, add_polygons};
+use crate::PlaceKind;
 use crate::canonical::{BBox, FeatureKind, GeoDb, Geometry as CanonicalGeometry};
-use geo::{BoundingRect, Coord, Geometry, LineString, Polygon, Rect};
+use geo::{BoundingRect, Coord, Geometry, LineString, Point, Polygon, Rect};
 use mappa_map_core::{TileKey, project};
 use mvt::Tile;
 use pmtiles::{PmTilesWriter, TileCoord, TileType};
@@ -15,6 +16,7 @@ struct ProjectedFeature {
     geometry: Geometry<f64>,
     min_zoom: u8,
     max_zoom: u8,
+    name: Option<String>,
 }
 
 fn world_rect(bounds: BBox) -> Result<Rect<f64>, DynError> {
@@ -81,6 +83,10 @@ pub fn build_canonical_tiles(
                 let exterior = projected_rings.remove(0);
                 Geometry::Polygon(Polygon::new(exterior, projected_rings))
             }
+            CanonicalGeometry::Point([lon, lat]) if feature.kind == FeatureKind::PlaceDistrict => {
+                let point = project(lon, lat)?;
+                Geometry::Point(Point::new(point.x, point.y))
+            }
             _ => {
                 return Err(
                     "canonical proof tile builder has no renderer for a feature kind".into(),
@@ -92,6 +98,7 @@ pub fn build_canonical_tiles(
             geometry,
             min_zoom: feature.min_zoom,
             max_zoom: feature.max_zoom,
+            name: feature.name,
         });
     }
     let region_world = world_rect(region)?;
@@ -104,7 +111,8 @@ pub fn build_canonical_tiles(
             {"id": "road_surface", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
             {"id": "road_major", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
             {"id": "road_collector", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
-            {"id": "road_local", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom}
+            {"id": "road_local", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
+            {"id": "place", "fields": {"name": "String", "rank": "Number", "kind": "String"}, "minzoom": 12, "maxzoom": max_zoom}
         ]
     })
     .to_string();
@@ -194,6 +202,27 @@ pub fn build_canonical_tiles(
                     ROAD_TILE_BUFFER_UNITS,
                 )?;
             }
+            let places = candidates
+                .iter()
+                .filter_map(|&index| {
+                    let feature = &projected[index];
+                    if feature.kind != FeatureKind::PlaceDistrict {
+                        return None;
+                    }
+                    let Geometry::Point(point) = &feature.geometry else {
+                        return None;
+                    };
+                    Some(PlaceSource {
+                        point: point.0,
+                        name: feature.name.clone()?,
+                        rank: 4,
+                        kind: PlaceKind::District,
+                    })
+                })
+                .collect::<Vec<_>>();
+            if !places.is_empty() {
+                count += add_places(&mut tile, places.iter(), tile_bounds, key)?;
+            }
             if count > 0 {
                 writer.add_tile(TileCoord::new(zoom, x, y)?, &tile.to_bytes()?)?;
                 tile_total += 1;
@@ -225,11 +254,18 @@ mod tests {
     use mappa_map_core::MapCamera;
 
     #[tokio::test]
-    async fn committed_proof_has_only_canonical_road_layers_at_every_zoom() {
+    async fn committed_proof_has_only_canonical_roads_and_districts() {
         let path = Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../../artifacts/map-v0.3c/naju-roads.pmtiles");
         let archive = LocalPmTiles::open(path).await.unwrap();
         assert!(archive.attribution.as_deref().unwrap().contains("나주시"));
+        assert!(
+            archive
+                .attribution
+                .as_deref()
+                .unwrap()
+                .contains("국가데이터처")
+        );
         for zoom in 10..=15 {
             let camera =
                 MapCamera::new(126.715, 35.025, zoom as f64 + 0.2, 1200, 720, 1.0).unwrap();
@@ -247,7 +283,12 @@ mod tests {
                 assert!(decoded.land.is_empty());
                 assert!(decoded.water.is_empty());
                 assert!(decoded.green.is_empty());
-                assert!(decoded.place.is_empty());
+                assert!(
+                    decoded
+                        .place
+                        .iter()
+                        .all(|place| place.kind == PlaceKind::District)
+                );
             }
             assert!(roads > 0, "no decoded roads at zoom {zoom}");
             if zoom >= 13 {

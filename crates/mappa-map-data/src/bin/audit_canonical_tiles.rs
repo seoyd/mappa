@@ -1,5 +1,5 @@
 use mappa_map_core::{TileKey, project};
-use mappa_map_data::{LocalPmTiles, TileSource, canonical::SourceManifest, decode_mvt};
+use mappa_map_data::{LocalPmTiles, PlaceKind, TileSource, canonical::SourceManifest, decode_mvt};
 use std::{
     collections::{BTreeMap, BTreeSet},
     error::Error,
@@ -97,6 +97,7 @@ async fn audit(
         let mut bytes = 0;
         let mut roads = 0;
         let mut surfaces = 0;
+        let mut districts = 0;
         let mut edges = BTreeMap::new();
         for y in y0..=y1 {
             for x in x0..=x1 {
@@ -109,14 +110,18 @@ async fn audit(
                 if !decoded.land.is_empty()
                     || !decoded.water.is_empty()
                     || !decoded.green.is_empty()
-                    || !decoded.place.is_empty()
+                    || decoded
+                        .place
+                        .iter()
+                        .any(|place| place.kind != PlaceKind::District)
                 {
-                    return Err("proof contains a non-road layer".into());
+                    return Err("proof contains an unsupported layer".into());
                 }
                 roads += decoded.road_major.len()
                     + decoded.road_collector.len()
                     + decoded.road_local.len();
                 surfaces += decoded.road_surface.len();
+                districts += decoded.place.len();
                 edges.insert((x, y), edge_ports(&decoded));
             }
         }
@@ -145,8 +150,17 @@ async fn audit(
         }
         total_unmatched += unmatched;
         println!(
-            "z={z} tiles={tiles} decoded_mvt_bytes={bytes} road_lines={roads} road_surfaces={surfaces} seam_exact={exact} seam_within_1_unit={one_unit} seam_unmatched={unmatched}"
+            "z={z} tiles={tiles} decoded_mvt_bytes={bytes} road_lines={roads} road_surfaces={surfaces} district_labels={districts} seam_exact={exact} seam_within_1_unit={one_unit} seam_unmatched={unmatched}"
         );
+        if z >= 12
+            && districts == 0
+            && manifest
+                .source
+                .iter()
+                .any(|source| source.adapter == "sgis-admin-district")
+        {
+            return Err(format!("z{z} is missing official district labels").into());
+        }
     }
     println!("archive_bytes={}", std::fs::metadata(archive_path)?.len());
     if total_unmatched != 0 {

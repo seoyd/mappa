@@ -495,6 +495,7 @@ fn add_places<'a>(
             PlaceKind::City => "city",
             PlaceKind::Station => "station",
             PlaceKind::Civic => "civic",
+            PlaceKind::District => "district",
         };
         feature.add_tag_string("kind", kind);
         layer = feature.into_layer();
@@ -983,6 +984,7 @@ pub fn build_osm_fixture(
                         PlaceKind::City => zoom >= 9 || place.rank == 0,
                         PlaceKind::Station => zoom >= 11,
                         PlaceKind::Civic => zoom >= 12,
+                        PlaceKind::District => zoom >= 12,
                     }),
                     rect,
                     key,

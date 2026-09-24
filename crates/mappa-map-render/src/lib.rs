@@ -252,6 +252,7 @@ pub fn prepare(tile: &DecodedTile) -> Result<PreparedTile, RenderError> {
             PlaceKind::City => &mut prepared.place,
             PlaceKind::Station => &mut prepared.station,
             PlaceKind::Civic => &mut prepared.civic,
+            PlaceKind::District => &mut prepared.place,
         };
         add_round_cap(target, place.point.0);
     }

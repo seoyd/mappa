@@ -1,5 +1,6 @@
 use mappa_map_data::canonical::{
-    BBox, GeoDb, SourceManifest, adapt_naju_road_surfaces, adapt_naju_roads, write_geodb,
+    BBox, GeoDb, SourceManifest, adapt_naju_road_surfaces, adapt_naju_roads, adapt_sgis_districts,
+    write_geodb,
 };
 use std::{error::Error, path::Path};
 
@@ -26,6 +27,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 records.extend(accepted);
                 rejected.extend(invalid);
             }
+            "sgis-admin-district" => records.extend(adapt_sgis_districts(source, region)?),
             _ => return Err("unsupported source adapter".into()),
         }
     }

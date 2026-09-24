@@ -46,7 +46,7 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         &attribution,
     )?;
     println!(
-        "region={} tiles={} encoded_road_features={} pmtiles_bytes={}",
+        "region={} tiles={} encoded_features={} pmtiles_bytes={}",
         manifest.proof_region,
         tiles,
         features,
