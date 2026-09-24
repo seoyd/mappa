@@ -1,5 +1,13 @@
 # Official Canadian National Road Network province packs, built from local source ZIPs.
 [[pack]]
+path = "../../artifacts/world-roads/ca/nb.pmtiles"
+manifest = "../../data/ca_nrn_nb.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "CA NB · Contains information licensed under the Open Government Licence – Canada."
+
+[[pack]]
 path = "../../artifacts/world-roads/ca/ns.pmtiles"
 manifest = "../../data/ca_nrn_ns.toml"
 min_visible_zoom = 10
@@ -8,9 +16,33 @@ archive_max_zoom = 15
 label = "CA NS · Contains information licensed under the Open Government Licence – Canada."
 
 [[pack]]
+path = "../../artifacts/world-roads/ca/nt.pmtiles"
+manifest = "../../data/ca_nrn_nt.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "CA NT · Contains information licensed under the Open Government Licence – Canada."
+
+[[pack]]
+path = "../../artifacts/world-roads/ca/nu.pmtiles"
+manifest = "../../data/ca_nrn_nu.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "CA NU · Contains information licensed under the Open Government Licence – Canada."
+
+[[pack]]
 path = "../../artifacts/world-roads/ca/pe.pmtiles"
 manifest = "../../data/ca_nrn_pe.toml"
 min_visible_zoom = 10
 archive_min_zoom = 10
 archive_max_zoom = 15
 label = "CA PE · Contains information licensed under the Open Government Licence – Canada."
+
+[[pack]]
+path = "../../artifacts/world-roads/ca/yt.pmtiles"
+manifest = "../../data/ca_nrn_yt.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "CA YT · Contains information licensed under the Open Government Licence – Canada."

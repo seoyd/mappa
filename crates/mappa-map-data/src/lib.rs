@@ -1,9 +1,10 @@
 //! Local PMTiles → MVT → geometry. No service-backed tile source exists.
 
+use futures_util::StreamExt;
 use geo::{Geometry, LineString, Point, Polygon};
 use mappa_map_core::TileKey;
 use pmtiles::{AsyncPmTilesReader, MmapBackend, NoCache, TileCoord, TileType};
-use std::{io::Read, path::Path, str::FromStr};
+use std::{io::Read, path::Path, str::FromStr, sync::Arc};
 use thiserror::Error;
 
 pub mod builder;
@@ -199,7 +200,7 @@ pub trait TileSource {
 }
 
 pub struct LocalPmTiles {
-    reader: AsyncPmTilesReader<MmapBackend, NoCache>,
+    reader: Arc<AsyncPmTilesReader<MmapBackend, NoCache>>,
     pub min_zoom: u8,
     pub max_zoom: u8,
     pub bounds: [f64; 4],
@@ -238,7 +239,7 @@ impl LocalPmTiles {
         {
             return Err(MapDataError::InvalidArchive);
         }
-        let reader = AsyncPmTilesReader::new_with_path(path).await?;
+        let reader = Arc::new(AsyncPmTilesReader::new_with_path(path).await?);
         if reader.get_header().tile_type != TileType::Mvt {
             return Err(MapDataError::UnsupportedTileType);
         }
@@ -267,6 +268,24 @@ impl LocalPmTiles {
             center,
             attribution,
         })
+    }
+
+    /// Return a tile recorded in the archive directory at this zoom, if one exists.
+    /// This avoids scanning a vast empty bounding box for sparse regional packs.
+    pub async fn first_tile_at_zoom(&self, zoom: u8) -> Result<Option<TileKey>, MapDataError> {
+        let mut entries = Arc::clone(&self.reader).entries();
+        while let Some(entry) = entries.next().await {
+            for id in entry?.iter_coords() {
+                let coord = TileCoord::from(id);
+                if coord.z() == zoom {
+                    return Ok(Some(
+                        TileKey::new(coord.z(), coord.x(), coord.y())
+                            .map_err(|_| MapDataError::InvalidArchive)?,
+                    ));
+                }
+            }
+        }
+        Ok(None)
     }
 }
 

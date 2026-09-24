@@ -7,7 +7,8 @@ license.workspace = true
 [dependencies]
 mappa-map-core = { path = "../mappa-map-core" }
 thiserror.workspace = true
-pmtiles = { version = "0.24.0", default-features = false, features = ["mmap-async-tokio", "write"] }
+pmtiles = { version = "0.24.0", default-features = false, features = ["mmap-async-tokio", "iter-async", "write"] }
+futures-util = "0.3"
 mvt-reader = "2.5.0"
 geo = { version = "0.33.1", default-features = false }
 geojson = "1.0.0"

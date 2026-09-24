@@ -2488,7 +2488,7 @@ mod tests {
             .lines()
             .skip(1)
             .count();
-        assert_eq!(manager.regional.len(), 8 + audited_gb_grids);
+        assert_eq!(manager.regional.len(), 12 + audited_gb_grids);
         assert!(manager.regional.iter().any(|pack| {
             pack.label
                 .contains("Contains Ordnance Survey data © Crown copyright")
@@ -2509,49 +2509,33 @@ mod tests {
         let mut water = 0;
         let mut parks = 0;
         for pack in &manager.regional {
-            let bounds = pack.bounds;
-            let northwest = project(bounds[0], bounds[3]).unwrap();
-            let southeast = project(bounds[2], bounds[1]).unwrap();
-            let n = 1u32 << 14;
-            let x0 = (northwest.x * f64::from(n)).floor() as u32;
-            let x1 = (southeast.x * f64::from(n)).floor() as u32;
-            let y0 = (northwest.y * f64::from(n)).floor() as u32;
-            let y1 = (southeast.y * f64::from(n)).floor() as u32;
-            let mut found = false;
-            'tiles: for y in y0..=y1 {
-                for x in x0..=x1 {
-                    let key = TileKey::new(14, x, y).unwrap();
-                    let decoded = read_decoded_tile(
-                        key,
-                        [
-                            &manager.source,
-                            &manager.detail,
-                            &manager.mid,
-                            &manager.street,
-                        ],
-                        &manager.regional,
-                        &manager.regional_index,
-                        &manager.regional_files,
-                    )
-                    .await
-                    .unwrap();
-                    if let Some(tile) = decoded.tile {
-                        buildings += tile.building.len();
-                        water += tile.water.len();
-                        parks += tile.green.len();
-                        roads += tile.road_major.len()
-                            + tile.road_collector.len()
-                            + tile.road_local.len();
-                        found = true;
-                        break 'tiles;
-                    }
-                }
-            }
-            assert!(
-                found,
-                "regional pack has no readable z14 tile: {}",
-                pack.label
-            );
+            let source = pack.source(&manager.regional_files).await.unwrap();
+            let key = source
+                .first_tile_at_zoom(14)
+                .await
+                .unwrap()
+                .unwrap_or_else(|| panic!("regional pack has no z14 tile: {}", pack.label));
+            let decoded = read_decoded_tile(
+                key,
+                [
+                    &manager.source,
+                    &manager.detail,
+                    &manager.mid,
+                    &manager.street,
+                ],
+                &manager.regional,
+                &manager.regional_index,
+                &manager.regional_files,
+            )
+            .await
+            .unwrap();
+            let tile = decoded.tile.unwrap_or_else(|| {
+                panic!("regional pack has no readable z14 tile: {}", pack.label)
+            });
+            buildings += tile.building.len();
+            water += tile.water.len();
+            parks += tile.green.len();
+            roads += tile.road_major.len() + tile.road_collector.len() + tile.road_local.len();
         }
         assert!(buildings > 0, "building layer missing in world mode");
         assert!(roads > 0, "road layer missing in world mode");
