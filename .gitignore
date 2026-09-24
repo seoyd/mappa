@@ -51,6 +51,11 @@
 /artifacts/world-roads/tn-state/state.mgeodb
 /artifacts/world-roads/tn-state/state.pmtiles
 /artifacts/world-water/tn-state/water.mgeodb
+/artifacts/world-roads/ky-state/state.mgeodb
+/artifacts/world-roads/ky-state/state.pmtiles
+/artifacts/world-roads/ky-state/roads-east.pmtiles
+/artifacts/world-water/ky-state/water.mgeodb
+/artifacts/world-water/ky-state/water.pmtiles
 /artifacts/world-roads/gb/*.mgeodb
 /artifacts/world-roads/ca/*.mgeodb
 /artifacts/world-roads/ca/on.pmtiles

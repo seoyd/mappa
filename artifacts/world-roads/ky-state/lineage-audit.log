@@ -1,0 +1,3 @@
+    Finished `release` profile [optimized] target(s) in 0.11s
+     Running `target/release/audit_tiger_road_lineage data/us_tiger_ky_state_roads.toml artifacts/world-roads/ky-state/state.mgeodb artifacts/world-roads/ky-state/state.rejected.json.gz`
+sources=120 dbf_rows=261570 accepted_raw_ids=233240 accepted_parts=233240 additional_parts=0 rejected_records=28330 rejected_raw_ids=28330 covered_rows=261570

@@ -519,6 +519,27 @@ bytes = 187323
 sha256 = "3e439f9303c40cdd5bfcde330ffb9dd6186110bb75f8a04d4073e35cf30587c4"
 
 [[pack]]
+path = "artifacts/world-roads/ky-state/roads-east-east.pmtiles"
+manifest = "data/us_tiger_ky_state_roads_east_east.toml"
+manifest_sha256 = "39c6eebf3935f64b5cc92f59384d92ddeb10a6a58a7867027f7afd2941747c09"
+bytes = 24396909
+sha256 = "d4b1b3e0e28d69b6c68fd8771be989671dc3ec00a2c8b9692014874867c4bfaa"
+
+[[pack]]
+path = "artifacts/world-roads/ky-state/roads-east-west.pmtiles"
+manifest = "data/us_tiger_ky_state_roads_east_west.toml"
+manifest_sha256 = "0e2cc9f25234a1df2ea765627795600cd352064abb2f41011d5d3161bd3d5c42"
+bytes = 33337633
+sha256 = "220d6654d411c90399bb5e681bca455e6f6f3bb12d4cc908a9ed43853fd8f588"
+
+[[pack]]
+path = "artifacts/world-roads/ky-state/roads-west.pmtiles"
+manifest = "data/us_tiger_ky_state_roads_west.toml"
+manifest_sha256 = "2b8d03f8d588b20d30df91bcbe7a18a6c6e8a02e2cb0da33e5b1ede66bac4d5e"
+bytes = 26999847
+sha256 = "4a6d17d11aab98c9acdfdbfea7203420cfb87443aff59e2455207ac0c12c0a83"
+
+[[pack]]
 path = "artifacts/world-roads/ma-state/state.pmtiles"
 manifest = "data/us_tiger_ma_state_roads.toml"
 manifest_sha256 = "f3ed5ed2e26442e874d4e8a1cc8de8fab0e012dee3f46f989f53923455e7e209"
@@ -727,6 +748,20 @@ manifest = "data/ign_bdtopo_paris_water.toml"
 manifest_sha256 = "cea32dd3a271d361270a37ec530de846457bc2214053feb30d974230218b7f4e"
 bytes = 337880
 sha256 = "3d8081a07c17d47d3f670dab40ba75650f4d613afd376fc0bb7bb7db9acb34e4"
+
+[[pack]]
+path = "artifacts/world-water/ky-state/water-east.pmtiles"
+manifest = "data/us_tiger_ky_state_areawater_east.toml"
+manifest_sha256 = "0ec8a0b3a3f3c0bfaf8dba7b4a6f2c291965e4e5976960ec576f7db56b78ee41"
+bytes = 31795898
+sha256 = "2d76d87977e4f27b4e0c1471410a333e6049598765d734b50c98d1d3b179ef4b"
+
+[[pack]]
+path = "artifacts/world-water/ky-state/water-west.pmtiles"
+manifest = "data/us_tiger_ky_state_areawater_west.toml"
+manifest_sha256 = "a3e911935dd2c8266187c59273ee3cae40608ffaa161c51b6e5d50eb59827033"
+bytes = 24075659
+sha256 = "8f795f2081c0d467db3db3de7b4b5d79509f2570eace16620e912b793bd46dbe"
 
 [[pack]]
 path = "artifacts/world-water/ma-state/water.pmtiles"
