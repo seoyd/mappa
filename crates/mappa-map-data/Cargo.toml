@@ -21,10 +21,10 @@ rstar = "0.12.2"
 mvt = "0.15.0"
 tokio.workspace = true
 mlt-core = { version = "0.14.5", optional = true, default-features = false }
-flate2 = { version = "1.1.10", optional = true }
+flate2 = "1.1.10"
 
 [features]
-mlt-eval = ["dep:mlt-core", "dep:flate2"]
+mlt-eval = ["dep:mlt-core"]
 
 [[bin]]
 name = "compare_formats"

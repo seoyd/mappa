@@ -12,7 +12,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let mut checked = 0;
     let mut absent = 0;
     let mut failed = 0;
-    let mut layer_counts = [0usize; 10];
+    let mut layer_counts = [0usize; 11];
     for z in source.min_zoom..=source.max_zoom {
         let n = (1u32 << z) as f64;
         let x0 = (project(west, 0.0)?.x * n).floor() as u32;
@@ -39,6 +39,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
                                     tile.green.len(),
                                     tile.water.len(),
                                     tile.road_surface.len(),
+                                    tile.building.len(),
                                     tile.boundary.len(),
                                     tile.waterway.len(),
                                     tile.road.len() + tile.road_major.len(),
@@ -63,7 +64,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         }
     }
     println!(
-        "{path}: decoded={checked}, absent={absent}, failures={failed}, layers (land, green, water, road_surface, boundary, waterway, major, collector, local, place)={layer_counts:?}"
+        "{path}: decoded={checked}, absent={absent}, failures={failed}, layers (land, green, water, road_surface, building, boundary, waterway, major, collector, local, place)={layer_counts:?}"
     );
     if failed != 0 {
         return Err("invalid vector tiles found".into());

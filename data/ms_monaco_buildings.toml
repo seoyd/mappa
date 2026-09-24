@@ -1,0 +1,30 @@
+schema_version = 1
+proof_region = "microsoft-buildings-monaco-z9-120223030"
+proof_bbox_wgs84 = [7.03125, 43.580390855607845, 7.734375, 44.087585028245165]
+
+[[source]]
+id = "ms-global-ml-buildings-2026-08-13-monaco-120223030"
+name = "Microsoft Global ML Building Footprints, Monaco quadkey 120223030"
+provider = "Microsoft"
+source_version = "2026-08-13"
+download_date = "2026-09-24"
+official_url = "https://bfppub.z5.web.core.windows.net/2026-08-13/global-buildings.geojsonl/RegionName=Monaco/quadkey=120223030/part-00016-110f5303-ff85-4c71-a2bf-c6070024fec8.c000.csv.gz"
+download_page_url = "https://github.com/microsoft/GlobalMLBuildingFootprints"
+file = "../assets/map/source/public/ms_monaco_120223030_2026-08-13.csv.gz"
+sha256 = "fc501fe4c0f52fb2c6ad0001d8a7ba9ed9cbe1fc7ca1b5dd5641fbb686274eee"
+crs = "EPSG:4326 (publisher documentation)"
+format = "gzip GeoJSONL Feature (.csv.gz extension)"
+coverage = "Monaco partition within publisher z9 quadkey 120223030; observed records only"
+resolution = "ML-extracted building polygons; positional accuracy varies with imagery"
+update_frequency = "publisher releases; this is a pinned 2026-08-13 snapshot"
+license_id = "CDLA-Permissive-2.0"
+license_url = "https://cdla.dev/permissive-2-0/"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "Microsoft Global ML Building Footprints (CDLA Permissive 2.0)"
+share_alike = false
+adapter = "microsoft-ml-building-footprints"
+adapter_version = 1

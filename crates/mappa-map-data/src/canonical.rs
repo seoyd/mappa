@@ -1,5 +1,6 @@
 //! Build-time canonical geography. Raw source fields end at the adapter boundary.
 
+use flate2::read::GzDecoder;
 use geo::{BooleanOps, Coord, InteriorPoint, LineString, MultiPolygon, Polygon, Rect, Validation};
 use geojson::{GeoJson, GeometryValue};
 use rstar::{AABB, RTree, RTreeObject};
@@ -8,7 +9,7 @@ use sha2::{Digest, Sha256};
 use std::{
     collections::BTreeSet,
     fs::{self, File, OpenOptions},
-    io::{Read, Seek, SeekFrom, Write},
+    io::{BufRead, BufReader, Read, Seek, SeekFrom, Write},
     path::Path,
     str::FromStr,
 };
@@ -151,6 +152,7 @@ impl SourceManifest {
                     | "sgis-admin-district"
                     | "esa-worldcover-water"
                     | "esa-worldcover-tree"
+                    | "microsoft-ml-building-footprints"
             ) || source.adapter_version != 1
             {
                 return Err(CanonicalError::Corrupt("unsupported source adapter"));
@@ -334,6 +336,126 @@ fn stable_id(source_id: &str, feature_id: &str) -> u128 {
     hash.update(feature_id.as_bytes());
     let digest = hash.finalize();
     u128::from_be_bytes(digest[..16].try_into().expect("fixed SHA-256 prefix"))
+}
+
+/// Microsoft's official partition files are gzip-compressed GeoJSON Features,
+/// one per line. A raw record digest supplies the ID because the feed has no
+/// feature ID. No footprint is repaired or synthesized here.
+pub fn adapt_microsoft_buildings(
+    source: &SourceRecord,
+    region: BBox,
+) -> Result<(AdaptedFeatures, Vec<RejectedFeature>), CanonicalError> {
+    if source.adapter != "microsoft-ml-building-footprints" {
+        return Err(CanonicalError::Feature("wrong building adapter".into()));
+    }
+    if source_hash(Path::new(&source.file))? != source.sha256.to_lowercase() {
+        return Err(CanonicalError::SourceChecksum(source.id.clone()));
+    }
+    let reader = BufReader::new(GzDecoder::new(File::open(&source.file)?));
+    let mut output = Vec::new();
+    let mut rejected = Vec::new();
+    let mut raw_ids = BTreeSet::new();
+    for (line_number, line) in reader.lines().enumerate() {
+        let line = line?;
+        let digest: [u8; 32] = Sha256::digest(line.as_bytes()).into();
+        let source_feature_id: String = digest.iter().map(|byte| format!("{byte:02x}")).collect();
+        if !raw_ids.insert(source_feature_id.clone()) {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id,
+                reason: "duplicate source feature".into(),
+            });
+            continue;
+        }
+        let raw = match GeoJson::from_str(&line) {
+            Ok(GeoJson::Feature(raw)) => raw,
+            _ => {
+                rejected.push(RejectedFeature {
+                    source_id: source.id.clone(),
+                    source_feature_id,
+                    reason: format!("line {}: expected GeoJSON Feature", line_number + 1),
+                });
+                continue;
+            }
+        };
+        let Some(geojson::Geometry {
+            value: GeometryValue::Polygon { coordinates },
+            ..
+        }) = raw.geometry.as_ref()
+        else {
+            rejected.push(RejectedFeature {
+                source_id: source.id.clone(),
+                source_feature_id,
+                reason: "expected building Polygon".into(),
+            });
+            continue;
+        };
+        let rings = coordinates
+            .iter()
+            .map(|ring| {
+                ring.iter()
+                    .map(|position| {
+                        let [lon, lat] = position.as_slice() else {
+                            return Err(CanonicalError::Feature(
+                                "invalid building coordinate".into(),
+                            ));
+                        };
+                        Ok([*lon, *lat])
+                    })
+                    .collect::<Result<Vec<_>, CanonicalError>>()
+            })
+            .collect::<Result<Vec<_>, CanonicalError>>();
+        let rings = match rings {
+            Ok(rings) => rings,
+            Err(error) => {
+                rejected.push(RejectedFeature {
+                    source_id: source.id.clone(),
+                    source_feature_id,
+                    reason: error.to_string(),
+                });
+                continue;
+            }
+        };
+        let geometry = Geometry::Polygon(rings);
+        let bbox = match geometry.bbox() {
+            Ok(bbox) => bbox,
+            Err(error) => {
+                rejected.push(RejectedFeature {
+                    source_id: source.id.clone(),
+                    source_feature_id,
+                    reason: error.to_string(),
+                });
+                continue;
+            }
+        };
+        if !bbox.intersects(region) {
+            continue;
+        }
+        let id = stable_id(&source.id, &source_feature_id);
+        output.push((
+            CanonicalFeature {
+                id,
+                kind: FeatureKind::Building,
+                geometry,
+                bbox,
+                importance: 100,
+                min_zoom: 14,
+                max_zoom: 15,
+                name: None,
+                revision: 1,
+            },
+            Provenance {
+                feature_id: id,
+                source_id: source.id.clone(),
+                source_feature_id,
+                source_revision: source.source_version.clone(),
+                adapter_version: source.adapter_version,
+                source_feature_sha256: digest,
+            },
+        ));
+    }
+    output.sort_by_key(|(feature, _)| feature.id);
+    Ok((output, rejected))
 }
 
 pub fn adapt_naju_roads(
@@ -1153,6 +1275,34 @@ adapter_version=1"#,
             Err(CanonicalError::License(_))
         ));
         fs::remove_file(temporary_path).unwrap();
+    }
+
+    #[test]
+    fn pinned_microsoft_buildings_keep_geometry_and_lineage() {
+        let manifest_path =
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data/ms_monaco_buildings.toml");
+        let manifest = SourceManifest::open(&manifest_path).unwrap();
+        let [west, south, east, north] = manifest.proof_bbox_wgs84;
+        let region = BBox {
+            west,
+            south,
+            east,
+            north,
+        };
+        let (features, rejected) = adapt_microsoft_buildings(&manifest.source[0], region).unwrap();
+        assert_eq!(features.len(), 908);
+        assert!(rejected.is_empty());
+        assert!(features.iter().all(|(feature, provenance)| {
+            feature.kind == FeatureKind::Building
+                && feature.id == provenance.feature_id
+                && provenance.source_id == manifest.source[0].id
+        }));
+        let mut modified = manifest.source[0].clone();
+        modified.sha256 = "0".repeat(64);
+        assert!(matches!(
+            adapt_microsoft_buildings(&modified, region),
+            Err(CanonicalError::SourceChecksum(_))
+        ));
     }
 
     #[test]

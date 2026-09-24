@@ -1,6 +1,6 @@
 use mappa_map_data::canonical::{
-    BBox, GeoDb, SourceManifest, adapt_naju_road_surfaces, adapt_naju_roads, adapt_sgis_districts,
-    adapt_worldcover_polygons, write_geodb,
+    BBox, GeoDb, SourceManifest, adapt_microsoft_buildings, adapt_naju_road_surfaces,
+    adapt_naju_roads, adapt_sgis_districts, adapt_worldcover_polygons, write_geodb,
 };
 use std::{error::Error, path::Path};
 
@@ -30,6 +30,11 @@ fn main() -> Result<(), Box<dyn Error>> {
             "sgis-admin-district" => records.extend(adapt_sgis_districts(source, region)?),
             "esa-worldcover-water" | "esa-worldcover-tree" => {
                 let (accepted, invalid) = adapt_worldcover_polygons(source, region)?;
+                records.extend(accepted);
+                rejected.extend(invalid);
+            }
+            "microsoft-ml-building-footprints" => {
+                let (accepted, invalid) = adapt_microsoft_buildings(source, region)?;
                 records.extend(accepted);
                 rejected.extend(invalid);
             }

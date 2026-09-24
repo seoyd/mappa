@@ -42,6 +42,7 @@ pub struct DecodedTile {
     pub green: Vec<Polygon<f32>>,
     pub water: Vec<Polygon<f32>>,
     pub road_surface: Vec<Polygon<f32>>,
+    pub building: Vec<Polygon<f32>>,
     pub boundary: Vec<LineString<f32>>,
     pub waterway: Vec<LineString<f32>>,
     pub road: Vec<LineString<f32>>,
@@ -129,6 +130,11 @@ impl DecodedTile {
             .iter()
             .map(|p| p.coords_count())
             .sum::<usize>();
+        let building = self
+            .building
+            .iter()
+            .map(|p| p.coords_count())
+            .sum::<usize>();
         let boundary = self
             .boundary
             .iter()
@@ -159,6 +165,7 @@ impl DecodedTile {
             + green
             + water
             + road_surface
+            + building
             + boundary
             + waterway
             + road
@@ -171,6 +178,7 @@ impl DecodedTile {
                 + self.water.capacity()
                 + self.road_surface.capacity())
                 * std::mem::size_of::<Polygon<f32>>()
+            + self.building.capacity() * std::mem::size_of::<Polygon<f32>>()
             + (self.boundary.capacity()
                 + self.waterway.capacity()
                 + self.road.capacity()
@@ -304,6 +312,7 @@ fn decode_inner(bytes: Vec<u8>) -> Result<DecodedTile, MapDataError> {
                 | "green"
                 | "water"
                 | "road_surface"
+                | "building"
                 | "boundary"
                 | "waterway"
                 | "road"
@@ -328,6 +337,8 @@ fn decode_inner(bytes: Vec<u8>) -> Result<DecodedTile, MapDataError> {
                 ("water", Geometry::MultiPolygon(mp)) => tile.water.extend(mp.0),
                 ("road_surface", Geometry::Polygon(p)) => tile.road_surface.push(p),
                 ("road_surface", Geometry::MultiPolygon(mp)) => tile.road_surface.extend(mp.0),
+                ("building", Geometry::Polygon(p)) => tile.building.push(p),
+                ("building", Geometry::MultiPolygon(mp)) => tile.building.extend(mp.0),
                 ("boundary", Geometry::LineString(l)) => tile.boundary.push(l),
                 ("boundary", Geometry::MultiLineString(ml)) => tile.boundary.extend(ml.0),
                 ("waterway", Geometry::LineString(l)) => tile.waterway.push(l),

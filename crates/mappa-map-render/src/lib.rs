@@ -56,6 +56,7 @@ pub struct PreparedTile {
     pub water: Mesh,
     pub waterway: Mesh,
     pub road_surface: Mesh,
+    pub building: Mesh,
     pub coast: Mesh,
     pub boundary: Mesh,
     pub road: Mesh,
@@ -186,6 +187,7 @@ pub fn prepare(tile: &DecodedTile) -> Result<PreparedTile, RenderError> {
         water: Mesh::default(),
         waterway: Mesh::default(),
         road_surface: Mesh::default(),
+        building: Mesh::default(),
         coast: Mesh::default(),
         boundary: Mesh::default(),
         road: Mesh::default(),
@@ -201,6 +203,7 @@ pub fn prepare(tile: &DecodedTile) -> Result<PreparedTile, RenderError> {
     let mut water = VertexBuffers::new();
     let mut green = VertexBuffers::new();
     let mut road_surface = VertexBuffers::new();
+    let mut building = VertexBuffers::new();
     for p in &tile.land {
         add_polygon(&mut land, &mut tessellator, p)?;
         if !tile.detailed {
@@ -218,6 +221,9 @@ pub fn prepare(tile: &DecodedTile) -> Result<PreparedTile, RenderError> {
     for p in &tile.road_surface {
         add_polygon(&mut road_surface, &mut tessellator, p)?;
     }
+    for p in &tile.building {
+        add_polygon(&mut building, &mut tessellator, p)?;
+    }
     prepared.land = Mesh {
         vertices: land.vertices,
         indices: land.indices,
@@ -233,6 +239,10 @@ pub fn prepare(tile: &DecodedTile) -> Result<PreparedTile, RenderError> {
     prepared.road_surface = Mesh {
         vertices: road_surface.vertices,
         indices: road_surface.indices,
+    };
+    prepared.building = Mesh {
+        vertices: building.vertices,
+        indices: building.indices,
     };
     for l in &tile.boundary {
         add_line(&mut prepared.boundary, l);
@@ -367,6 +377,7 @@ struct GpuTile {
     water: Option<GpuMesh>,
     waterway: Option<GpuMesh>,
     road_surface: Option<GpuMesh>,
+    building: Option<GpuMesh>,
     coast: Option<GpuMesh>,
     boundary: Option<GpuMesh>,
     road: Option<GpuMesh>,
@@ -572,6 +583,7 @@ impl MapRenderer {
         let water = self.upload_mesh(tile.water);
         let waterway = self.upload_mesh(tile.waterway);
         let road_surface = self.upload_mesh(tile.road_surface);
+        let building = self.upload_mesh(tile.building);
         let coast = self.upload_mesh(tile.coast);
         let boundary = self.upload_mesh(tile.boundary);
         let road = self.upload_mesh(tile.road);
@@ -587,6 +599,7 @@ impl MapRenderer {
             &water,
             &waterway,
             &road_surface,
+            &building,
             &coast,
             &boundary,
             &road,
@@ -610,6 +623,7 @@ impl MapRenderer {
                 water,
                 waterway,
                 road_surface,
+                building,
                 coast,
                 boundary,
                 road,
@@ -662,6 +676,7 @@ impl MapRenderer {
             .chain(std::iter::once(20))
             .chain(3..5u8)
             .chain(std::iter::once(19))
+            .chain(std::iter::once(21))
             .chain(5..19u8)
         {
             // The OSM land source is distributed in overlapping polygon chunks.
@@ -679,6 +694,7 @@ impl MapRenderer {
                     2 => &tile.water,
                     20 => &tile.waterway,
                     19 => &tile.road_surface,
+                    21 => &tile.building,
                     3 => &tile.coast,
                     4 => &tile.boundary,
                     5 | 6 => &tile.road,
@@ -703,6 +719,7 @@ impl MapRenderer {
                     2 => style.lake,
                     20 => style.lake,
                     19 => local_fill,
+                    21 => [0.67, 0.71, 0.73, 1.0],
                     3 => style.coast,
                     4 => style.boundary,
                     5 | 7 => style.road_local_casing,
@@ -814,6 +831,7 @@ impl MapRenderer {
                     2 => &tile.water,
                     20 => &tile.waterway,
                     19 => &tile.road_surface,
+                    21 => &tile.building,
                     3 => &tile.coast,
                     4 => &tile.boundary,
                     5 | 6 => &tile.road,

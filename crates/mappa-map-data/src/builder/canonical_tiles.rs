@@ -78,7 +78,10 @@ pub fn build_canonical_tiles(
             CanonicalGeometry::Polygon(rings)
                 if matches!(
                     feature.kind,
-                    FeatureKind::RoadSurface | FeatureKind::Water | FeatureKind::Vegetation
+                    FeatureKind::RoadSurface
+                        | FeatureKind::Water
+                        | FeatureKind::Vegetation
+                        | FeatureKind::Building
                 ) =>
             {
                 let mut projected_rings = rings
@@ -116,6 +119,7 @@ pub fn build_canonical_tiles(
             {"id": "road_surface", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
             {"id": "water", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
             {"id": "green", "fields": {}, "minzoom": 14, "maxzoom": max_zoom},
+            {"id": "building", "fields": {}, "minzoom": 14, "maxzoom": max_zoom},
             {"id": "road_major", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
             {"id": "road_collector", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
             {"id": "road_local", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
@@ -208,6 +212,16 @@ pub fn build_canonical_tiles(
                 candidates
                     .iter()
                     .filter(|&&index| projected[index].kind == FeatureKind::RoadSurface)
+                    .map(|&index| &projected[index].geometry),
+                tile_bounds,
+                key,
+            )?;
+            count += add_polygons(
+                &mut tile,
+                "building",
+                candidates
+                    .iter()
+                    .filter(|&&index| projected[index].kind == FeatureKind::Building)
                     .map(|&index| &projected[index].geometry),
                 tile_bounds,
                 key,
