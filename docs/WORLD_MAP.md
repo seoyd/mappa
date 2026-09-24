@@ -28,7 +28,7 @@ Web Mercator 표현 범위는 극점 밖 위도 약 ±85.05°까지다. z5–z7�
 
 Mac Metal 기본 세계 모드 캡처에서 [모나코 건물](../artifacts/world-integration/monaco-world.png), 뉴욕시 5개 카운티 팩의 [Manhattan](../artifacts/world-integration/manhattan-world.png)·[Queens](../artifacts/world-roads/nyc-queens-world-z14.png)·[Richmond](../artifacts/world-roads/nyc-richmond-world-z14.png) 도로가 실제 z14 타일로 표시됐다. [파리의 미수집 상세 영역](../artifacts/world-integration/unmapped-world.png)은 빈 중립색이다. [모나코 z12](../artifacts/world-integration/monaco-overview-z12.png)는 건물 타일이 시작되기 전이라 기존 z7 개략 자료를 확대하며 화면에 그 한계를 밝힌다. 여섯 캡처의 타일 실패는 각각 0개다. 최종 모나코의 동기·비동기 캡처 PNG는 SHA-256 `6477b6f1bb2cf1b12b861cdfce308e0de0a0b05e4db2aa7021989c6b73e074e2`로 일치했다. 이는 자료 선택·표시의 검증이며 현장 위치 정확도나 전 세계 커버리지 통과 판정이 아니다.
 
-현재 목록은 파일 2개의 manifest를 시작 시 검증하고, PMTiles는 각 파일이 처음 필요할 때 연다. 코드 테스트에서 매니저 생성 직후 지역 PMTiles 열린 수는 0이었다. 지연 열기 전후의 모나코 동기·Queens 비동기 Metal PNG는 각각 바이트 단위로 같았고 두 캡처 모두 실패 0이었다. 한 번 연 파일은 세션 동안 유지되며 타일 요청마다 전체 목록을 검사한다. 전 세계 수만 개 분할 파일에 적용하려면 공간 인덱스와 열린 파일 상한·축출을 추가해야 한다. iPhone 구동과 메모리 측정도 아직 없다.
+현재 목록은 파일 2개의 manifest를 시작 시 검증하고, PMTiles는 각 파일이 처음 필요할 때 연다. manifest 범위를 z5 공간 셀에 등록해 카메라·타일의 셀에 걸친 패키지만 검사하고, 실제 타일과 원천 범위의 교차를 다시 확인한다. 열린 PMTiles는 최근 사용 순서로 최대 16개를 유지하며 축출된 파일은 필요하면 다시 연다. 코드 테스트에서 매니저 생성 직후 열린 지역 PMTiles 수는 0이고, 최근 사용 파일을 제외한 축출 결과가 확인됐다. 인덱스·파일 상한 적용 전후 모나코 동기·Queens 비동기 Metal PNG는 각각 바이트 단위로 같았고 두 캡처 모두 실패 0이었다. 이 검증은 실제 파일 2개에 대한 것이다. 수만 분할 파일의 시작 시간·메모리·iPhone 성능 및 패키지 갱신은 아직 측정되지 않았다.
 
 ### Natural Earth 전 세계 개략 자료
 

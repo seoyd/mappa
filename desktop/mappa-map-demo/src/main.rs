@@ -35,6 +35,8 @@ const FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Bgra8UnormSrgb;
 const CPU_BUDGET: usize = 64 * 1024 * 1024;
 const LIVE_PENDING_LIMIT: usize = 12;
 const LIVE_UPLOADS_PER_FRAME: usize = 1;
+const OPEN_REGIONAL_PACK_LIMIT: usize = 16;
+const REGIONAL_INDEX_ZOOM: u8 = 5;
 
 fn public_roads_mode() -> bool {
     std::env::var("MAPPA_DATASET").is_ok_and(|value| value == "public-naju")
@@ -220,6 +222,49 @@ fn camera_center_inside(camera: &MapCamera, bounds: [f64; 4]) -> bool {
     })
 }
 
+fn regional_cell_for_camera(camera: &MapCamera) -> u32 {
+    let n = 1u32 << REGIONAL_INDEX_ZOOM;
+    let x = (camera.center.x.rem_euclid(1.0) * f64::from(n)).floor() as u32;
+    let y = (camera.center.y * f64::from(n))
+        .floor()
+        .min(f64::from(n - 1)) as u32;
+    y * n + x
+}
+
+fn regional_cell_for_tile(key: TileKey) -> u32 {
+    let shift = key.z - REGIONAL_INDEX_ZOOM;
+    let n = 1u32 << REGIONAL_INDEX_ZOOM;
+    (key.y >> shift) * n + (key.x >> shift)
+}
+
+fn build_regional_index(packs: &[RegionalPack]) -> Result<HashMap<u32, Vec<usize>>, DynError> {
+    let n = 1u32 << REGIONAL_INDEX_ZOOM;
+    let mut index: HashMap<u32, Vec<usize>> = HashMap::new();
+    for (id, pack) in packs.iter().enumerate() {
+        let [west, south, east, north] = pack.bounds;
+        let northwest = project(west, north)?;
+        let southeast = project(east, south)?;
+        let x0 = (northwest.x * f64::from(n))
+            .floor()
+            .clamp(0.0, f64::from(n - 1)) as u32;
+        let x1 = (southeast.x * f64::from(n))
+            .floor()
+            .clamp(0.0, f64::from(n - 1)) as u32;
+        let y0 = (northwest.y * f64::from(n))
+            .floor()
+            .clamp(0.0, f64::from(n - 1)) as u32;
+        let y1 = (southeast.y * f64::from(n))
+            .floor()
+            .clamp(0.0, f64::from(n - 1)) as u32;
+        for y in y0..=y1 {
+            for x in x0..=x1 {
+                index.entry(y * n + x).or_default().push(id);
+            }
+        }
+    }
+    Ok(index)
+}
+
 #[derive(Deserialize)]
 struct RegionalCatalog {
     pack: Vec<RegionalEntry>,
@@ -242,38 +287,73 @@ struct RegionalPack {
     archive_min_zoom: u8,
     archive_max_zoom: u8,
     required_credits: Vec<String>,
-    source: Arc<tokio::sync::OnceCell<Arc<LocalPmTiles>>>,
     min_visible_zoom: u8,
     label: String,
 }
 
+#[derive(Default)]
+struct OpenRegionalPacks {
+    files: HashMap<PathBuf, (Arc<LocalPmTiles>, u64)>,
+    tick: u64,
+}
+
+impl OpenRegionalPacks {
+    fn get(&mut self, path: &Path) -> Option<Arc<LocalPmTiles>> {
+        self.tick += 1;
+        let (source, touched) = self.files.get_mut(path)?;
+        *touched = self.tick;
+        Some(Arc::clone(source))
+    }
+
+    fn insert(&mut self, path: PathBuf, source: Arc<LocalPmTiles>) {
+        self.tick += 1;
+        self.files.insert(path, (source, self.tick));
+        while self.files.len() > OPEN_REGIONAL_PACK_LIMIT {
+            let oldest = self
+                .files
+                .iter()
+                .min_by_key(|(_, (_, touched))| touched)
+                .map(|(path, _)| path.clone())
+                .expect("nonempty regional file cache");
+            self.files.remove(&oldest);
+        }
+    }
+}
+
 impl RegionalPack {
-    async fn source(&self) -> Result<&Arc<LocalPmTiles>, DynError> {
-        self.source
-            .get_or_try_init(|| async {
-                let source = Arc::new(LocalPmTiles::open(&self.path).await?);
-                if source.min_zoom != self.archive_min_zoom
-                    || source.max_zoom != self.archive_max_zoom
-                    || source
-                        .bounds
-                        .iter()
-                        .zip(self.bounds)
-                        .any(|(actual, expected)| (actual - expected).abs() > 1e-6)
-                    || source.attribution.as_deref().is_none_or(|credit| {
-                        self.required_credits
-                            .iter()
-                            .any(|term| !credit.contains(term))
-                    })
-                {
-                    return Err(format!(
-                        "regional pack header or credit differs from manifest: {}",
-                        self.path.display()
-                    )
-                    .into());
-                }
-                Ok::<Arc<LocalPmTiles>, DynError>(source)
+    async fn source(
+        &self,
+        cache: &Arc<Mutex<OpenRegionalPacks>>,
+    ) -> Result<Arc<LocalPmTiles>, DynError> {
+        if let Some(source) = cache.lock().expect("regional files lock").get(&self.path) {
+            return Ok(source);
+        }
+        let source = Arc::new(LocalPmTiles::open(&self.path).await?);
+        if source.min_zoom != self.archive_min_zoom
+            || source.max_zoom != self.archive_max_zoom
+            || source
+                .bounds
+                .iter()
+                .zip(self.bounds)
+                .any(|(actual, expected)| (actual - expected).abs() > 1e-6)
+            || source.attribution.as_deref().is_none_or(|credit| {
+                self.required_credits
+                    .iter()
+                    .any(|term| !credit.contains(term))
             })
-            .await
+        {
+            return Err(format!(
+                "regional pack header or credit differs from manifest: {}",
+                self.path.display()
+            )
+            .into());
+        }
+        let mut open = cache.lock().expect("regional files lock");
+        if let Some(existing) = open.get(&self.path) {
+            return Ok(existing);
+        }
+        open.insert(self.path.clone(), Arc::clone(&source));
+        Ok(source)
     }
 }
 
@@ -320,7 +400,6 @@ fn open_regional_packs() -> Result<Vec<RegionalPack>, DynError> {
             archive_min_zoom: entry.archive_min_zoom,
             archive_max_zoom: entry.archive_max_zoom,
             required_credits,
-            source: Arc::new(tokio::sync::OnceCell::new()),
             min_visible_zoom: entry.min_visible_zoom,
             label: entry.label,
         });
@@ -355,18 +434,27 @@ async fn read_decoded_tile(
     key: TileKey,
     sources: [&Arc<LocalPmTiles>; 4],
     regional: &[RegionalPack],
+    regional_index: &Arc<HashMap<u32, Vec<usize>>>,
+    regional_files: &Arc<Mutex<OpenRegionalPacks>>,
 ) -> Result<DecodedLoad, DynError> {
     let regional_zoom = regional.iter().map(|pack| pack.min_visible_zoom).min();
     let mut opening_ms = 0.0;
     let candidates: Vec<Arc<LocalPmTiles>> = if regional_zoom.is_some_and(|z| key.z >= z) {
         let mut selected = Vec::new();
-        for pack in regional.iter().filter(|pack| {
-            key.z >= pack.min_visible_zoom
-                && key.z <= pack.archive_max_zoom
-                && tile_intersects(key, pack.bounds)
-        }) {
+        for &id in regional_index
+            .get(&regional_cell_for_tile(key))
+            .into_iter()
+            .flatten()
+        {
+            let pack = &regional[id];
+            if key.z < pack.min_visible_zoom
+                || key.z > pack.archive_max_zoom
+                || !tile_intersects(key, pack.bounds)
+            {
+                continue;
+            }
             let start = Instant::now();
-            selected.push(Arc::clone(pack.source().await?));
+            selected.push(pack.source(regional_files).await?);
             opening_ms += start.elapsed().as_secs_f64() * 1000.0;
         }
         selected
@@ -487,6 +575,8 @@ struct TileManager {
     mid: Arc<LocalPmTiles>,
     street: Arc<LocalPmTiles>,
     regional: Vec<RegionalPack>,
+    regional_index: Arc<HashMap<u32, Vec<usize>>>,
+    regional_files: Arc<Mutex<OpenRegionalPacks>>,
     countries: Vec<CountryLabel>,
     cache: HashMap<TileKey, CacheEntry>,
     missing: HashSet<TileKey>,
@@ -523,6 +613,8 @@ impl TileManager {
                 mid: survey.clone(),
                 street: survey,
                 regional: Vec::new(),
+                regional_index: Arc::new(HashMap::new()),
+                regional_files: Arc::new(Mutex::new(OpenRegionalPacks::default())),
                 countries: Vec::new(),
                 cache: HashMap::new(),
                 missing: HashSet::new(),
@@ -535,12 +627,15 @@ impl TileManager {
             let source = Arc::new(LocalPmTiles::open(map_file()).await?);
             let detail = Arc::new(LocalPmTiles::open(world_detail_file()).await?);
             let regional = open_regional_packs()?;
+            let regional_index = Arc::new(build_regional_index(&regional)?);
             return Ok(Self {
                 source,
                 detail: detail.clone(),
                 mid: detail.clone(),
                 street: detail,
                 regional,
+                regional_index,
+                regional_files: Arc::new(Mutex::new(OpenRegionalPacks::default())),
                 countries: load_country_labels(&country_label_file())?,
                 cache: HashMap::new(),
                 missing: HashSet::new(),
@@ -555,6 +650,8 @@ impl TileManager {
             mid: Arc::new(LocalPmTiles::open(mid_map_file()).await?),
             street: Arc::new(LocalPmTiles::open(street_map_file()).await?),
             regional: Vec::new(),
+            regional_index: Arc::new(HashMap::new()),
+            regional_files: Arc::new(Mutex::new(OpenRegionalPacks::default())),
             countries: load_country_labels(&country_label_file())?,
             cache: HashMap::new(),
             missing: HashSet::new(),
@@ -564,11 +661,18 @@ impl TileManager {
         })
     }
 
+    fn regional_near(&self, camera: &MapCamera) -> impl Iterator<Item = &RegionalPack> {
+        self.regional_index
+            .get(&regional_cell_for_camera(camera))
+            .into_iter()
+            .flatten()
+            .map(|&id| &self.regional[id])
+    }
+
     fn max_zoom_for(&self, camera: &MapCamera) -> u8 {
         if world_mode() {
             if let Some(max_zoom) = self
-                .regional
-                .iter()
+                .regional_near(camera)
                 .filter(|pack| {
                     camera.zoom >= f64::from(pack.min_visible_zoom)
                         && camera_center_inside(camera, pack.bounds)
@@ -580,8 +684,7 @@ impl TileManager {
             }
             if camera.zoom >= 10.0 {
                 if self
-                    .regional
-                    .iter()
+                    .regional_near(camera)
                     .any(|pack| camera_center_inside(camera, pack.bounds))
                 {
                     return self.detail.max_zoom;
@@ -729,8 +832,7 @@ impl TileManager {
                 } else if world_mode() {
                     if visible.first().is_some_and(|tile| tile.key.z >= 10) {
                         let active: Vec<_> = self
-                            .regional
-                            .iter()
+                            .regional_near(camera)
                             .filter(|pack| {
                                 camera.zoom >= f64::from(pack.min_visible_zoom)
                                     && camera_center_inside(camera, pack.bounds)
@@ -803,6 +905,8 @@ impl TileManager {
                 key,
                 [&self.source, &self.detail, &self.mid, &self.street],
                 &self.regional,
+                &self.regional_index,
+                &self.regional_files,
             )
             .await
             {
@@ -917,6 +1021,8 @@ impl LiveTileLoader {
         let mid = Arc::clone(&manager.mid);
         let street = Arc::clone(&manager.street);
         let regional = manager.regional.clone();
+        let regional_index = Arc::clone(&manager.regional_index);
+        let regional_files = Arc::clone(&manager.regional_files);
         let wanted = Arc::clone(&desired);
         let worker_runtime = runtime()?;
         std::thread::Builder::new()
@@ -930,6 +1036,8 @@ impl LiveTileLoader {
                             request,
                             [&source, &detail, &mid, &street],
                             &regional,
+                            &regional_index,
+                            &regional_files,
                             &worker_runtime,
                         )
                     } else {
@@ -1076,6 +1184,8 @@ fn load_tile(
     request: TileRequest,
     sources: [&Arc<LocalPmTiles>; 4],
     regional: &[RegionalPack],
+    regional_index: &Arc<HashMap<u32, Vec<usize>>>,
+    regional_files: &Arc<Mutex<OpenRegionalPacks>>,
     runtime: &tokio::runtime::Runtime,
 ) -> TileResult {
     let TileRequest { key, decoded } = request;
@@ -1089,7 +1199,13 @@ fn load_tile(
     let decoded = if let Some(decoded) = decoded {
         decoded
     } else {
-        let loaded = runtime.block_on(read_decoded_tile(key, sources, regional));
+        let loaded = runtime.block_on(read_decoded_tile(
+            key,
+            sources,
+            regional,
+            regional_index,
+            regional_files,
+        ));
         let decoded = match loaded {
             Ok(DecodedLoad {
                 tile: Some(decoded),
@@ -2278,12 +2394,7 @@ mod tests {
         }
         let manager = TileManager::open().await.unwrap();
         assert_eq!(manager.regional.len(), 2);
-        assert!(
-            manager
-                .regional
-                .iter()
-                .all(|pack| pack.source.get().is_none())
-        );
+        assert!(manager.regional_files.lock().unwrap().files.is_empty());
         for pack in &manager.regional {
             let [west, south, east, north] = pack.bounds;
             let (lon, lat) = ((west + east) / 2.0, (south + north) / 2.0);
@@ -2325,6 +2436,8 @@ mod tests {
                             &manager.street,
                         ],
                         &manager.regional,
+                        &manager.regional_index,
+                        &manager.regional_files,
                     )
                     .await
                     .unwrap();
@@ -2346,6 +2459,22 @@ mod tests {
         }
         assert!(buildings > 0, "building layer missing in world mode");
         assert!(roads > 0, "road layer missing in world mode");
+        let source = manager.regional[0]
+            .source(&manager.regional_files)
+            .await
+            .unwrap();
+        let mut bounded = OpenRegionalPacks::default();
+        for index in 0..OPEN_REGIONAL_PACK_LIMIT {
+            bounded.insert(
+                PathBuf::from(format!("fixture-{index}")),
+                Arc::clone(&source),
+            );
+        }
+        assert!(bounded.get(Path::new("fixture-0")).is_some());
+        bounded.insert(PathBuf::from("next-fixture"), source);
+        assert_eq!(bounded.files.len(), OPEN_REGIONAL_PACK_LIMIT);
+        assert!(bounded.files.contains_key(Path::new("fixture-0")));
+        assert!(!bounded.files.contains_key(Path::new("fixture-1")));
     }
 
     #[test]
