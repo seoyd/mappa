@@ -57,6 +57,13 @@ sha256 = "722de9df0cb03365f90a0778b69e5c51a2104c42e91dff8e047541f535ac271e"
 download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25-ar/722de9df0cb03365f90a0778b69e5c51a2104c42e91dff8e047541f535ac271e.pmtiles"
 
 [[pack]]
+path = "artifacts/world-roads/au-vic-dtp/roads.pmtiles"
+manifest = "data/au_vic_dtp_roads.toml"
+manifest_sha256 = "395f8fd04e1821e3aeae417b247c2f33da0906162d239486768af3c0dc3a8342"
+bytes = 15008857
+sha256 = "13b0c0fa6172da6e99826d0ed2eeea255198522eab75782c13225a8312484cca"
+
+[[pack]]
 path = "artifacts/world-roads/au-wa/goldfields-esperance.pmtiles"
 manifest = "data/au_wa_roads_goldfields-esperance.toml"
 manifest_sha256 = "63bc93e48c3ca96405e24ea4da119f754a227954e14d8344f9bf4eae78858b48"

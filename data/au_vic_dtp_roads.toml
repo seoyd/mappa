@@ -1,0 +1,35 @@
+schema_version = 1
+proof_region = "au-vic-dtp-managed-roads"
+proof_bbox_wgs84 = [
+    140.9630929111,
+    -39.0307555304,
+    149.7485225259,
+    -34.1145370274,
+]
+
+[[source]]
+id = "au-vic-dtp-managed-roads-f6b88130da0b42b3"
+name = "DTP Managed Roads"
+provider = "Victoria Department of Transport and Planning"
+source_version = "sha256:f6b88130da0b42b3d24356878a87cfc62ddbd6e44d8aa6707b03497befeff243"
+download_date = "2026-09-25"
+official_url = "https://opendata.transport.vic.gov.au/dataset/858f87e7-c089-4b00-9d06-ff9c4c682367/resource/7085bd59-9bed-4284-b226-703e3cfe3404/download/dtp_managed_roads.geojson"
+download_page_url = "https://opendata.transport.vic.gov.au/dataset/dtp-managed-roads/resource/7085bd59-9bed-4284-b226-703e3cfe3404"
+file = "local/au_vic/dtp_managed_roads.geojson"
+sha256 = "f6b88130da0b42b3d24356878a87cfc62ddbd6e44d8aa6707b03497befeff243"
+crs = "WGS84 geographic degrees (provider resource metadata; GeoJSON has no explicit CRS member)"
+format = "GeoJSON FeatureCollection of LineString features"
+coverage = "Victoria DTP-managed roads only; not the statewide complete Vicmap road network"
+resolution = "Official road centreline geometry; independent position accuracy not measured"
+update_frequency = "Resource snapshot metadata last updated 2026-03-10; frequency not verified"
+license_id = "CC-BY-4.0"
+license_url = "https://creativecommons.org/licenses/by/4.0/"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "Copyright (c) The State of Victoria, Department of Energy, Environment and Climate Action"
+share_alike = false
+adapter = "au-vic-dtp-managed-roads"
+adapter_version = 1
