@@ -15,7 +15,9 @@
 
 같은 Newark 위치에서 비동기 이동 40프레임의 기본 목록 단일 실행은 초기 로딩 84.083ms, 프레임 중앙값 2.858ms, p95 3.248ms, p99 18.962ms, 미해결·실패 0이었다. 뉴저지 팩만 목록에 둔 단일 비교 실행은 초기 로딩 88.373ms, 프레임 중앙값 5.508ms, p95 7.293ms, p99 68.997ms, 미해결·실패 0이었다. 반복 측정이 아니고 실행 간 변동이 커서 다른 팩의 로딩 비용이나 최적화 효과를 판정하지 않는다.
 
-뉴욕주와 뉴저지주 원천의 직사각형 범위가 겹칠 수 있다. 현재 렌더러는 같은 타일의 레이어를 합치지만 주 경계 도로 중복 식별·연결성 검증은 아직 하지 않는다. 뉴저지의 건물·상세 수면·공원·역·공공기관·주소는 이번 팩에 없다. 원본의 도로 누락, 도형의 위치 정확도, WGS84 datum 차이, iPhone 성능도 아직 검증하지 않았다. 미국 전체나 세계 상세 지도가 완성된 결과가 아니다.
+뉴욕주와 뉴저지주 원천의 직사각형 범위가 겹칠 수 있다. 현재 렌더러는 같은 타일의 레이어를 합치지만 주 경계의 부분 중복 통합·도로 연결성 검증은 아직 하지 않는다. 뉴저지의 건물·상세 수면·공원·역·공공기관·주소는 이번 팩에 없다. 원본의 도로 누락, 도형의 위치 정확도, WGS84 datum 차이, iPhone 성능도 아직 검증하지 않았다. 미국 전체나 세계 상세 지도가 완성된 결과가 아니다.
+
+두 팩의 실제 타일을 해독해 같은 종류·좌표열의 도로 선형을 대조했다. 양쪽에 비어 있지 않은 타일은 214개였고, 그 타일의 도로 선형은 뉴욕주 20,470개·뉴저지주 16,839개, 역방향까지 같은 **완전 동일 선형은 0개**였다. 이는 동일 좌표열의 중복만 찾는 검사다. 일부만 겹치거나 수치가 다른 중복, 주 경계 연결성은 이 검사로 배제할 수 없다.
 
 ## 재현
 
@@ -36,5 +38,8 @@ cargo run --offline --release -p mappa-map-data --bin audit_canonical_sources --
   data/us_tiger_nj_state_roads.toml artifacts/world-roads/nj-state/state.mgeodb \
   artifacts/world-roads/nj-state/state.rejected.json.gz
 cargo run --offline --release -p mappa-map-data --bin audit_fixture -- \
+  artifacts/world-roads/nj-state/state.pmtiles
+cargo run --offline --release -p mappa-map-data --bin audit_pmtiles_road_overlap -- \
+  artifacts/world-roads/ny-state/state.pmtiles \
   artifacts/world-roads/nj-state/state.pmtiles
 ```

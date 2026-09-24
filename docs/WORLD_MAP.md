@@ -36,7 +36,7 @@ Web Mercator 표현 범위는 극점 밖 위도 약 ±85.05°까지다. z5–z7�
 
 ### 뉴저지주 도로 확장 — 2026-09-24
 
-[뉴저지주 21개 카운티 원천 감사](NJ_STATE_ROADS_PROGRESS.md)에서 도로 177,815개를 채택하고 6,537개 레코드를 거절했다. 29,097개 비어 있지 않은 타일을 모두 해독했으며 오류는 0개였다. 기본 세계 모드 [Newark z14.4](../artifacts/world-roads/nj-state/newark-world-z14.png) 캡처의 타일 실패도 0개였다. 뉴욕주와 뉴저지주 팩은 별도 원천으로 읽으며 경계에서 겹치는 도로의 중복·연결성은 아직 검사하지 않았다.
+[뉴저지주 21개 카운티 원천 감사](NJ_STATE_ROADS_PROGRESS.md)에서 도로 177,815개를 채택하고 6,537개 레코드를 거절했다. 29,097개 비어 있지 않은 타일을 모두 해독했으며 오류는 0개였다. 기본 세계 모드 [Newark z14.4](../artifacts/world-roads/nj-state/newark-world-z14.png) 캡처의 타일 실패도 0개였다. 두 주 팩의 같은 타일 214개에서 완전 동일한 도로 좌표열은 0개였지만 부분 중복과 경계 연결성은 미검증이다.
 
 Mac Metal 기본 세계 모드 캡처에서 [모나코 건물](../artifacts/world-integration/monaco-world.png), 뉴욕시 5개 카운티 팩의 [Manhattan](../artifacts/world-integration/manhattan-world.png)·[Queens](../artifacts/world-roads/nyc-queens-world-z14.png)·[Richmond](../artifacts/world-roads/nyc-richmond-world-z14.png) 도로가 실제 z14 타일로 표시됐다. [파리의 미수집 상세 영역](../artifacts/world-integration/unmapped-world.png)은 빈 중립색이다. [모나코 z12](../artifacts/world-integration/monaco-overview-z12.png)는 건물 타일이 시작되기 전이라 기존 z7 개략 자료를 확대하며 화면에 그 한계를 밝힌다. 여섯 캡처의 타일 실패는 각각 0개다. 최종 모나코의 동기·비동기 캡처 PNG는 SHA-256 `6477b6f1bb2cf1b12b861cdfce308e0de0a0b05e4db2aa7021989c6b73e074e2`로 일치했다. 이는 자료 선택·표시의 검증이며 현장 위치 정확도나 전 세계 커버리지 통과 판정이 아니다.
 
