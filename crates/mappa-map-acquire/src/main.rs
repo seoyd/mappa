@@ -1,7 +1,16 @@
 //! Build-time official source downloader. The map runtime never calls this.
 
-use std::{collections::BTreeSet, error::Error, path::PathBuf, sync::Arc, time::Duration};
-use tokio::{fs, sync::Semaphore, task::JoinSet};
+use md5::{Digest, Md5};
+use reqwest::header::{CONTENT_RANGE, RANGE};
+use std::{
+    collections::BTreeSet,
+    error::Error,
+    io::Read,
+    path::{Path, PathBuf},
+    sync::Arc,
+    time::Duration,
+};
+use tokio::{fs, io::AsyncWriteExt, sync::Semaphore, task::JoinSet};
 
 const MAX_SOURCE_BYTES: usize = 64 * 1024 * 1024;
 const CONCURRENT_DOWNLOADS: usize = 8;
@@ -12,9 +21,139 @@ fn county_name(name: &str) -> bool {
         .is_some_and(|county| county.len() == 5 && county.bytes().all(|b| b.is_ascii_digit()))
 }
 
+async fn download(
+    client: &reqwest::Client,
+    url: &str,
+    output: &Path,
+    max_bytes: u64,
+    expected_md5: Option<&str>,
+) -> Result<u64, Box<dyn Error + Send + Sync>> {
+    let temporary = output.with_extension("part");
+    let mut hasher = Md5::new();
+    let mut total = if expected_md5.is_some() {
+        match fs::metadata(&temporary).await {
+            Ok(metadata) => metadata.len(),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => 0,
+            Err(error) => return Err(error.into()),
+        }
+    } else {
+        0
+    };
+    if total > max_bytes {
+        return Err("partial source exceeds publisher size".into());
+    }
+    if total > 0 {
+        let mut existing = std::fs::File::open(&temporary)?;
+        let mut buffer = [0u8; 64 * 1024];
+        loop {
+            let read = existing.read(&mut buffer)?;
+            if read == 0 {
+                break;
+            }
+            hasher.update(&buffer[..read]);
+        }
+    }
+    if total < max_bytes {
+        let mut request = client.get(url);
+        if total > 0 {
+            request = request.header(RANGE, format!("bytes={total}-"));
+        }
+        let mut response = request.send().await?.error_for_status()?;
+        if total > 0 {
+            let content_range = response
+                .headers()
+                .get(CONTENT_RANGE)
+                .ok_or("resumed source has no Content-Range")?
+                .to_str()?;
+            if response.status() != reqwest::StatusCode::PARTIAL_CONTENT
+                || !content_range.starts_with(&format!("bytes {total}-"))
+                || !content_range.ends_with(&format!("/{max_bytes}"))
+            {
+                return Err("server did not honor the requested source range".into());
+            }
+        }
+        if response
+            .content_length()
+            .is_some_and(|size| size > max_bytes - total)
+        {
+            return Err("source exceeds expected size".into());
+        }
+        let mut file = fs::OpenOptions::new()
+            .create(true)
+            .write(true)
+            .append(total > 0)
+            .truncate(total == 0)
+            .open(&temporary)
+            .await?;
+        while let Some(chunk) = response.chunk().await? {
+            total = total
+                .checked_add(chunk.len() as u64)
+                .ok_or("source size overflow")?;
+            if total > max_bytes {
+                return Err("source exceeds expected size".into());
+            }
+            file.write_all(&chunk).await?;
+            if expected_md5.is_some() {
+                hasher.update(&chunk);
+            }
+        }
+        file.flush().await?;
+    }
+    if total == 0 || (expected_md5.is_some() && total != max_bytes) {
+        return Err("source byte count differs from publisher metadata".into());
+    }
+    if let Some(expected) = expected_md5 {
+        let actual = hasher
+            .finalize()
+            .iter()
+            .map(|byte| format!("{byte:02x}"))
+            .collect::<String>();
+        if actual != expected {
+            return Err("publisher MD5 mismatch".into());
+        }
+    }
+    fs::rename(temporary, output).await?;
+    Ok(total)
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let args: Vec<_> = std::env::args().collect();
+    if args.get(1).is_some_and(|arg| arg == "--file") {
+        if args.len() != 6 {
+            return Err(
+                "usage: mappa-map-acquire --file HTTPS_URL OUTPUT EXPECTED_BYTES EXPECTED_MD5"
+                    .into(),
+            );
+        }
+        if !args[2].starts_with("https://")
+            || args[5].len() != 32
+            || !args[5].bytes().all(|byte| byte.is_ascii_hexdigit())
+        {
+            return Err("expected HTTPS source URL and 32-digit MD5".into());
+        }
+        let expected_bytes: u64 = args[4].parse()?;
+        let output = PathBuf::from(&args[3]);
+        fs::create_dir_all(output.parent().ok_or("output needs a parent directory")?).await?;
+        let client = reqwest::Client::builder()
+            .user_agent("Mappa build-time source acquisition")
+            .timeout(Duration::from_secs(1200))
+            .build()?;
+        let actual = download(
+            &client,
+            &args[2],
+            &output,
+            expected_bytes,
+            Some(&args[5].to_ascii_lowercase()),
+        )
+        .await?;
+        println!(
+            "downloaded={} bytes={actual} publisher_md5={}",
+            output.display(),
+            args[5]
+        );
+        return Ok(());
+    }
     if args.len() != 3 {
         return Err("usage: mappa-map-acquire INVENTORY.txt OUTPUT_DIR".into());
     }
@@ -46,26 +185,19 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         tasks.spawn(async move {
             let _permit = permit;
             let url = format!("https://www2.census.gov/geo/tiger/TIGER2025/ROADS/{name}");
-            let bytes = client
-                .get(url)
-                .send()
-                .await?
-                .error_for_status()?
-                .bytes()
-                .await?;
-            if bytes.is_empty() || bytes.len() > MAX_SOURCE_BYTES {
-                return Err::<(String, usize), Box<dyn Error + Send + Sync>>(
-                    format!("source size outside allowed range: {name}").into(),
-                );
-            }
-            let temporary = output.join(format!("{name}.part"));
-            fs::write(&temporary, &bytes).await?;
-            fs::rename(temporary, output.join(&name)).await?;
-            Ok::<_, Box<dyn Error + Send + Sync>>((name, bytes.len()))
+            let bytes = download(
+                &client,
+                &url,
+                &output.join(&name),
+                MAX_SOURCE_BYTES as u64,
+                None,
+            )
+            .await?;
+            Ok::<_, Box<dyn Error + Send + Sync>>((name, bytes))
         });
     }
     let mut files = 0usize;
-    let mut total_bytes = 0usize;
+    let mut total_bytes = 0u64;
     while let Some(result) = tasks.join_next().await {
         let (name, bytes) = result??;
         files += 1;
