@@ -3,6 +3,46 @@
 # with observed features, not positional accuracy. Archives open on first use.
 # Adding a pack here does not certify its coverage or positional accuracy.
 [[pack]]
+path = "../../artifacts/world-water/va-state/water.pmtiles"
+manifest = "../../data/us_tiger_va_state_areawater.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 수면 · 버지니아주 133개 카운티 상당 단위 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/va-state/roads-west.pmtiles"
+manifest = "../../data/us_tiger_va_state_roads_west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 서부 · 버지니아주 133개 카운티 상당 단위 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/va-state/roads-east-west-west.pmtiles"
+manifest = "../../data/us_tiger_va_state_roads_east_west_west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 중서부 · 버지니아주 133개 카운티 상당 단위 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/va-state/roads-east-west-east.pmtiles"
+manifest = "../../data/us_tiger_va_state_roads_east_west_east.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 중동부 · 버지니아주 133개 카운티 상당 단위 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/va-state/roads-east-east.pmtiles"
+manifest = "../../data/us_tiger_va_state_roads_east_east.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 동부 · 버지니아주 133개 카운티 상당 단위 실증"
+
+[[pack]]
 path = "../../artifacts/world-water/oh-state/water.pmtiles"
 manifest = "../../data/us_tiger_oh_state_areawater.toml"
 min_visible_zoom = 10
