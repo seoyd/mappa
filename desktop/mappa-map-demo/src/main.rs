@@ -103,7 +103,7 @@ fn world_detail_file() -> PathBuf {
     std::env::var_os("MAPPA_WORLD_DETAIL_FILE")
         .map(PathBuf::from)
         .unwrap_or_else(|| {
-            Path::new(env!("CARGO_MANIFEST_DIR")).join("../../assets/map/world_50m.pmtiles")
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("../../assets/map/world_10m.pmtiles")
         })
 }
 
@@ -151,11 +151,12 @@ fn viewport_inside(camera: &MapCamera, bounds: [f64; 4]) -> bool {
     else {
         return false;
     };
-    left < right
-        && left >= bounds[0]
-        && right <= bounds[2]
-        && bottom >= bounds[1]
-        && top <= bounds[3]
+    let longitude_inside = if bounds[0] <= -180.0 && bounds[2] >= 180.0 {
+        true
+    } else {
+        left < right && left >= bounds[0] && right <= bounds[2]
+    };
+    longitude_inside && bottom >= bounds[1] && top <= bounds[3]
 }
 
 fn tile_inside(key: TileKey, bounds: [f64; 4]) -> bool {
@@ -479,7 +480,11 @@ impl TileManager {
                 } else if canonical_proof_mode() {
                     self.source.attribution.clone().unwrap_or_default()
                 } else if world_mode() {
-                    "지형: Natural Earth · Mappa 렌더링".to_owned()
+                    if camera.zoom > f64::from(self.mid.max_zoom) {
+                        "개략지도 확대 표시 · 상세 도로/건물 없음".to_owned()
+                    } else {
+                        "지형: Natural Earth · 세계 도로/건물 미완성".to_owned()
+                    }
                 } else if public_roads_mode() {
                     "도로: 나주시 · 지형: Natural Earth".to_owned()
                 } else {
@@ -1837,6 +1842,12 @@ mod tests {
         assert!(viewport_inside(&korea, bounds));
         assert!(!viewport_inside(&world, bounds));
         assert!(!viewport_inside(&outside, bounds));
+        let dateline = MapCamera::new(179.0, 10.0, 6.4, 1200, 720, 1.0).unwrap();
+        assert!(viewport_inside(
+            &dateline,
+            [-180.0, -85.051_128_78, 180.0, 85.051_128_78]
+        ));
+        assert!(!viewport_inside(&dateline, bounds));
     }
 
     #[tokio::test]
@@ -1847,9 +1858,11 @@ mod tests {
             let asia = MapCamera::new(127.5, 37.5, 6.4, 1200, 720, 1.0).unwrap();
             let europe = MapCamera::new(2.35, 48.86, 6.4, 1200, 720, 1.0).unwrap();
             let overview = MapCamera::new(2.35, 48.86, 4.4, 1200, 720, 1.0).unwrap();
+            let dateline = MapCamera::new(179.0, 10.0, 6.4, 1200, 720, 1.0).unwrap();
             assert_eq!(manager.max_zoom_for(&asia), 7);
             assert_eq!(manager.max_zoom_for(&europe), 7);
             assert_eq!(manager.max_zoom_for(&overview), 4);
+            assert_eq!(manager.max_zoom_for(&dateline), 7);
             for (lon, lat, expected) in
                 [(127.5, 37.5, &manager.street), (2.35, 48.86, &manager.mid)]
             {

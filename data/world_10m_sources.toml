@@ -1,0 +1,63 @@
+schema_version = 1
+name = "world-10m-overview"
+min_zoom = 5
+max_zoom = 7
+max_road_rank = 5
+max_place_rank = 6
+
+# All input coordinates are Natural Earth WGS84 GeoJSON at the pinned commit.
+# These are global overview layers, not street-level surveyed geography.
+[[source]]
+file = "ne_10m_land.geojson"
+sha256 = "1ac90796408bc6ad6911d69448485d3c4dbf2190370080368a09976e1c9f7416"
+url = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_10m_land.geojson"
+license = "Natural Earth public domain"
+license_url = "https://www.naturalearthdata.com/about/terms-of-use/"
+commercial_use = true
+modification = true
+redistribution = true
+coverage = "global coastlines within Web Mercator latitude range"
+
+[[source]]
+file = "ne_10m_lakes.geojson"
+sha256 = "2d036f53dedec578001c5c30c2959ee7d4eebc1306900fa4367c49929ec8f2d9"
+url = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_10m_lakes.geojson"
+license = "Natural Earth public domain"
+license_url = "https://www.naturalearthdata.com/about/terms-of-use/"
+commercial_use = true
+modification = true
+redistribution = true
+coverage = "global generalized lakes"
+
+[[source]]
+file = "ne_10m_admin_0_boundary_lines_land.geojson"
+sha256 = "74d9c16229c095fde65943a9919e337682f044bcebccb120764f38edf3b70f4a"
+url = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_10m_admin_0_boundary_lines_land.geojson"
+license = "Natural Earth public domain"
+license_url = "https://www.naturalearthdata.com/about/terms-of-use/"
+commercial_use = true
+modification = true
+redistribution = true
+coverage = "global generalized land borders; de facto viewpoint"
+
+[[source]]
+file = "ne_10m_populated_places.geojson"
+sha256 = "9b8e3de09048ef00dfc70357dbb9fa324493f214b5e0ae4daf1aa79a8d10116b"
+url = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_10m_populated_places.geojson"
+license = "Natural Earth public domain"
+license_url = "https://www.naturalearthdata.com/about/terms-of-use/"
+commercial_use = true
+modification = true
+redistribution = true
+coverage = "selected global cities and towns, not all settlements"
+
+[[source]]
+file = "ne_10m_roads.geojson"
+sha256 = "66a0c7b438e92fd124822cc5921cfa11042f48c294ade5e0f03f2c6640fd0248"
+url = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_10m_roads.geojson"
+license = "Natural Earth public domain"
+license_url = "https://www.naturalearthdata.com/about/terms-of-use/"
+commercial_use = true
+modification = true
+redistribution = true
+coverage = "North America focused; Natural Earth does not claim a global road network"

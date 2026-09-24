@@ -1,50 +1,45 @@
 # Mappa 오프라인 세계지도 — 2026-09-24
 
-## 방향과 원본 구분
+## 현재 판정
 
-기본 실행은 빈 화면 대신 실제 세계 지형을 보여준다. **지도 투영·타일 생성·렌더링·색과 글자 배치는 Mappa의 Rust 구현**이다. 대륙·해안·국경·도시 좌표는 Mappa가 측량한 것이 아니라 [Natural Earth의 퍼블릭 도메인 지도 데이터](https://www.naturalearthdata.com/about/terms-of-use/)다. 상용 지도의 화면이나 데이터베이스를 복제하지 않는다. Natural Earth의 공식 설명에 따르면 이 데이터는 수정과 상업적 사용이 허용된다. 위치 정확성과 최신성은 그 원본의 범위에 따른다.
+**세계 개략 지도는 표시된다. 전 세계 상세 지도는 완성되지 않았다.** 기본 화면은 Mappa의 Rust 타일 빌더·PMTiles 리더·Metal 렌더러가 로컬 파일만 읽는다. 해안·국경·도시·일부 주요 도로의 좌표 원본은 [Natural Earth 퍼블릭 도메인 자료](https://www.naturalearthdata.com/about/terms-of-use/)다. Mappa가 전 세계를 직접 측량했거나 독자적 원본 지형을 확보했다는 뜻은 아니다. 지도 서버와 유료 지도 API는 런타임에서 사용하지 않는다.
 
-지도 조회는 로컬 PMTiles 파일만 사용하며 지도 타일 서버나 외부 지도 API를 호출하지 않는다. 이것은 **운영 중 지도 타일 전송 비용이 없다는 뜻**이다. 지형 원본을 독점 소유한다는 뜻은 아니다.
+## 실제로 보이는 범위
 
-## 현재 화면 단계
-
-| 확대 단계 | 세계 범위 | 보이는 내용 | 실제 원본 수준 |
+| 화면 타일 단계 | 적용 지역 | 원본과 표시 내용 | 한계 |
 |---|---|---|---|
-| z0–z4 | 전 세계 | 대륙·호수·국경·나라 이름 | Natural Earth 1:110m |
-| z5–z7 | 전 세계 | 더 자세한 해안·호수·국경, z6부터 주요 도시 | Natural Earth 1:50m |
-| z5–z7 | 동아시아 한정 | 더 자세한 해안·호수·국경·주요 도로·도시 | 기존 Natural Earth 1:10m 시안 |
+| z0–z4 | Web Mercator 세계 범위 | Natural Earth 1:110m 대륙·호수·국경·나라 이름 | 축소 지도 |
+| z5–z7 | Web Mercator 세계 범위 | Natural Earth 1:10m 해안·호수·국경, z6부터 선별된 도시·주요 도로 | 1:10m은 **축척 1:1,000만**이며 10m 위치 정확도가 아님 |
+| z5–z7 | 동아시아 일부 | 기존 1:10m 지역 아카이브 우선 선택 | 같은 종류의 개략 원본이며 별도 정밀 측량이 아님 |
+| z8 이상 | 전 세계 | z7 데이터를 확대 | 새 상세 객체가 추가되지 않음 |
 
-동아시아 상세 영역에 완전히 들어가는 타일은 1:10m 파일을, 다른 세계 지역은 1:50m 파일을 읽는다. z7 이후 화면 확대는 가능하지만 새로운 도로·건물·역 정보가 생기지는 않는다. 화면의 m/px는 표시 축척이며 지리 위치 오차가 아니다. 전 세계 도로·주소·길찾기·건물 수준의 지도로 검증된 상태는 아니다.
+Web Mercator 표현 범위는 극점 밖 위도 약 ±85.05°까지다. z5–z7의 도로는 원본에 들어 있는 선별된 선만 그린다. [Natural Earth의 도로 설명](https://www.naturalearthdata.com/downloads/10m-cultural-vectors/roads/)도 기본 도로의 북미 중심 범위와 전 세계 확장 필요성을 명시한다. 파리·라고스·부에노스아이레스·시드니 캡처에는 실제 원본에 수록된 도로선이 보였으나, 이 사례로 모든 나라의 도로가 완전하다고 판단하지 않는다. 건물·역·공공기관·주소·길찾기·현재 도로 연결성은 전 세계 지도에 없다.
 
-## 확인된 진행 상황
+## 이번 확장과 검증
 
-| 항목 | 실제 결과 |
+기존 기본 세계 상세 파일은 1:50m(`world_50m.pmtiles`)이었다. 고정된 같은 Natural Earth 커밋의 1:10m 원본 5개를 받아 해시를 확인하고 전 세계 z5–z7 아카이브 `world_10m.pmtiles`를 새로 생성했다. Rust 빌더에는 공간 인덱스를 넣어 각 타일과 겹치는 형상만 검사한다. 지형 좌표를 그럴듯하게 하드코딩하거나 보간해서 새 도로를 만들지 않았다.
+
+| 검증 항목 | 관측 결과 |
 |---|---|
-| 전 세계 중간 상세 빌드 | z5–z7, 타일 10,690개, 인코딩된 피처 23,518개, `world_50m.pmtiles` 1,608,226바이트 |
-| 전 타일 감사 | 비어 있지 않은 타일 10,690개 전부 해독, 오류 0개. 지형 16,634개, 수면 1,913개, 국경 2,964개, 장소 2,256개 (타일별 중복 포함) |
-| 화면 검증 | 세계 z1.3, 유럽 z6.4, 한국 z6.4 Metal 캡처 모두 타일 오류 0개 |
-| 데이터 선택 | 유럽·동아시아 z6.4에서 상세 최대 z7 선택 확인. 동아시아 타일은 기존 1:10m, 유럽 타일은 1:50m 파일 선택을 자동 테스트로 확인 |
-| 직접 측량 | 현장 기록 0건. [직접 기록 전용 모드](FIRST_PARTY_MAP.md)와 세계지도 합성은 아직 구현하지 않음 |
+| 빌드 원천 | 해안/육지·호수·육상 국경·도시·도로 5개; [`world_10m_sources.toml`](../data/world_10m_sources.toml)에 URL·SHA-256·권리·범위 고정 |
+| 산출물 | 11,021개 비어 있지 않은 타일, 타일별 중복 포함 피처 116,946개, 6,121,010바이트, SHA-256 `edc42302346aa360cc16b2eb5cf54c11fa7db8c7d927b2911e44e147f7ee78ca` |
+| 전체 타일 감사 | 11,021개 모두 디코드, 오류 0; 비어 있는 해양 타일 10,483개. 타일별 중복 포함 육지 34,802, 호수 5,649, 국경 25,762, 주요 도로 46,385, 장소 4,890 |
+| 화면 | 동일 파리 z6.4에서 기존 50m [이전 화면](../artifacts/world-10m/europe-50m-before.png)과 [10m 화면](../artifacts/world-10m/europe-10m.png) 캡처, 두 화면 모두 타일 오류 0. 10m은 해안선·주요 도로·도시가 더 보임 |
+| 대륙별 표시 | [서아프리카](../artifacts/world-10m/africa-10m.png), [남미](../artifacts/world-10m/south-america-10m.png), [호주](../artifacts/world-10m/australia-10m.png) Mac Metal 캡처에서 타일 오류 0 |
+| 날짜변경선 | [피지 z7.4](../artifacts/world-10m/fiji-dateline-10m.png) 캡처가 실제 z7 세계 타일을 선택, 오류 0. 경도 래핑 때문에 z4로 후퇴하던 선택 조건을 수정 |
 
-비교 화면: [세계](../artifacts/world-map/world.png), [유럽](../artifacts/world-map/europe.png), [동아시아](../artifacts/world-map/east-asia.png).
+이 감사는 파일 해독과 표시 확인이다. 실제 현장 정확도, 도로 완전성, 국가별 건물 커버리지의 독립 검증은 아니다. 원본 도로가 없는 지역을 새 선으로 채우지 않는다. 기존 50m 파일은 비교·회귀용으로 보관하고 기본 상세 선택만 10m으로 바꿨다.
 
-## 재생성·출처
+Mac Metal 1200×720, 파리 중심 z6.4의 같은 비동기 팬 40프레임을 파일별로 3회 실행했다. 실행별 중앙값의 중앙값은 기존 50m **2.442ms**, 새 10m **3.508ms**였다. 초기 로딩의 3회 중앙값은 각각 **36.472ms**, **45.271ms**였다. 각 실행에서 미해결 화면 타일 0, 실패 0이었다. 더 많은 형상을 그리는 비용이 관측되며, 이 단일 Mac·카메라 측정으로 iPhone 프레임 성능을 추정하지 않는다.
 
-1:50m의 네 GeoJSON은 기존 1:110m·1:10m 원본과 같은 [`nvkelso/natural-earth-vector` 고정 커밋 `ca96624a56bd078437bca8184e78163e5039ad19`](https://github.com/nvkelso/natural-earth-vector/tree/ca96624a56bd078437bca8184e78163e5039ad19/geojson)에서 받았다.
+## 재생성
 
-| 입력 파일 (`assets/map/source/50m/`) | SHA-256 |
-|---|---|
-| `ne_50m_land.geojson` | `e874b27a51d146452be360cafb3cc50c86001074a67d534113e6534682f9826b` |
-| `ne_50m_lakes.geojson` | `d350b75978b26fe839b797c2c529b2fb8f47fb3983c03f4964e36d5df9378a52` |
-| `ne_50m_admin_0_boundary_lines_land.geojson` | `2faac4f6b34386f3d21b6e018cf151f241f00e5c936d44dd17d7d9bfb147fa48` |
-| `ne_50m_populated_places.geojson` | `da4662b7bbfeb897d02f228c5839131dce27acff5717630f91ccff4f67828ee7` |
-
-출력 `assets/map/world_50m.pmtiles` SHA-256: `e51f203900abfaa60a63e66f3de74c41c1759757d44c0419c3df4af60f5a9892`. 기존 1:110m·동아시아 1:10m 파일의 원본·해시는 [MAP_DATA.md](MAP_DATA.md)에 있다. 재빌드는 데모가 파일을 열고 있지 않을 때 실행한다.
+입력은 [`nvkelso/natural-earth-vector` 고정 커밋 `ca96624a56bd078437bca8184e78163e5039ad19`](https://github.com/nvkelso/natural-earth-vector/tree/ca96624a56bd078437bca8184e78163e5039ad19/geojson)의 GeoJSON이다. `data/world_10m_sources.toml`의 URL로 파일 5개를 한 디렉터리에 받아 둔다. 소스 확인과 타일 빌드는 Rust CLI가 수행한다. 검증된 입력 이외의 파일은 해시 오류로 거절된다.
 
 ```bash
-cargo run -p mappa-map-data --bin build_world_50m
-cargo run -p mappa-map-data --bin audit_fixture -- assets/map/world_50m.pmtiles
-cargo run -p mappa-map-demo
+cargo run --release --offline -p mappa-map-data --bin build_world_10m -- \
+  data/world_10m_sources.toml /path/to/10m-geojson assets/map/world_10m.pmtiles
+cargo run --release --offline -p mappa-map-data --bin audit_fixture -- assets/map/world_10m.pmtiles
 ```
 
-다음 범위는 단순 타일 확장이 아니라 실제 데이터 요건으로 판단한다. 전 세계 도로·역·기관을 보이려면 해당 범위의 실제 위치 원본과 이용 조건, 연결성·최신성 검증이 필요하다. 직접 측량만으로 채울 구역은 관측 범위를 명시하고 세계 개략 지형 위에 별도 출처 레이어로 합성하는 작업이 남아 있다.
+이 원본 파일들은 제품 런타임에 필요하지 않으며 Git 저장소에는 빌드 산출물과 출처 기록만 둔다. 1:10m 지형은 Mappa 전 세계 canonical GeoDB로 아직 편입되지 않았다. [나주 지역 canonical 실증의 S16 결과](MAP_V0_3C_GATE_AUDIT.md)도 여전히 `NO_GO_SOURCE_COVERAGE`다. 이후 국가별 승인 원천·건물·도로 연결성·독립 기준점을 확보하고, 구축 완료 구역과 빈 구역을 별도로 표시해야 한다.

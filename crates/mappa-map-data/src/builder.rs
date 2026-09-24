@@ -8,6 +8,7 @@ use geojson::GeoJson;
 use mappa_map_core::{TileKey, WorldPoint, project, unproject};
 use mvt::{GeomEncoder, GeomType, Tile};
 use pmtiles::{PmTilesWriter, TileCoord, TileType};
+use rstar::{AABB, RTree, RTreeObject};
 use std::{collections::HashMap, fs::File, path::Path, str::FromStr};
 
 use crate::PlaceKind;
@@ -16,6 +17,54 @@ type DynError = Box<dyn std::error::Error + Send + Sync>;
 
 pub mod canonical_tiles;
 pub mod first_party;
+
+#[cfg(test)]
+mod spatial_tests {
+    use super::*;
+
+    #[test]
+    fn indexed_queries_match_linear_over_world_tiles() {
+        let source = std::env::var_os("MAPPA_SPATIAL_TEST_SOURCE")
+            .map(std::path::PathBuf::from)
+            .unwrap_or_else(|| {
+                Path::new(env!("CARGO_MANIFEST_DIR"))
+                    .join("../../assets/map/source/50m/ne_50m_admin_0_boundary_lines_land.geojson")
+            });
+        let geometries = read_geometries(&source).unwrap();
+        let indexed = SpatialGeometries::new(geometries);
+        for y in 0..32 {
+            for x in 0..32 {
+                let rect = Rect::new(
+                    Coord {
+                        x: x as f64 / 32.0,
+                        y: y as f64 / 32.0,
+                    },
+                    Coord {
+                        x: (x + 1) as f64 / 32.0,
+                        y: (y + 1) as f64 / 32.0,
+                    },
+                );
+                let expected: Vec<_> = indexed
+                    .geometries
+                    .iter()
+                    .filter(|geometry| {
+                        geometry
+                            .bounding_rect()
+                            .is_some_and(|bounds| overlaps(bounds, rect))
+                    })
+                    .collect();
+                let actual = indexed.query(rect);
+                assert_eq!(expected.len(), actual.len(), "tile {x},{y}");
+                assert!(
+                    expected
+                        .into_iter()
+                        .zip(actual)
+                        .all(|(left, right)| std::ptr::eq(left, right))
+                );
+            }
+        }
+    }
+}
 
 fn read_geometries(path: &Path) -> Result<Vec<Geometry<f64>>, DynError> {
     let source = std::fs::read_to_string(path)?;
@@ -357,6 +406,102 @@ struct PlaceSource {
     kind: PlaceKind,
 }
 
+#[derive(Clone, Copy)]
+struct SpatialEntry {
+    index: usize,
+    envelope: AABB<[f64; 2]>,
+}
+
+impl RTreeObject for SpatialEntry {
+    type Envelope = AABB<[f64; 2]>;
+
+    fn envelope(&self) -> Self::Envelope {
+        self.envelope
+    }
+}
+
+struct SpatialGeometries {
+    geometries: Vec<Geometry<f64>>,
+    index: RTree<SpatialEntry>,
+}
+
+struct SpatialPlaces {
+    places: Vec<PlaceSource>,
+    index: RTree<SpatialEntry>,
+}
+
+impl SpatialPlaces {
+    fn new(places: Vec<PlaceSource>) -> Self {
+        let entries = places
+            .iter()
+            .enumerate()
+            .map(|(index, place)| SpatialEntry {
+                index,
+                envelope: AABB::from_point([place.point.x, place.point.y]),
+            })
+            .collect();
+        Self {
+            places,
+            index: RTree::bulk_load(entries),
+        }
+    }
+
+    fn query(&self, bounds: Rect<f64>) -> Vec<&PlaceSource> {
+        let envelope = AABB::from_corners(
+            [bounds.min().x, bounds.min().y],
+            [bounds.max().x, bounds.max().y],
+        );
+        let mut entries: Vec<_> = self
+            .index
+            .locate_in_envelope_intersecting(&envelope)
+            .collect();
+        entries.sort_unstable_by_key(|entry| entry.index);
+        entries
+            .into_iter()
+            .map(|entry| &self.places[entry.index])
+            .collect()
+    }
+}
+
+impl SpatialGeometries {
+    fn new(geometries: Vec<Geometry<f64>>) -> Self {
+        let entries = geometries
+            .iter()
+            .enumerate()
+            .filter_map(|(index, geometry)| {
+                let bounds = geometry.bounding_rect()?;
+                Some(SpatialEntry {
+                    index,
+                    envelope: AABB::from_corners(
+                        [bounds.min().x, bounds.min().y],
+                        [bounds.max().x, bounds.max().y],
+                    ),
+                })
+            })
+            .collect();
+        Self {
+            geometries,
+            index: RTree::bulk_load(entries),
+        }
+    }
+
+    fn query(&self, bounds: Rect<f64>) -> Vec<&Geometry<f64>> {
+        let envelope = AABB::from_corners(
+            [bounds.min().x, bounds.min().y],
+            [bounds.max().x, bounds.max().y],
+        );
+        let mut entries: Vec<_> = self
+            .index
+            .locate_in_envelope_intersecting(&envelope)
+            .collect();
+        entries.sort_unstable_by_key(|entry| entry.index);
+        entries
+            .into_iter()
+            .map(|entry| &self.geometries[entry.index])
+            .collect()
+    }
+}
+
 fn clip_to_region(geoms: Vec<Geometry<f64>>, region: Rect<f64>) -> Vec<Geometry<f64>> {
     let clip = region.to_polygon();
     let mut out = Vec::new();
@@ -555,29 +700,29 @@ pub fn build_detail_fixture(
             y: max_lat,
         },
     );
-    let land = clip_to_region(
+    let land = SpatialGeometries::new(clip_to_region(
         read_geometries(&source_dir.join("ne_10m_land.geojson"))?,
         region,
-    );
-    let water = clip_to_region(
+    ));
+    let water = SpatialGeometries::new(clip_to_region(
         read_geometries(&source_dir.join("ne_10m_lakes.geojson"))?,
         region,
-    );
-    let boundary = read_regional_lines(
+    ));
+    let boundary = SpatialGeometries::new(read_regional_lines(
         &source_dir.join("ne_10m_admin_0_boundary_lines_land.geojson"),
         region_lonlat,
         None,
-    )?;
-    let road = read_regional_lines(
+    )?);
+    let road = SpatialGeometries::new(read_regional_lines(
         &source_dir.join("ne_10m_roads.geojson"),
         region_lonlat,
         Some(max_road_rank),
-    )?;
-    let places = read_regional_places(
+    )?);
+    let places = SpatialPlaces::new(read_regional_places(
         &source_dir.join("ne_10m_populated_places.geojson"),
         region_lonlat,
         max_place_rank,
-    )?;
+    )?);
     let metadata = format!(
         "{{\"vector_layers\":[{{\"id\":\"land\",\"fields\":{{}},\"minzoom\":{min_zoom},\"maxzoom\":{max_zoom}}},{{\"id\":\"water\",\"fields\":{{}},\"minzoom\":{min_zoom},\"maxzoom\":{max_zoom}}},{{\"id\":\"boundary\",\"fields\":{{}},\"minzoom\":{min_zoom},\"maxzoom\":{max_zoom}}},{{\"id\":\"road\",\"fields\":{{}},\"minzoom\":{},\"maxzoom\":{max_zoom}}},{{\"id\":\"place\",\"fields\":{{\"name\":\"String\",\"rank\":\"Number\"}},\"minzoom\":{},\"maxzoom\":{max_zoom}}}]}}",
         min_zoom + 1,
@@ -611,12 +756,12 @@ pub fn build_detail_fixture(
                     },
                 );
                 let mut tile = Tile::new(4096);
-                let mut count = add_polygons(&mut tile, "land", &land, rect, key)?
-                    + add_polygons(&mut tile, "water", &water, rect, key)?
-                    + add_lines(&mut tile, "boundary", &boundary, rect, key)?;
+                let mut count = add_polygons(&mut tile, "land", land.query(rect), rect, key)?
+                    + add_polygons(&mut tile, "water", water.query(rect), rect, key)?
+                    + add_lines(&mut tile, "boundary", boundary.query(rect), rect, key)?;
                 if z > min_zoom {
-                    count += add_lines(&mut tile, "road", &road, rect, key)?;
-                    count += add_places(&mut tile, &places, rect, key)?;
+                    count += add_lines(&mut tile, "road", road.query(rect), rect, key)?;
+                    count += add_places(&mut tile, places.query(rect), rect, key)?;
                 }
                 if count > 0 {
                     writer.add_tile(TileCoord::new(z, x, y)?, &tile.to_bytes()?)?;

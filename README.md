@@ -2,7 +2,7 @@
 
 ## 자체 GeoDB 지역 실증 (v0.3C)
 
-나주 10km 안팎의 도로 중심선·도로면과 공식 SGIS 읍면동 지명 14개를 [출처·라이선스 manifest](data/sources.toml) → Rust 어댑터 → MappaGeoDB → 자체 z10–z15 PMTiles → 기존 Rust 렌더러로 연결했다. 이 경로는 OSM/Natural Earth를 읽지 않고 운영 중 지도 API 비용이 없다. **현재 도로와 읍면동 이름만 있는 PARTIAL 시안**이다. 건물·수면·역·공공기관과 독립 도로 좌표 검증이 없어 실제 위치까지 완성된 자체 세계지도라고 판단하지 않는다. [방향](docs/MAP_PHILOSOPHY.md), [원천](docs/MAP_SOURCES.md), [품질 판정](docs/MAP_FIDELITY_V0_3C.md), [측정](docs/BENCHMARK_MAP_V0_3C.md)을 함께 확인한다.
+나주 10km 안팎의 도로 중심선·도로면, 공식 SGIS 읍면동 지명 14개, ESA의 2021 영구수면·수목 피복을 [출처·라이선스 manifest](data/sources.toml) → Rust 어댑터 → MappaGeoDB → 자체 z10–z15 PMTiles → 기존 Rust 렌더러로 연결했다. 이 경로는 OSM/Natural Earth를 읽지 않고 운영 중 지도 API 비용이 없다. **지역 실증은 PARTIAL이며 S16은 NO_GO**다. 건물·철도·법정 공원 경계와 독립 위치 정확도 검증이 없어 자체 세계 상세지도가 완성됐다고 판단하지 않는다. [방향](docs/MAP_PHILOSOPHY.md), [원천](docs/MAP_SOURCES.md), [품질 판정](docs/MAP_V0_3C_GATE_AUDIT.md), [측정](docs/BENCHMARK_MAP_V0_3C.md)을 함께 확인한다.
 
 [나주 도로와 송월동 지명 시안](artifacts/map-v0.3c/naju-district-z14.png)
 
@@ -16,12 +16,12 @@ MAPPA_DATASET=canonical-proof cargo run -p mappa-map-demo -- --street-demo 126.7
 
 ## 세계지도 (기본 모드)
 
-기본 지도는 Mappa의 Rust 타일 생성기·렌더러가 로컬 파일을 직접 읽어 그린다. 세계 z0–z4, 전 세계 z5–z7, 동아시아 z5–z7의 세 단계를 쓴다. 지형·국경·도시의 원본은 [퍼블릭 도메인 Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/)이고, 외부 지도 서버/API는 호출하지 않는다. 상세 단계와 실제 검증 결과는 [세계지도 보고서](docs/WORLD_MAP.md)에 있다.
+기본 지도는 Mappa의 Rust 타일 생성기·렌더러가 로컬 파일을 직접 읽어 그린다. 세계 z0–z4는 Natural Earth 1:110m, 전 세계 z5–z7은 새 1:10m 개략 원본, 동아시아 일부는 기존 1:10m 지역 아카이브를 쓴다. 지형·국경·도시·일부 주요 도로의 원본은 [퍼블릭 도메인 Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/)이고, 외부 지도 서버/API는 호출하지 않는다. 전 세계 건물·역·정밀 도로망은 없다. 상세 단계와 실제 검증 결과는 [세계지도 보고서](docs/WORLD_MAP.md)에 있다.
 
 ```bash
 cargo run -p mappa-map-demo
 cargo run -p mappa-map-demo -- --capture 0 15 1.3 artifacts/world-map/world.png
-cargo run -p mappa-map-data --bin build_world_50m
+cargo run -p mappa-map-data --bin audit_fixture -- assets/map/world_10m.pmtiles
 ```
 
 ## 직접 기록만 보는 모드
