@@ -230,17 +230,54 @@ struct RegionalEntry {
     path: PathBuf,
     manifest: PathBuf,
     min_visible_zoom: u8,
+    archive_min_zoom: u8,
+    archive_max_zoom: u8,
     label: String,
 }
 
 #[derive(Clone)]
 struct RegionalPack {
-    source: Arc<LocalPmTiles>,
+    path: PathBuf,
+    bounds: [f64; 4],
+    archive_min_zoom: u8,
+    archive_max_zoom: u8,
+    required_credits: Vec<String>,
+    source: Arc<tokio::sync::OnceCell<Arc<LocalPmTiles>>>,
     min_visible_zoom: u8,
     label: String,
 }
 
-async fn open_regional_packs() -> Result<Vec<RegionalPack>, DynError> {
+impl RegionalPack {
+    async fn source(&self) -> Result<&Arc<LocalPmTiles>, DynError> {
+        self.source
+            .get_or_try_init(|| async {
+                let source = Arc::new(LocalPmTiles::open(&self.path).await?);
+                if source.min_zoom != self.archive_min_zoom
+                    || source.max_zoom != self.archive_max_zoom
+                    || source
+                        .bounds
+                        .iter()
+                        .zip(self.bounds)
+                        .any(|(actual, expected)| (actual - expected).abs() > 1e-6)
+                    || source.attribution.as_deref().is_none_or(|credit| {
+                        self.required_credits
+                            .iter()
+                            .any(|term| !credit.contains(term))
+                    })
+                {
+                    return Err(format!(
+                        "regional pack header or credit differs from manifest: {}",
+                        self.path.display()
+                    )
+                    .into());
+                }
+                Ok::<Arc<LocalPmTiles>, DynError>(source)
+            })
+            .await
+    }
+}
+
+fn open_regional_packs() -> Result<Vec<RegionalPack>, DynError> {
     let catalog_path = std::env::var_os("MAPPA_REGIONAL_CATALOG")
         .map(PathBuf::from)
         .unwrap_or_else(|| {
@@ -261,48 +298,29 @@ async fn open_regional_packs() -> Result<Vec<RegionalPack>, DynError> {
             return Err(format!("duplicate regional pack: {}", entry.path.display()).into());
         }
         let manifest = SourceManifest::open(&parent.join(&entry.manifest))?;
-        let source = Arc::new(LocalPmTiles::open(archive_path).await?);
-        if source.attribution.is_none()
-            || source.min_zoom < 10
-            || source.max_zoom > 15
-            || source.max_zoom < source.min_zoom
-            || entry.min_visible_zoom < source.min_zoom
-            || entry.min_visible_zoom > source.max_zoom
+        if entry.archive_min_zoom < 10
+            || entry.archive_max_zoom > 15
+            || entry.archive_max_zoom < entry.archive_min_zoom
+            || entry.min_visible_zoom < entry.archive_min_zoom
+            || entry.min_visible_zoom > entry.archive_max_zoom
         {
-            return Err(format!(
-                "regional pack has invalid attribution or zoom: {}",
-                entry.path.display()
-            )
-            .into());
+            return Err(format!("regional pack has invalid zoom: {}", entry.path.display()).into());
         }
-        if source
-            .bounds
+        let required_credits = manifest
+            .source
             .iter()
-            .zip(manifest.proof_bbox_wgs84)
-            .any(|(actual, expected)| (actual - expected).abs() > 1e-6)
-        {
-            return Err(format!(
-                "regional pack bounds differ from manifest: {}",
-                entry.path.display()
-            )
-            .into());
-        }
-        let credit = source.attribution.as_deref().unwrap_or_default();
-        if manifest.source.iter().any(|record| {
-            !credit.contains(&record.provider)
-                || record
-                    .attribution_text
-                    .as_deref()
-                    .is_some_and(|text| !credit.contains(text))
-        }) {
-            return Err(format!(
-                "regional pack attribution differs from manifest: {}",
-                entry.path.display()
-            )
-            .into());
-        }
+            .flat_map(|record| {
+                std::iter::once(record.provider.clone())
+                    .chain(record.attribution_text.iter().cloned())
+            })
+            .collect();
         packs.push(RegionalPack {
-            source,
+            path: archive_path,
+            bounds: manifest.proof_bbox_wgs84,
+            archive_min_zoom: entry.archive_min_zoom,
+            archive_max_zoom: entry.archive_max_zoom,
+            required_credits,
+            source: Arc::new(tokio::sync::OnceCell::new()),
             min_visible_zoom: entry.min_visible_zoom,
             label: entry.label,
         });
@@ -339,21 +357,24 @@ async fn read_decoded_tile(
     regional: &[RegionalPack],
 ) -> Result<DecodedLoad, DynError> {
     let regional_zoom = regional.iter().map(|pack| pack.min_visible_zoom).min();
-    let candidates: Vec<_> = if regional_zoom.is_some_and(|z| key.z >= z) {
-        regional
-            .iter()
-            .filter(|pack| {
-                key.z >= pack.min_visible_zoom
-                    && key.z <= pack.source.max_zoom
-                    && tile_intersects(key, pack.source.bounds)
-            })
-            .map(|pack| &pack.source)
-            .collect()
+    let mut opening_ms = 0.0;
+    let candidates: Vec<Arc<LocalPmTiles>> = if regional_zoom.is_some_and(|z| key.z >= z) {
+        let mut selected = Vec::new();
+        for pack in regional.iter().filter(|pack| {
+            key.z >= pack.min_visible_zoom
+                && key.z <= pack.archive_max_zoom
+                && tile_intersects(key, pack.bounds)
+        }) {
+            let start = Instant::now();
+            selected.push(Arc::clone(pack.source().await?));
+            opening_ms += start.elapsed().as_secs_f64() * 1000.0;
+        }
+        selected
     } else {
-        vec![source_for_key(key, sources)]
+        vec![Arc::clone(source_for_key(key, sources))]
     };
     let mut tile = None;
-    let mut lookup_ms = 0.0;
+    let mut lookup_ms = opening_ms;
     let mut decode_ms = 0.0;
     for source in candidates {
         let start = Instant::now();
@@ -513,7 +534,7 @@ impl TileManager {
         if world_mode() {
             let source = Arc::new(LocalPmTiles::open(map_file()).await?);
             let detail = Arc::new(LocalPmTiles::open(world_detail_file()).await?);
-            let regional = open_regional_packs().await?;
+            let regional = open_regional_packs()?;
             return Ok(Self {
                 source,
                 detail: detail.clone(),
@@ -550,9 +571,9 @@ impl TileManager {
                 .iter()
                 .filter(|pack| {
                     camera.zoom >= f64::from(pack.min_visible_zoom)
-                        && camera_center_inside(camera, pack.source.bounds)
+                        && camera_center_inside(camera, pack.bounds)
                 })
-                .map(|pack| pack.source.max_zoom)
+                .map(|pack| pack.archive_max_zoom)
                 .max()
             {
                 return max_zoom;
@@ -561,7 +582,7 @@ impl TileManager {
                 if self
                     .regional
                     .iter()
-                    .any(|pack| camera_center_inside(camera, pack.source.bounds))
+                    .any(|pack| camera_center_inside(camera, pack.bounds))
                 {
                     return self.detail.max_zoom;
                 }
@@ -712,7 +733,7 @@ impl TileManager {
                             .iter()
                             .filter(|pack| {
                                 camera.zoom >= f64::from(pack.min_visible_zoom)
-                                    && camera_center_inside(camera, pack.source.bounds)
+                                    && camera_center_inside(camera, pack.bounds)
                             })
                             .map(|pack| pack.label.as_str())
                             .collect();
@@ -2257,8 +2278,15 @@ mod tests {
         }
         let manager = TileManager::open().await.unwrap();
         assert_eq!(manager.regional.len(), 2);
+        assert!(
+            manager
+                .regional
+                .iter()
+                .all(|pack| pack.source.get().is_none())
+        );
         for pack in &manager.regional {
-            let [lon, lat] = pack.source.center;
+            let [west, south, east, north] = pack.bounds;
+            let (lon, lat) = ((west + east) / 2.0, (south + north) / 2.0);
             let before = MapCamera::new(
                 lon,
                 lat,
@@ -2271,12 +2299,12 @@ mod tests {
             let at =
                 MapCamera::new(lon, lat, f64::from(pack.min_visible_zoom), 1200, 720, 1.0).unwrap();
             assert_eq!(manager.max_zoom_for(&before), manager.detail.max_zoom);
-            assert_eq!(manager.max_zoom_for(&at), pack.source.max_zoom);
+            assert_eq!(manager.max_zoom_for(&at), pack.archive_max_zoom);
         }
         let mut buildings = 0;
         let mut roads = 0;
         for pack in &manager.regional {
-            let bounds = pack.source.bounds;
+            let bounds = pack.bounds;
             let northwest = project(bounds[0], bounds[3]).unwrap();
             let southeast = project(bounds[2], bounds[1]).unwrap();
             let n = 1u32 << 14;

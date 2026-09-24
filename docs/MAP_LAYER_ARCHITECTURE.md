@@ -33,7 +33,7 @@ flowchart LR
 
 `MAPPA_DATASET=canonical-proof`에서는 위 세계 파일을 열지 않고 나주 `artifacts/map-v0.3c/naju-roads.pmtiles`만 연다. 이 파일은 z10–z15 자료이고 이후 확대는 z15 오버줌이다. `legacy-osm`과 `public-naju`는 과거 비교 모드이며 기본 세계 모드가 아니다. 화면의 `m/px`는 카메라 중심 위도와 현재 화면 배율에서 계산한 **표시 축척**이다. 지리 위치 오차나 원본 해상도를 뜻하지 않는다.
 
-기존 `east_asia_10m.pmtiles`는 비교용 파일로 남지만 기본 세계 모드가 열지 않는다. 세계 10m 아카이브가 동아시아에도 적용된다. [지역 패키지 목록](../assets/map/regional_packs.toml)에 추가한 파일은 시작할 때 canonical manifest의 권리 게이트를 통과해야 한다. 현재 목록은 2개 실증 파일이며, 목록 크기에 따라 시작 시간과 조회 시간이 증가하므로 전 세계 규모의 샤딩·지연 열기·공간 인덱스는 후속 작업이다.
+기존 `east_asia_10m.pmtiles`는 비교용 파일로 남지만 기본 세계 모드가 열지 않는다. 세계 10m 아카이브가 동아시아에도 적용된다. [지역 패키지 목록](../assets/map/regional_packs.toml)에 추가한 파일은 시작할 때 canonical manifest의 권리 게이트를 통과해야 한다. PMTiles는 필요한 지역의 첫 타일 요청 때 열어 헤더와 출처를 확인한다. 현재 목록은 2개 실증 파일이며, 전 세계 규모의 샤딩·공간 인덱스·열린 파일 수 제한은 후속 작업이다.
 
 ## 3. 타일 안의 데이터 레이어와 그리는 순서
 

@@ -1,14 +1,19 @@
 # Local, source-audited samples. The archive headers supply geographic bounds and zooms.
-# min_visible_zoom is the first zoom with observed features, not positional accuracy.
+# Zoom fields are audited package metadata. min_visible_zoom is the first zoom
+# with observed features, not positional accuracy. Archives open on first use.
 # Adding a pack here does not certify its coverage or positional accuracy.
 [[pack]]
 path = "../../artifacts/world-buildings/monaco.pmtiles"
 manifest = "../../data/ms_monaco_buildings.toml"
 min_visible_zoom = 14
+archive_min_zoom = 10
+archive_max_zoom = 15
 label = "Microsoft 건물 · 모나코 실증"
 
 [[pack]]
 path = "../../artifacts/world-roads/nyc-five-boroughs.pmtiles"
 manifest = "../../data/us_tiger_nyc_roads.toml"
 min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
 label = "US Census 도로 · 뉴욕시 5개 카운티 실증"
