@@ -136,3 +136,11 @@ G25의 `BLOCKED_ACCOUNT_DEVICE_LIMIT`는 그대로 유지한다. 지도 의존 �
 | W5 실기기 | iPhone 지도 프레임·GPS 조사 미측정 | 기존 계정 기기 등록 제한 유지 | BLOCKED_ACCOUNT_DEVICE_LIMIT |
 
 원본·화면·한계의 상세 기록은 [WORLD_MAP.md](WORLD_MAP.md). 이 노드들은 기존 M11/G25 상태를 변경하지 않는다.
+
+## 지도 패키징 형식 실험 (2026-09-24)
+
+| Node | 확인된 출력 | 검증 | 상태 |
+|---|---|---|---|
+| X0 MSP 형식 실험 | 나주 GeoDB 11,006개 → 1,112,776 B MSP, mmap·셀 질의·Metal 캡처 | 143,704 좌표 최대 정수화 오차 0.007117m; 재빌드 SHA 일치; PMTiles 대비 1.499배 | PARTIAL_SIZE_NO_GO |
+
+[실험 기록](MAP_SPATIAL_PACK_EXPERIMENT.md)에 구현 범위·화면·대체 보류 이유를 기록했다.

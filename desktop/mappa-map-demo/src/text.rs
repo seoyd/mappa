@@ -20,7 +20,7 @@ pub fn run() -> Result<(), DynError> {
         &mut renderer,
         &camera,
         &visible,
-        0,
+        super::map_style(0),
         path,
         |view, renderer| {
             let mut fonts = FontSystem::new();

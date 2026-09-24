@@ -3315,6 +3315,7 @@ dependencies = [
  "geo",
  "geojson",
  "mappa-map-core",
+ "memmap2",
  "mlt-core",
  "mvt",
  "mvt-reader",

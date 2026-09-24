@@ -8,6 +8,7 @@ use thiserror::Error;
 
 pub mod builder;
 pub mod canonical;
+pub mod spatial_pack;
 
 pub const EXTENT: f32 = 4096.0;
 pub const MAX_TILE_BYTES: usize = 4 * 1024 * 1024;

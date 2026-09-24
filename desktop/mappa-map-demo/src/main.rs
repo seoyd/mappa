@@ -1,6 +1,7 @@
 use mappa_map_core::{MapCamera, TileKey, VisibleTile, WorldPoint, project, unproject};
 use mappa_map_data::{
-    CountryLabel, DecodedTile, LocalPmTiles, PlaceKind, TileSource, decode_mvt, load_country_labels,
+    CountryLabel, DecodedTile, LocalPmTiles, PlaceKind, TileSource, canonical::BBox, decode_mvt,
+    load_country_labels, spatial_pack::SpatialPack,
 };
 use mappa_map_render::{MapRenderer, MapStyle, PreparedTile, STYLES, prepare};
 use std::{
@@ -866,14 +867,21 @@ fn screenshot(
     style_idx: usize,
     path: &Path,
 ) -> Result<(), DynError> {
-    screenshot_inner(renderer, camera, visible, style_idx, path, |_, _| Ok(()))
+    screenshot_inner(
+        renderer,
+        camera,
+        visible,
+        map_style(style_idx),
+        path,
+        |_, _| Ok(()),
+    )
 }
 
 fn screenshot_inner(
     renderer: &mut MapRenderer,
     camera: &MapCamera,
     visible: &[VisibleTile],
-    style_idx: usize,
+    style: MapStyle,
     path: &Path,
     overlay: impl FnOnce(&wgpu::TextureView, &mut MapRenderer) -> Result<(), DynError>,
 ) -> Result<(), DynError> {
@@ -894,7 +902,7 @@ fn screenshot_inner(
         view_formats: &[],
     });
     let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
-    renderer.render(&view, camera, visible, map_style(style_idx));
+    renderer.render(&view, camera, visible, style);
     overlay(&view, renderer)?;
     let row_bytes = width * 4;
     let padded = row_bytes.div_ceil(256) * 256;
@@ -1221,7 +1229,7 @@ fn zoom_comparison() -> Result<(), DynError> {
             &mut renderer,
             &camera,
             &visible,
-            0,
+            map_style(0),
             Path::new(&path),
             |view, renderer| labels.draw(renderer, view, &camera, &visible_labels),
         )?;
@@ -1422,16 +1430,141 @@ fn capture_location(
         &mut renderer,
         &camera,
         &visible,
-        0,
+        map_style(0),
         path,
         |view, renderer| labels.draw(renderer, view, &camera, &visible_labels),
     )?;
     println!(
-        "{}: lon={lon}, lat={lat}, zoom={zoom}, tile_zoom={}, labels={}, failures={}",
+        "{}: lon={lon}, lat={lat}, zoom={zoom}, tile_zoom={}, labels={}, failures={}, lookup_ms={:.3}, decode_ms={:.3}, prepare_ms={:.3}, upload_ms={:.3}",
         path.display(),
         visible.first().map_or(0, |tile| tile.key.z),
         visible_labels.len(),
         manager.stats.failures,
+        manager.stats.lookup_ms,
+        manager.stats.decode_ms,
+        manager.stats.prepare_ms,
+        manager.stats.upload_ms,
+    );
+    Ok(())
+}
+
+fn capture_spatial_pack(
+    pack_path: &Path,
+    lon: f64,
+    lat: f64,
+    zoom: f64,
+    output: &Path,
+) -> Result<(), DynError> {
+    let pack = SpatialPack::open(pack_path)?;
+    let camera = MapCamera::new(lon, lat, zoom, 1200, 720, 1.0)?;
+    let (west, north) = camera.screen_to_coordinate(0.0, 0.0)?;
+    let (east, south) =
+        camera.screen_to_coordinate(camera.width_px as f64, camera.height_px as f64)?;
+    if west >= east {
+        return Err("MSP regional capture cannot cross the date line".into());
+    }
+    let data_zoom = (zoom.floor() as u8).min(15);
+    let n = (1u32 << data_zoom) as f64;
+    let point = project(lon, lat)?;
+    let key = TileKey::new(
+        data_zoom,
+        (point.x * n).floor() as u32,
+        (point.y * n).floor() as u32,
+    )?;
+    let start = Instant::now();
+    let decoded = pack.decode_viewport(
+        BBox {
+            west,
+            south,
+            east,
+            north,
+        },
+        key,
+    )?;
+    let decode_ms = start.elapsed().as_secs_f64() * 1000.0;
+    let mut screen_labels = Vec::new();
+    for place in &decoded.place {
+        let world = WorldPoint {
+            x: (key.x as f64 + place.point.x() as f64 / 4096.0) / n,
+            y: (key.y as f64 + place.point.y() as f64 / 4096.0) / n,
+        };
+        let (x, y) = camera.unwrapped_to_screen(world);
+        screen_labels.push(ScreenLabel {
+            name: place.name.clone(),
+            x: x as f32,
+            y: y as f32,
+            rank: place.rank,
+            kind: LabelKind::City,
+        });
+    }
+    let mut line = String::new();
+    let mut width = 0.0;
+    let mut attribution_lines = Vec::new();
+    for word in pack.attribution().split_whitespace() {
+        let word_width: f32 = word
+            .chars()
+            .map(|c| if c.is_ascii() { 9.0 } else { 17.0 })
+            .sum();
+        if !line.is_empty() && width + 9.0 + word_width > 270.0 {
+            attribution_lines.push(std::mem::take(&mut line));
+            width = 0.0;
+        }
+        if !line.is_empty() {
+            line.push(' ');
+            width += 9.0;
+        }
+        line.push_str(word);
+        width += word_width;
+    }
+    if !line.is_empty() {
+        attribution_lines.push(line);
+    }
+    for (index, name) in attribution_lines.into_iter().enumerate() {
+        screen_labels.push(ScreenLabel {
+            name,
+            x: 12.0,
+            y: 12.0 + index as f32 * 17.0,
+            rank: 0,
+            kind: LabelKind::Attribution,
+        });
+    }
+    let start = Instant::now();
+    let prepared = prepare(&decoded)?;
+    let prepare_ms = start.elapsed().as_secs_f64() * 1000.0;
+    let runtime = runtime()?;
+    let mut renderer = runtime.block_on(MapRenderer::new(FORMAT))?;
+    let mut labels = labels::LabelRenderer::new(&renderer);
+    let start = Instant::now();
+    renderer.upload_tile(key, prepared);
+    let upload_ms = start.elapsed().as_secs_f64() * 1000.0;
+    if let Some(parent) = output.parent() {
+        std::fs::create_dir_all(parent)?;
+    }
+    let visible = [VisibleTile {
+        key,
+        world_x: key.x as i32,
+    }];
+    let mut style = STYLES[0];
+    style.ocean = [0.91, 0.93, 0.94, 1.0];
+    screenshot_inner(
+        &mut renderer,
+        &camera,
+        &visible,
+        style,
+        output,
+        |view, renderer| labels.draw(renderer, view, &camera, &screen_labels),
+    )?;
+    println!(
+        "{}: features={} decode_ms={decode_ms:.3} prepare_ms={prepare_ms:.3} upload_ms={upload_ms:.3} labels={}",
+        output.display(),
+        decoded.road_major.len()
+            + decoded.road_collector.len()
+            + decoded.road_local.len()
+            + decoded.road_surface.len()
+            + decoded.water.len()
+            + decoded.green.len()
+            + decoded.place.len(),
+        decoded.place.len()
     );
     Ok(())
 }
@@ -1803,6 +1936,21 @@ fn main() -> Result<(), DynError> {
                 args[4].parse()?,
                 Path::new(&args[5]),
                 args[1] == "--async-capture",
+            )
+        }
+        Some("--msp-capture") => {
+            let args: Vec<String> = std::env::args().collect();
+            if args.len() != 7 {
+                return Err(
+                    "usage: mappa-map-demo --msp-capture FILE.msp LON LAT ZOOM OUTPUT.png".into(),
+                );
+            }
+            capture_spatial_pack(
+                Path::new(&args[2]),
+                args[3].parse()?,
+                args[4].parse()?,
+                args[5].parse()?,
+                Path::new(&args[6]),
             )
         }
         Some("--street-demo") => {

@@ -7,3 +7,5 @@ Canonical feature ID는 source ID와 source feature ID를 SHA-256으로 조합�
 도로면 원본 7,667건 중 17건은 invalid polygon으로 [거부 목록](../artifacts/map-v0.3c/naju-roads.rejected.json)에 기록했고 수리하지 않았다. 그중 proof bbox와 겹치는 유효 polygon 4,477개가 DB에 들어갔다.
 
 **미구현:** 여러 독립 원천의 같은 객체 matching/fusion, 수정 revision 체인과 tombstone, 문자열 테이블, geometry delta 압축, 건물·공식 수계·철도·공원 경계 어댑터. 현재 `revision=1`은 초기 값이지 업데이트 이력을 구현했다는 뜻이 아니다. 2개 이상의 합법적 동일 객체 원천이 없으므로 fusion 정확도를 측정할 수 없다.
+
+문자열 테이블과 좌표 delta는 [별도 MSP 런타임 패키징 실험](MAP_SPATIAL_PACK_EXPERIMENT.md)에만 추가했다. Canonical GeoDB의 f64 원본 구조와 기본 PMTiles 경로는 유지한다.
