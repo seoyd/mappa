@@ -3426,6 +3426,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "lzma-rust2"
+version = "0.21.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fde178a3caf126c440fa15628147772d8ee590a39477d711353fbe2e58a73a5b"
+
+[[package]]
 name = "mappa-apple"
 version = "0.1.0"
 dependencies = [
@@ -3533,7 +3539,11 @@ version = "0.1.0"
 dependencies = [
  "md-5",
  "reqwest",
+ "sevenz-rust2",
+ "sha2 0.10.9",
+ "tempfile",
  "tokio",
+ "zip",
 ]
 
 [[package]]
@@ -4395,7 +4405,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dc882e51b82416d3d12fedf28658e59949a1440edb4192f7d183985cd93897a9"
 dependencies = [
  "libc",
- "lzma-rust2",
+ "lzma-rust2 0.15.8",
  "phf",
  "phf_codegen",
 ]
@@ -5664,6 +5674,18 @@ dependencies = [
  "itoa",
  "ryu",
  "serde",
+]
+
+[[package]]
+name = "sevenz-rust2"
+version = "0.23.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0a4f883677093690e91fef8ae81fad8bce9e2c3a079b61054f05ce0d3ecf681e"
+dependencies = [
+ "crc32fast",
+ "js-sys",
+ "lzma-rust2 0.21.0",
+ "wasm-bindgen",
 ]
 
 [[package]]

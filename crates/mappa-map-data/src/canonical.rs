@@ -18,7 +18,11 @@ use std::{
 };
 use thiserror::Error;
 
+mod ign_bdtopo;
+mod lambert93;
 mod nrn;
+pub use ign_bdtopo::adapt_ign_bdtopo_roads;
+pub use lambert93::inverse_lambert93;
 pub use nrn::adapt_ca_nrn_roads;
 
 const MAGIC: &[u8; 8] = b"MAPPAGEO";
@@ -187,6 +191,7 @@ impl SourceManifest {
                     | "us-census-tiger-areawater"
                     | "us-census-tiger-arealm-parks"
                     | "ca-nrn-roadseg"
+                    | "ign-bdtopo-road-segment"
                     | "os-open-roads"
             ) || (source.adapter == "os-open-roads" && source.adapter_version != 2)
                 || (source.adapter != "os-open-roads" && source.adapter_version != 1)

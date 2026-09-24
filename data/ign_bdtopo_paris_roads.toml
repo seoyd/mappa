@@ -1,0 +1,37 @@
+schema_version = 1
+proof_region = "bdtopo_3-5_tousthemes_shp_lamb93_d075_2026-06-15"
+proof_bbox_wgs84 = [
+    2.153918089573465,
+    48.76481276145325,
+    2.5426011395319663,
+    48.94948403965513,
+]
+
+[[source]]
+id = "ign-bdtopo-bdtopo_3-5_tousthemes_shp_lamb93_d075_2026-06-15"
+name = "IGN BD TOPO 3.5 Tronçon de route, BDTOPO_3-5_TOUSTHEMES_SHP_LAMB93_D075_2026-06-15"
+provider = "Institut national de l'information géographique et forestière (IGN)"
+source_version = "BDTOPO_3-5_TOUSTHEMES_SHP_LAMB93_D075_2026-06-15"
+download_date = "2026-09-25"
+official_url = "https://data.geopf.fr/telechargement/download/BDTOPO/BDTOPO_3-5_TOUSTHEMES_SHP_LAMB93_D075_2026-06-15/BDTOPO_3-5_TOUSTHEMES_SHP_LAMB93_D075_2026-06-15.7z"
+download_page_url = "https://www.data.gouv.fr/datasets/bd-topo-r"
+file = "local/ign_bdtopo_paris/road.zip"
+sha256 = "26a66d6fcf8cfeeb97852af2326799ec9c392c08855ca7e2398b3f465f97e361"
+upstream_file = "local/ign_bdtopo_paris/BDTOPO_3-5_TOUSTHEMES_SHP_LAMB93_D075_2026-06-15.7z"
+upstream_sha256 = "dc1cdeaef2b220520faf2a05edea11af0ff2c7cc54961cb6cefd0af6e50c2414"
+crs = "EPSG:2154 RGF93 / Lambert-93; inverted to RGF93 geographic degrees; independent WGS84 datum and positional accuracy pending"
+format = "official 7z Shapefile; road-only ZIP selected and repacked in Rust"
+coverage = "selected in-service vehicle-road geometry bounds [2.153918089573465, 48.76481276145325, 2.5426011395319663, 48.94948403965513]"
+resolution = "IGN BD TOPO 3.5 road centerlines; source precision varies by acquisition method"
+update_frequency = "published quarterly snapshot; pinned edition"
+license_id = "ETALAB-LICENCE-OUVERTE-2.0"
+license_url = "https://www.data.gouv.fr/pages/legal/licences/etalab-2.0"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "IGN, BD TOPO 3.5, BDTOPO_3-5_TOUSTHEMES_SHP_LAMB93_D075_2026-06-15; modifications Mappa"
+share_alike = false
+adapter = "ign-bdtopo-road-segment"
+adapter_version = 1
