@@ -8,24 +8,25 @@
 
 ## 현재 구현한 로컬 게이트
 
-[재고표](../data/map_pack_inventory.toml)는 세 [지역 카탈로그](../assets/map/regional_packs.toml), [GB 카탈로그](../assets/map/gb_regional_packs.toml), [캐나다 카탈로그](../assets/map/ca_regional_packs.toml)의 **모든 등록 팩**에 대해 저장소 상대 경로, 출처 manifest 경로·SHA-256, 팩 바이트 수·SHA-256을 고정한다. [Rust 도구](../crates/mappa-map-acquire/src/bin/map_pack_bundle.rs)는 카탈로그 누락·중복, manifest 변조, 팩 크기·해시 불일치를 거절한다. 소스 디렉터리나 HTTPS 정적 파일에서 설치할 때 파일을 임시 경로에 받은 뒤 전체 크기와 SHA-256을 확인하고 원자적으로 배치한다. 이미 있는 파일도 검증한다. HTTPS 파일명은 `<팩 SHA-256>.pmtiles`다.
+[재고표](../data/map_pack_inventory.toml)는 세 [지역 카탈로그](../assets/map/regional_packs.toml), [GB 카탈로그](../assets/map/gb_regional_packs.toml), [캐나다 카탈로그](../assets/map/ca_regional_packs.toml)의 **모든 등록 팩**에 대해 저장소 상대 경로, 출처 manifest 경로·SHA-256, 팩 바이트 수·SHA-256과 팩별 정적 HTTPS 다운로드 주소를 고정한다. [Rust 도구](../crates/mappa-map-acquire/src/bin/map_pack_bundle.rs)는 카탈로그 누락·중복, manifest 변조, 팩 크기·해시 불일치를 거절한다. `inventory`를 다시 생성할 때 내용이 같은 팩의 URL을 보존하고 바뀐 팩의 URL은 제거한다. 소스 디렉터리나 HTTPS 정적 파일에서 설치할 때 파일을 임시 경로에 받은 뒤 전체 크기와 SHA-256을 확인하고 원자적으로 배치한다. 이미 있는 파일도 검증한다. HTTPS 파일명은 `<팩 SHA-256>.pmtiles`다.
 
 ```sh
 cargo run --offline -p mappa-map-acquire --bin map_pack_bundle -- inventory . data/map_pack_inventory.toml
 cargo run --offline -p mappa-map-acquire --bin map_pack_bundle -- verify . data/map_pack_inventory.toml
 cargo run --offline -p mappa-map-acquire --bin map_pack_bundle -- stage . data/map_pack_inventory.toml /tmp/mappa-pack-stage
 cargo run --offline -p mappa-map-acquire --bin map_pack_bundle -- install-dir . data/map_pack_inventory.toml /tmp/mappa-pack-stage
-cargo run --offline -p mappa-map-acquire --bin map_pack_bundle -- install-url . data/map_pack_inventory.toml https://github.com/seoyd/mappa/releases/download/TAG/
+cargo run --offline -p mappa-map-acquire --bin map_pack_bundle -- pin-release . data/map_pack_inventory.toml https://github.com/seoyd/mappa/releases/download/TAG/ /tmp/verified-release-assets.txt
+cargo run --offline -p mappa-map-acquire --bin map_pack_bundle -- install-pinned . data/map_pack_inventory.toml
 ```
 
-마지막 명령의 `TAG`는 실제 **게시된** 릴리스 태그로 바꿔야 한다. 현재 초안 릴리스는 공개 다운로드에 사용할 수 없다. 오프라인 지도 런타임은 네트워크 요청을 하지 않는다. 원격 설치 명령은 사용자가 별도로 실행하는 설치·갱신 단계용이다.
+`pin-release`의 파일 목록은 서버 자산의 이름·크기·SHA-256을 재고표와 대조한 뒤 확정한 `<SHA-256>.pmtiles` 이름을 한 줄씩 담는다. 같은 팩을 다른 릴리스로 다시 고정하려 하면 실패한다. `install-pinned`는 팩마다 고정한 서로 다른 릴리스 주소를 사용한다. 원격 설치는 릴리스가 **게시된 뒤에만** 가능하다. 현재 두 릴리스는 초안이라 공개 다운로드에 사용할 수 없다. 오프라인 지도 런타임은 네트워크 요청을 하지 않는다. 원격 설치 명령은 사용자가 별도로 실행하는 설치·갱신 단계용이다.
 
-초기 106개 팩 전체의 해시 대조가 통과했고, `stage`가 SHA-256 파일명으로 106개 자산을 만들었다. 카탈로그 세 개와 해당 manifest 106개만 있는 별도 빈 디렉터리에 이 자산을 `install-dir`로 복원한 결과 `installed_packs=106 verified_packs=106`이었다. 노스캐롤라이나주 다섯 팩을 추가한 뒤 `staged_assets=5 inventory_packs=111`, 사우스캐롤라이나주 세 팩을 추가한 뒤 `staged_assets=3 inventory_packs=114`, 테네시주 세 팩을 추가한 뒤 `staged_assets=3 inventory_packs=117`, 켄터키주 다섯 팩을 추가한 뒤 `staged_assets=5 inventory_packs=122`로 전체 파일을 검사했다. 122개 전체의 새 빈 디렉터리 복원은 아직 반복하지 않았다.
+초기 106개 팩 전체의 해시 대조가 통과했고, `stage`가 SHA-256 파일명으로 106개 자산을 만들었다. 카탈로그 세 개와 해당 manifest 106개만 있는 별도 빈 디렉터리에 이 자산을 `install-dir`로 복원한 결과 `installed_packs=106 verified_packs=106`이었다. 노스캐롤라이나주 다섯 팩을 추가한 뒤 `staged_assets=5 inventory_packs=111`, 사우스캐롤라이나주 세 팩을 추가한 뒤 `staged_assets=3 inventory_packs=114`, 테네시주 세 팩을 추가한 뒤 `staged_assets=3 inventory_packs=117`, 켄터키주 다섯 팩을 추가한 뒤 `staged_assets=5 inventory_packs=122`로 전체 파일을 검사했다. 켄터키 추가 후 **122개 팩 전부를 별도 빈 디렉터리에 복원**한 결과 `installed_packs=122 verified_packs=122`였고, 그 복원본을 기본 세계 지도 카탈로그로 열어 모든 등록 팩에서 z14 타일을 읽는 테스트도 통과했다. 이후 재고표 재생성과 122개 원본 팩의 전체 해시 검증 결과는 `verified_packs=122 bytes=2347877047`이었다. 이미 팩이 있는 작업 디렉터리에서 `install-pinned`를 실행한 결과도 `installed_packs=0 verified_packs=122`였으며 네트워크 다운로드는 발생하지 않았다.
 
-공개 저장소 `seoyd/mappa`에는 태그 `map-packs-2026-09-25`, 커밋 `309ee680cf273e56c4f56579ae3d253d839c576f` 대상의 **비공개 초안 릴리스**를 만들고 당시 **117개, 2,207,271,101바이트**를 업로드했다. GitHub가 보고하는 자산 이름·크기·서버 SHA-256 digest **117개가 모두 로컬 재고표와 일치**했다. 작은 모나코 팩과 49,468,493바이트 테네시 동부 팩은 인증 다운로드 후 SHA-256을 다시 확인했다. 켄터키주 신규 다섯 팩은 이 초안에 아직 없다. 초안의 이름·크기·digest 검사와 표본 재다운로드는 완료됐지만, 공개 URL에서 설치하거나 전체 122개를 새 기기에 설치한 검증은 아직 없다.
+공개 저장소 `seoyd/mappa`에는 태그 `map-packs-2026-09-25`, 커밋 `309ee680cf273e56c4f56579ae3d253d839c576f` 대상의 **비공개 초안 릴리스**를 만들고 당시 **117개, 2,207,271,101바이트**를 업로드했다. GitHub가 보고하는 자산 이름·크기·서버 SHA-256 digest **117개가 모두 로컬 재고표와 일치**했다. 작은 모나코 팩과 49,468,493바이트 테네시 동부 팩은 인증 다운로드 후 SHA-256을 다시 확인했다. 켄터키 신규 팩은 두 번째 **비공개 초안 릴리스** `map-packs-2026-09-25-ky`에 **5개, 140,605,946바이트**를 업로드했다. 서버가 보고하는 다섯 파일의 이름·크기·SHA-256이 로컬 팩과 일치했다. 첫 릴리스의 117개와 두 번째 릴리스의 5개를 모두 재고표에 고정했다. 공개 URL 설치 검증은 게시 전이므로 아직 없다.
 
 ## 정적 배포 후보와 아직 남은 일
 
 [GitHub Releases 문서](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases)는 릴리스당 자산 최대 1,000개, 파일당 2GiB 미만, 총 릴리스 크기 및 전송량 제한 없음이라고 설명한다. 현재 122개 팩은 자산 수 한도 안에 있고 각 파일도 2GiB 미만이다. 이 조건은 현재 게시 정책이며 영구적인 무상 제공 보장은 아니다. [Git LFS](https://docs.github.com/en/billing/concepts/product-billing/git-lfs)는 무료 할당량 이후 과금 또는 차단이 가능하므로 기본 배포 경로로 선택하지 않는다.
 
-다음 게이트는 정적 릴리스 공개 게시, 릴리스별 팩 URL 고정, 새 체크아웃에서 설치 및 전체 해시 검증, 카탈로그가 모든 팩을 열 수 있는지 확인, 새 팩을 Git에서 제외하는 전환이다. **현재 이 전환은 완료되지 않았다.** 기존 등록 파일은 아직 Git이 제공하므로 지금의 체크아웃 재현성은 유지된다. 장기적으로 다운로드 저장소가 바뀌면 저장소에 고정한 해시를 만족하는 미러로 교체할 수 있다. 팩의 원천 라이선스와 출처 manifest 게이트는 배포 방식과 별개로 유지된다.
+다음 게이트는 초안 릴리스 공개 게시 승인, 게시된 URL에서 실제 설치 및 전체 해시 검증, 카탈로그가 설치된 모든 팩을 열 수 있는지 확인, 새 팩을 Git에서 제외하는 전환이다. **현재 이 전환은 완료되지 않았다.** 기존 등록 파일은 아직 Git이 제공하므로 지금의 체크아웃 재현성은 유지된다. 장기적으로 다운로드 저장소가 바뀌면 저장소에 고정한 해시를 만족하는 미러로 교체할 수 있다. 팩의 원천 라이선스와 출처 manifest 게이트는 배포 방식과 별개로 유지된다.

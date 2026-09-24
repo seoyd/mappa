@@ -44,6 +44,8 @@ struct Pack {
     manifest_sha256: String,
     bytes: u64,
     sha256: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    download_url: Option<String>,
 }
 
 fn relative_path(base: &Path, raw: &Path) -> Result<String> {
@@ -104,7 +106,12 @@ fn digest(path: &Path) -> Result<(u64, String)> {
     Ok((bytes, format!("{:x}", hasher.finalize())))
 }
 
-fn build_inventory(root: &Path) -> Result<Inventory> {
+fn build_inventory(root: &Path, previous: Option<&Inventory>) -> Result<Inventory> {
+    let previous: BTreeMap<_, _> = previous
+        .into_iter()
+        .flat_map(|inventory| &inventory.pack)
+        .map(|entry| (entry.path.as_str(), entry))
+        .collect();
     let mut pack = Vec::new();
     for (path, manifest) in catalog_paths(root)? {
         let (bytes, sha256) = digest(&root.join(&path))?;
@@ -112,13 +119,23 @@ fn build_inventory(root: &Path) -> Result<Inventory> {
         if bytes < 127 {
             return Err(format!("PMTiles archive too small: {path}").into());
         }
-        pack.push(Pack {
+        let mut entry = Pack {
             path,
             manifest,
             manifest_sha256,
             bytes,
             sha256,
-        });
+            download_url: None,
+        };
+        if let Some(old) = previous.get(entry.path.as_str())
+            && old.manifest == entry.manifest
+            && old.manifest_sha256 == entry.manifest_sha256
+            && old.bytes == entry.bytes
+            && old.sha256 == entry.sha256
+        {
+            entry.download_url = old.download_url.clone();
+        }
+        pack.push(entry);
     }
     Ok(Inventory { version: 1, pack })
 }
@@ -142,12 +159,91 @@ fn checked_inventory(root: &Path, file: &Path) -> Result<Inventory> {
         if digest(&root.join(manifest))?.1 != entry.manifest_sha256 {
             return Err(format!("source manifest changed: {manifest}").into());
         }
+        if let Some(url) = &entry.download_url {
+            checked_asset_url(url, &entry.sha256)?;
+        }
     }
     Ok(inventory)
 }
 
 fn valid_sha(value: &str) -> bool {
     value.len() == 64 && value.bytes().all(|byte| byte.is_ascii_hexdigit())
+}
+
+fn checked_base_url(raw: &str) -> Result<reqwest::Url> {
+    let url = reqwest::Url::parse(raw)?;
+    if url.scheme() != "https"
+        || !url.path().ends_with('/')
+        || !url.username().is_empty()
+        || url.password().is_some()
+        || url.query().is_some()
+        || url.fragment().is_some()
+    {
+        return Err("pack URL base must be an HTTPS directory without credentials or query".into());
+    }
+    Ok(url)
+}
+
+fn checked_asset_url(raw: &str, sha256: &str) -> Result<reqwest::Url> {
+    let url = reqwest::Url::parse(raw)?;
+    if url.scheme() != "https"
+        || !url.username().is_empty()
+        || url.password().is_some()
+        || url.query().is_some()
+        || url.fragment().is_some()
+        || url.path_segments().and_then(|mut parts| parts.next_back())
+            != Some(format!("{sha256}.pmtiles").as_str())
+    {
+        return Err(format!("invalid pinned pack URL: {raw}").into());
+    }
+    Ok(url)
+}
+
+fn write_inventory(path: &Path, inventory: &Inventory) -> Result<()> {
+    let parent = path.parent().ok_or("inventory has no parent directory")?;
+    let mut temporary = tempfile::NamedTempFile::new_in(parent)?;
+    temporary.write_all(toml::to_string_pretty(inventory)?.as_bytes())?;
+    temporary.as_file_mut().sync_all()?;
+    temporary.persist(path)?;
+    Ok(())
+}
+
+fn pin_release(inventory: &mut Inventory, base: &str, asset_list: &Path) -> Result<usize> {
+    let base = checked_base_url(base)?;
+    let names = fs::read_to_string(asset_list)?;
+    let mut by_sha: BTreeMap<String, Vec<usize>> = BTreeMap::new();
+    for (index, entry) in inventory.pack.iter().enumerate() {
+        by_sha.entry(entry.sha256.clone()).or_default().push(index);
+    }
+    let mut assigned = 0;
+    let mut seen = std::collections::BTreeSet::new();
+    for name in names.lines().filter(|line| !line.is_empty()) {
+        let Some(sha256) = name.strip_suffix(".pmtiles") else {
+            return Err(format!("unexpected release asset name: {name}").into());
+        };
+        if !valid_sha(sha256) || !seen.insert(sha256.to_owned()) {
+            return Err(format!("invalid or duplicate release asset name: {name}").into());
+        }
+        let indexes = by_sha
+            .get(sha256)
+            .ok_or(format!("release asset not in inventory: {name}"))?;
+        let url = base.join(name)?.to_string();
+        checked_asset_url(&url, sha256)?;
+        for &index in indexes {
+            let entry = &mut inventory.pack[index];
+            if entry.download_url.as_ref().is_some_and(|old| old != &url) {
+                return Err(format!("pack already pinned to another URL: {}", entry.path).into());
+            }
+            if entry.download_url.is_none() {
+                assigned += 1;
+            }
+            entry.download_url = Some(url.clone());
+        }
+    }
+    if seen.is_empty() {
+        return Err("release asset list is empty".into());
+    }
+    Ok(assigned)
 }
 
 fn verify_file(root: &Path, entry: &Pack) -> Result<()> {
@@ -214,29 +310,28 @@ fn stage_release(root: &Path, inventory: &Inventory, output: &Path) -> Result<us
     Ok(staged)
 }
 
-async fn install_from_url(root: &Path, inventory: &Inventory, base: &str) -> Result<usize> {
-    let base = reqwest::Url::parse(base)?;
-    if base.scheme() != "https"
-        || !base.path().ends_with('/')
-        || !base.username().is_empty()
-        || base.password().is_some()
-        || base.query().is_some()
-        || base.fragment().is_some()
-    {
-        return Err("pack URL base must be an HTTPS directory without credentials or query".into());
+async fn install_from_urls(
+    root: &Path,
+    inventory: &Inventory,
+    urls: &[reqwest::Url],
+) -> Result<usize> {
+    if urls.len() != inventory.pack.len() {
+        return Err("pack URL count differs from inventory".into());
     }
     let client = reqwest::Client::builder()
         .user_agent("Mappa offline pack installation")
         .build()?;
     let mut installed = 0;
-    for entry in &inventory.pack {
+    for (entry, url) in inventory.pack.iter().zip(urls) {
         let destination = root.join(&entry.path);
         if destination.exists() {
             verify_file(root, entry)?;
             continue;
         }
-        let url = base.join(&format!("{}.pmtiles", entry.sha256))?;
-        let mut response = client.get(url).send().await?.error_for_status()?;
+        let mut response = client.get(url.clone()).send().await?.error_for_status()?;
+        if response.url().scheme() != "https" {
+            return Err(format!("pack download redirected away from HTTPS: {}", entry.path).into());
+        }
         if response
             .content_length()
             .is_some_and(|size| size != entry.bytes)
@@ -268,18 +363,52 @@ async fn install_from_url(root: &Path, inventory: &Inventory, base: &str) -> Res
     Ok(installed)
 }
 
+async fn install_from_url(root: &Path, inventory: &Inventory, base: &str) -> Result<usize> {
+    let base = checked_base_url(base)?;
+    let urls = inventory
+        .pack
+        .iter()
+        .map(|entry| base.join(&format!("{}.pmtiles", entry.sha256)))
+        .collect::<std::result::Result<Vec<_>, _>>()?;
+    install_from_urls(root, inventory, &urls).await
+}
+
+async fn install_pinned(root: &Path, inventory: &Inventory) -> Result<usize> {
+    let urls = inventory
+        .pack
+        .iter()
+        .map(|entry| {
+            let raw = entry
+                .download_url
+                .as_deref()
+                .ok_or(format!("pack has no download URL: {}", entry.path))?;
+            checked_asset_url(raw, &entry.sha256)
+        })
+        .collect::<Result<Vec<_>>>()?;
+    install_from_urls(root, inventory, &urls).await
+}
+
 #[tokio::main]
 async fn main() -> Result<()> {
     let args: Vec<_> = std::env::args().collect();
     let [_, command, root, inventory, rest @ ..] = args.as_slice() else {
-        return Err("usage: map_pack_bundle inventory|verify|install-dir|install-url|stage REPO_ROOT INVENTORY.toml [SOURCE_ROOT|HTTPS_BASE|OUTPUT_DIR]".into());
+        return Err("usage: map_pack_bundle inventory|verify|install-dir|install-url|install-pinned|pin-release|stage REPO_ROOT INVENTORY.toml [SOURCE_ROOT|HTTPS_BASE|OUTPUT_DIR] [ASSET_LIST]".into());
     };
     let root = Path::new(root);
     let inventory_path = Path::new(inventory);
     match (command.as_str(), rest) {
         ("inventory", []) => {
-            let inventory = build_inventory(root)?;
-            fs::write(inventory_path, toml::to_string_pretty(&inventory)?)?;
+            let previous = if inventory_path.exists() {
+                let previous: Inventory = toml::from_str(&fs::read_to_string(inventory_path)?)?;
+                if previous.version != 1 {
+                    return Err("unsupported previous map pack inventory".into());
+                }
+                Some(previous)
+            } else {
+                None
+            };
+            let inventory = build_inventory(root, previous.as_ref())?;
+            write_inventory(inventory_path, &inventory)?;
             println!("inventory_packs={} output={}", inventory.pack.len(), inventory_path.display());
         }
         ("verify", []) => {
@@ -300,12 +429,23 @@ async fn main() -> Result<()> {
             let installed = install_from_url(root, &inventory, base).await?;
             println!("installed_packs={installed} verified_packs={}", inventory.pack.len());
         }
+        ("install-pinned", []) => {
+            let inventory = checked_inventory(root, inventory_path)?;
+            let installed = install_pinned(root, &inventory).await?;
+            println!("installed_packs={installed} verified_packs={}", inventory.pack.len());
+        }
+        ("pin-release", [base, asset_list]) => {
+            let mut inventory = checked_inventory(root, inventory_path)?;
+            let pinned = pin_release(&mut inventory, base, Path::new(asset_list))?;
+            write_inventory(inventory_path, &inventory)?;
+            println!("pinned_assets={pinned} inventory_packs={}", inventory.pack.len());
+        }
         ("stage", [output]) => {
             let inventory = checked_inventory(root, inventory_path)?;
             let staged = stage_release(root, &inventory, Path::new(output))?;
             println!("staged_assets={staged} inventory_packs={}", inventory.pack.len());
         }
-        _ => return Err("usage: map_pack_bundle inventory|verify|install-dir|install-url|stage REPO_ROOT INVENTORY.toml [SOURCE_ROOT|HTTPS_BASE|OUTPUT_DIR]".into()),
+        _ => return Err("usage: map_pack_bundle inventory|verify|install-dir|install-url|install-pinned|pin-release|stage REPO_ROOT INVENTORY.toml [SOURCE_ROOT|HTTPS_BASE|OUTPUT_DIR] [ASSET_LIST]".into()),
     }
     Ok(())
 }
@@ -347,6 +487,7 @@ mod tests {
                 manifest_sha256: "0".repeat(64),
                 bytes: 128,
                 sha256: "0".repeat(64),
+                download_url: None,
             }],
         };
         assert!(install_from_dir(&root, &inventory, &source).is_err());
@@ -367,6 +508,7 @@ mod tests {
                 manifest_sha256: "0".repeat(64),
                 bytes: bytes.len() as u64,
                 sha256: format!("{:x}", Sha256::digest(&bytes)),
+                download_url: None,
             }],
         };
         fs::create_dir_all(source.join("artifacts")).unwrap();
@@ -381,5 +523,87 @@ mod tests {
         assert_eq!(install_from_dir(&root, &inventory, &staged).unwrap(), 1);
         assert_eq!(install_from_dir(&root, &inventory, &staged).unwrap(), 0);
         assert_eq!(fs::read(root.join("artifacts/a.pmtiles")).unwrap(), bytes);
+    }
+
+    #[test]
+    fn release_pin_assigns_only_listed_hashes_and_rejects_changes() {
+        let temporary = tempfile::tempdir().unwrap();
+        let names = temporary.path().join("assets.txt");
+        let first = "a".repeat(64);
+        let second = "b".repeat(64);
+        let mut inventory = Inventory {
+            version: 1,
+            pack: [(&first, "a"), (&second, "b")]
+                .into_iter()
+                .map(|(sha256, name)| Pack {
+                    path: format!("artifacts/{name}.pmtiles"),
+                    manifest: format!("data/{name}.toml"),
+                    manifest_sha256: "0".repeat(64),
+                    bytes: 128,
+                    sha256: sha256.clone(),
+                    download_url: None,
+                })
+                .collect(),
+        };
+        fs::write(&names, format!("{first}.pmtiles\n")).unwrap();
+        let base = "https://github.com/seoyd/mappa/releases/download/test/";
+        assert_eq!(pin_release(&mut inventory, base, &names).unwrap(), 1);
+        assert_eq!(pin_release(&mut inventory, base, &names).unwrap(), 0);
+        assert_eq!(
+            inventory.pack[0].download_url.as_deref(),
+            Some(format!("{base}{first}.pmtiles").as_str())
+        );
+        assert!(inventory.pack[1].download_url.is_none());
+        assert!(pin_release(&mut inventory, "http://example.com/", &names).is_err());
+        assert!(pin_release(&mut inventory, "https://example.com/", &names).is_err());
+        fs::write(&names, format!("{second}.pmtiles\n")).unwrap();
+        assert_eq!(pin_release(&mut inventory, base, &names).unwrap(), 1);
+    }
+
+    #[test]
+    fn pinned_url_requires_https_and_expected_asset_name() {
+        let sha = "a".repeat(64);
+        assert!(checked_asset_url(&format!("https://example.com/{sha}.pmtiles"), &sha).is_ok());
+        assert!(checked_asset_url(&format!("http://example.com/{sha}.pmtiles"), &sha).is_err());
+        assert!(checked_asset_url("https://example.com/other.pmtiles", &sha).is_err());
+        assert!(
+            checked_asset_url(
+                &format!("https://example.com/{sha}.pmtiles?token=secret"),
+                &sha
+            )
+            .is_err()
+        );
+    }
+
+    #[test]
+    fn inventory_rebuild_keeps_url_only_for_unchanged_pack() {
+        let temporary = tempfile::tempdir().unwrap();
+        let root = temporary.path();
+        fs::create_dir_all(root.join("assets/map")).unwrap();
+        fs::create_dir_all(root.join("artifacts")).unwrap();
+        fs::create_dir_all(root.join("data")).unwrap();
+        fs::write(
+            root.join(CATALOGS[0]),
+            "[[pack]]\npath = '../../artifacts/a.pmtiles'\nmanifest = '../../data/a.toml'\n",
+        )
+        .unwrap();
+        for catalog in &CATALOGS[1..] {
+            fs::write(root.join(catalog), "pack = []\n").unwrap();
+        }
+        fs::write(root.join("data/a.toml"), "source = []\n").unwrap();
+        fs::write(root.join("artifacts/a.pmtiles"), vec![7; 128]).unwrap();
+        let mut first = build_inventory(root, None).unwrap();
+        let url = format!("https://example.com/{}.pmtiles", first.pack[0].sha256);
+        first.pack[0].download_url = Some(url.clone());
+        assert_eq!(
+            build_inventory(root, Some(&first)).unwrap().pack[0].download_url,
+            Some(url)
+        );
+        fs::write(root.join("artifacts/a.pmtiles"), vec![8; 128]).unwrap();
+        assert!(
+            build_inventory(root, Some(&first)).unwrap().pack[0]
+                .download_url
+                .is_none()
+        );
     }
 }
