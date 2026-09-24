@@ -56,6 +56,11 @@
 /artifacts/world-roads/ky-state/roads-east.pmtiles
 /artifacts/world-water/ky-state/water.mgeodb
 /artifacts/world-water/ky-state/water.pmtiles
+/artifacts/world-roads/ga-state/state.mgeodb
+/artifacts/world-roads/ga-state/state.pmtiles
+/artifacts/world-roads/ga-state/roads-west.pmtiles
+/artifacts/world-roads/ga-state/roads-west-east.pmtiles
+/artifacts/world-water/ga-state/water.mgeodb
 /artifacts/world-roads/gb/*.mgeodb
 /artifacts/world-roads/ca/*.mgeodb
 /artifacts/world-roads/ca/on.pmtiles

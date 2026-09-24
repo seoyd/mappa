@@ -271,6 +271,75 @@ fn clip_segment(a: Coord<f64>, b: Coord<f64>, r: Rect<f64>) -> Option<(Coord<f64
     ))
 }
 
+// Encode the exact crossing on the unbuffered tile edge in both adjacent tiles.
+// Quantizing only the buffered segment endpoints can shift an interpolated seam
+// crossing by multiple MVT units when a long segment is clipped independently.
+fn tile_edge_crossings(
+    raw_a: Coord<f64>,
+    raw_b: Coord<f64>,
+    clipped_a: Coord<f64>,
+    clipped_b: Coord<f64>,
+    tile_rect: Rect<f64>,
+) -> Vec<Coord<f64>> {
+    let dx = raw_b.x - raw_a.x;
+    let dy = raw_b.y - raw_a.y;
+    if dx == 0.0 && dy == 0.0 {
+        return Vec::new();
+    }
+    let fraction = |point: Coord<f64>| {
+        if dx.abs() >= dy.abs() {
+            (point.x - raw_a.x) / dx
+        } else {
+            (point.y - raw_a.y) / dy
+        }
+    };
+    let start = fraction(clipped_a);
+    let end = fraction(clipped_b);
+    let mut hits = Vec::with_capacity(4);
+    for x in [tile_rect.min().x, tile_rect.max().x] {
+        if dx != 0.0 {
+            let t = (x - raw_a.x) / dx;
+            let y = raw_a.y + t * dy;
+            if t > start && t < end && y >= tile_rect.min().y && y <= tile_rect.max().y {
+                hits.push((t, Coord { x, y }));
+            }
+        }
+    }
+    for y in [tile_rect.min().y, tile_rect.max().y] {
+        if dy != 0.0 {
+            let t = (y - raw_a.y) / dy;
+            let x = raw_a.x + t * dx;
+            if t > start && t < end && x >= tile_rect.min().x && x <= tile_rect.max().x {
+                hits.push((t, Coord { x, y }));
+            }
+        }
+    }
+    hits.sort_by(|a, b| a.0.total_cmp(&b.0));
+    hits.into_iter().map(|(_, point)| point).collect()
+}
+
+#[cfg(test)]
+mod tile_edge_tests {
+    use super::*;
+
+    #[test]
+    fn adjacent_buffered_tiles_insert_the_same_crossing() {
+        let a = Coord { x: 0.4, y: 0.31123 };
+        let b = Coord { x: 0.6, y: 0.65987 };
+        let left = Rect::new(Coord { x: 0.0, y: 0.0 }, Coord { x: 0.5, y: 1.0 });
+        let right = Rect::new(Coord { x: 0.5, y: 0.0 }, Coord { x: 1.0, y: 1.0 });
+        let left_buffer = Rect::new(Coord { x: -0.05, y: -0.05 }, Coord { x: 0.55, y: 1.05 });
+        let right_buffer = Rect::new(Coord { x: 0.45, y: -0.05 }, Coord { x: 1.05, y: 1.05 });
+        let (left_a, left_b) = clip_segment(a, b, left_buffer).unwrap();
+        let (right_a, right_b) = clip_segment(a, b, right_buffer).unwrap();
+        let left_hits = tile_edge_crossings(a, b, left_a, left_b, left);
+        let right_hits = tile_edge_crossings(a, b, right_a, right_b, right);
+        assert_eq!(left_hits, right_hits);
+        assert_eq!(left_hits.len(), 1);
+        assert_eq!(left_hits[0].x, 0.5);
+    }
+}
+
 fn add_lines<'a>(
     tile: &mut Tile,
     name: &str,
@@ -293,6 +362,7 @@ fn add_lines_with_buffer<'a>(
     let mut count = 0;
     let n = (1u32 << key.z) as f64;
     let buffer_world = buffer_units / (4096.0 * n);
+    let tile_rect = rect;
     let rect = Rect::new(
         Coord {
             x: rect.min().x - buffer_world,
@@ -315,25 +385,36 @@ fn add_lines_with_buffer<'a>(
                 let Some((a, b)) = clip_segment(pair[0], pair[1], rect) else {
                     continue;
                 };
-                let start = (
-                    ((a.x * n - key.x as f64) * 4096.0).round(),
-                    ((a.y * n - key.y as f64) * 4096.0).round(),
-                );
-                let end = (
-                    ((b.x * n - key.x as f64) * 4096.0).round(),
-                    ((b.y * n - key.y as f64) * 4096.0).round(),
-                );
-                if start == end {
+                let quantize = |point: Coord<f64>| {
+                    (
+                        ((point.x * n - key.x as f64) * 4096.0).round(),
+                        ((point.y * n - key.y as f64) * 4096.0).round(),
+                    )
+                };
+                let mut points = vec![quantize(a)];
+                if buffer_units > 0.0 {
+                    points.extend(
+                        tile_edge_crossings(pair[0], pair[1], a, b, tile_rect)
+                            .into_iter()
+                            .map(quantize),
+                    );
+                }
+                points.push(quantize(b));
+                points.dedup();
+                if points.len() < 2 {
                     continue;
                 }
+                let start = points[0];
                 if previous_end != Some(start) {
                     if previous_end.is_some() {
                         encoder.complete_geom()?;
                     }
                     encoder.add_point(start.0, start.1)?;
                 }
-                encoder.add_point(end.0, end.1)?;
-                previous_end = Some(end);
+                for point in points.into_iter().skip(1) {
+                    encoder.add_point(point.0, point.1)?;
+                    previous_end = Some(point);
+                }
                 has_geometry = true;
             }
             if has_geometry {

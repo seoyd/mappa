@@ -177,6 +177,34 @@ sha256 = "0b8e4e07ca7f5b6bb3a9a7e305f5c7743aab5487e8bd64759f88b10f6b3f72c7"
 download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25/0b8e4e07ca7f5b6bb3a9a7e305f5c7743aab5487e8bd64759f88b10f6b3f72c7.pmtiles"
 
 [[pack]]
+path = "artifacts/world-roads/ga-state/roads-east.pmtiles"
+manifest = "data/us_tiger_ga_state_roads_east.toml"
+manifest_sha256 = "295f2476b59db1692a2daf79163c528dc396ef6ed6ff49c27d706956a061fe54"
+bytes = 37880773
+sha256 = "6c227147edf4733be35b603aa369a874918298a3b340c30fbe19c6d5e6865bd2"
+
+[[pack]]
+path = "artifacts/world-roads/ga-state/roads-west-east-east.pmtiles"
+manifest = "data/us_tiger_ga_state_roads_west_east_east.toml"
+manifest_sha256 = "21b1225dbed9d53b5ca98579404ca02dafdf912c0ef4f82d4e11c52271a8630b"
+bytes = 24485675
+sha256 = "36d6bb65587aed090787fc70e18f2b1da7790db466e3e3ca7e40ae09a6596887"
+
+[[pack]]
+path = "artifacts/world-roads/ga-state/roads-west-east-west.pmtiles"
+manifest = "data/us_tiger_ga_state_roads_west_east_west.toml"
+manifest_sha256 = "82e4bfcd41490f09fa7b565bc75b15647b2046d263d8f06e9a1143ae158b2f32"
+bytes = 30066582
+sha256 = "bccd408894efc2ef31408489422d404a994666ca5fdbd056e9a812a783f9fe3d"
+
+[[pack]]
+path = "artifacts/world-roads/ga-state/roads-west-west.pmtiles"
+manifest = "data/us_tiger_ga_state_roads_west_west.toml"
+manifest_sha256 = "59fb6700c6380f05180bf6f022ef6f9f01070ddebf24d9cc64aa43f7563902c4"
+bytes = 17299642
+sha256 = "ac9793cbe3702d50eb7a9435f6d5bf4cab13935e5be53024d2f304ef9604db72"
+
+[[pack]]
 path = "artifacts/world-roads/gb/hp.pmtiles"
 manifest = "data/os_open_roads_hp.toml"
 manifest_sha256 = "07566b24c2011fec672fc0bfa02f29ede35662bbad434f8bf7457b5cbd3a9b5c"
@@ -855,6 +883,13 @@ manifest_sha256 = "cea32dd3a271d361270a37ec530de846457bc2214053feb30d974230218b7
 bytes = 337880
 sha256 = "3d8081a07c17d47d3f670dab40ba75650f4d613afd376fc0bb7bb7db9acb34e4"
 download_url = "https://github.com/seoyd/mappa/releases/download/map-packs-2026-09-25/3d8081a07c17d47d3f670dab40ba75650f4d613afd376fc0bb7bb7db9acb34e4.pmtiles"
+
+[[pack]]
+path = "artifacts/world-water/ga-state/water.pmtiles"
+manifest = "data/us_tiger_ga_state_areawater.toml"
+manifest_sha256 = "8c3ee883a1e60ada259c1658f96feac89c23ccd0906f8df0ac15350e336343d0"
+bytes = 48920242
+sha256 = "f54de4bf86e7e79d9dfb226b8f961760b0bc68e3dea5644c8769f1d458cd85d9"
 
 [[pack]]
 path = "artifacts/world-water/ky-state/water-east.pmtiles"

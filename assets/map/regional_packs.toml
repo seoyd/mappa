@@ -3,6 +3,46 @@
 # with observed features, not positional accuracy. Archives open on first use.
 # Adding a pack here does not certify its coverage or positional accuracy.
 [[pack]]
+path = "../../artifacts/world-water/ga-state/water.pmtiles"
+manifest = "../../data/us_tiger_ga_state_areawater.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 수면 · 조지아주 159개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/ga-state/roads-west-west.pmtiles"
+manifest = "../../data/us_tiger_ga_state_roads_west_west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 서부 · 조지아주 159개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/ga-state/roads-west-east-west.pmtiles"
+manifest = "../../data/us_tiger_ga_state_roads_west_east_west.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 중서부 · 조지아주 159개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/ga-state/roads-west-east-east.pmtiles"
+manifest = "../../data/us_tiger_ga_state_roads_west_east_east.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 중동부 · 조지아주 159개 카운티 실증"
+
+[[pack]]
+path = "../../artifacts/world-roads/ga-state/roads-east.pmtiles"
+manifest = "../../data/us_tiger_ga_state_roads_east.toml"
+min_visible_zoom = 10
+archive_min_zoom = 10
+archive_max_zoom = 15
+label = "US Census 도로 동부 · 조지아주 159개 카운티 실증"
+
+[[pack]]
 path = "../../artifacts/world-water/ky-state/water-west.pmtiles"
 manifest = "../../data/us_tiger_ky_state_areawater_west.toml"
 min_visible_zoom = 10
