@@ -28,12 +28,12 @@ flowchart LR
 | z0–z4 | `world_110m.pmtiles` | 1:110m 육지·호수·국경; 나라이름은 별도 원천 좌표 | 세계 축소 화면 |
 | z5–z7 | `world_10m.pmtiles` | 1:10m 육지·호수·국경; z6부터 선별된 주요 도로·도시·하천 중심선 | 전 세계 Web Mercator 범위 |
 | z8–z9 화면 확대 | 선택된 파일의 최고 z7 타일 | 기존 벡터를 확대 | 위치·객체 상세는 증가하지 않음 |
-| z10–z15 | 승인된 지역 PMTiles | 뉴욕주·뉴저지주·델라웨어주·코네티컷주 95개 카운티 상당 단위·GB 52개 격자·캐나다 13개 지역 도로와 뉴욕시 5개 카운티 수면은 z10부터, 뉴욕시 주변 공원 경계는 z12부터, 모나코·Queens 동부 건물은 z14부터 | 출처 manifest와 아카이브 표기·범위 일치 확인; 나머지 지역은 중립색 |
+| z10–z15 | 승인된 지역 PMTiles | 뉴욕주·뉴저지주·델라웨어주·코네티컷주·로드아일랜드주 100개 카운티 상당 단위·GB 52개 격자·캐나다 13개 지역 도로와 뉴욕시 5개 카운티 수면은 z10부터, 뉴욕시 주변 공원 경계는 z12부터, 모나코·Queens 동부 건물은 z14부터 | 출처 manifest와 아카이브 표기·범위 일치 확인; 나머지 지역은 중립색 |
 | z16 화면 확대 | 해당 지역 최고 z15 타일 | 기존 지역 벡터를 확대 | 위치·객체 상세는 증가하지 않음 |
 
 `MAPPA_DATASET=canonical-proof`에서는 위 세계 파일을 열지 않고 나주 `artifacts/map-v0.3c/naju-roads.pmtiles`만 연다. 이 파일은 z10–z15 자료이고 이후 확대는 z15 오버줌이다. `legacy-osm`과 `public-naju`는 과거 비교 모드이며 기본 세계 모드가 아니다. 화면의 `m/px`는 카메라 중심 위도와 현재 화면 배율에서 계산한 **표시 축척**이다. 지리 위치 오차나 원본 해상도를 뜻하지 않는다.
 
-기존 `east_asia_10m.pmtiles`는 비교용 파일로 남지만 기본 세계 모드가 열지 않는다. 세계 10m 아카이브가 동아시아에도 적용된다. [기존 지역 목록](../assets/map/regional_packs.toml)·[GB 도로 목록](../assets/map/gb_regional_packs.toml)·[캐나다 도로 목록](../assets/map/ca_regional_packs.toml)의 파일은 시작할 때 canonical manifest의 권리 게이트를 통과해야 한다. manifest 범위로 만든 z5 셀 인덱스에서 후보를 고르고, PMTiles는 필요한 지역의 첫 타일 요청 때 열어 헤더와 출처를 확인한다. 열린 파일은 최근 사용 순서로 최대 16개를 유지한다. 현재 목록은 기존 8개·GB 52개·캐나다 15개, 총 75개 파일이다. 75개 로드 테스트와 GB 네 지역·캐나다 13개 지역·Delaware·Connecticut Metal 캡처를 확인했으며, iPhone 성능·패키지 갱신 검증은 후속 작업이다.
+기존 `east_asia_10m.pmtiles`는 비교용 파일로 남지만 기본 세계 모드가 열지 않는다. 세계 10m 아카이브가 동아시아에도 적용된다. [기존 지역 목록](../assets/map/regional_packs.toml)·[GB 도로 목록](../assets/map/gb_regional_packs.toml)·[캐나다 도로 목록](../assets/map/ca_regional_packs.toml)의 파일은 시작할 때 canonical manifest의 권리 게이트를 통과해야 한다. manifest 범위로 만든 z5 셀 인덱스에서 후보를 고르고, PMTiles는 필요한 지역의 첫 타일 요청 때 열어 헤더와 출처를 확인한다. 열린 파일은 최근 사용 순서로 최대 16개를 유지한다. 현재 목록은 기존 9개·GB 52개·캐나다 15개, 총 76개 파일이다. 76개 로드 테스트와 GB 네 지역·캐나다 13개 지역·Delaware·Connecticut·Rhode Island Metal 캡처를 확인했으며, iPhone 성능·패키지 갱신 검증은 후속 작업이다.
 
 ## 3. 타일 안의 데이터 레이어와 그리는 순서
 

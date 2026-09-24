@@ -1,0 +1,143 @@
+schema_version = 1
+proof_region = "us-tiger-2025-state-44-5-county-roads"
+proof_bbox_wgs84 = [
+    -71.861023,
+    41.147566,
+    -71.121203,
+    42.018791,
+]
+
+[[source]]
+id = "us-census-tiger-2025-roads-44001"
+name = "2025 TIGER/Line All Roads, county FIPS 44001"
+provider = "U.S. Census Bureau"
+source_version = "2025 TIGER/Line, legal boundaries as of 2025-01-01"
+download_date = "2026-09-24"
+official_url = "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_44001_roads.zip"
+download_page_url = "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html"
+file = "local/ri_roads/tl_2025_44001_roads.zip"
+sha256 = "057a87bb3ab6b91b7a5c6ba1c91381958d1e4ad47509073d95b1b6ef1fcb2b33"
+crs = "EPSG:4269 NAD83; numeric degrees retained; WGS84 datum transform and positional accuracy pending"
+format = "ZIP Shapefile, county All Roads"
+coverage = "County FIPS 44001, source header bounds [-71.35277, 41.638146, -71.225983, 41.774838]; selected road classes only"
+resolution = "official TIGER/Line linear feature geometry; source accuracy varies"
+update_frequency = "annual publication; pinned 2025 snapshot"
+license_id = "US-GOV-PUBLIC-DOMAIN"
+license_url = "https://www2.census.gov/geo/pdfs/maps-data/data/tiger/tgrshp2025/TGRSHP2025_TechDoc.pdf"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "U.S. Census Bureau, 2025 TIGER/Line All Roads; Mappa modifications"
+share_alike = false
+adapter = "us-census-tiger-roads"
+adapter_version = 1
+
+[[source]]
+id = "us-census-tiger-2025-roads-44003"
+name = "2025 TIGER/Line All Roads, county FIPS 44003"
+provider = "U.S. Census Bureau"
+source_version = "2025 TIGER/Line, legal boundaries as of 2025-01-01"
+download_date = "2026-09-24"
+official_url = "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_44003_roads.zip"
+download_page_url = "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html"
+file = "local/ri_roads/tl_2025_44003_roads.zip"
+sha256 = "16c92bf9fa583ff789b9b622874943776d6a83836b1ea1f0e4237d738e1b3ff5"
+crs = "EPSG:4269 NAD83; numeric degrees retained; WGS84 datum transform and positional accuracy pending"
+format = "ZIP Shapefile, county All Roads"
+coverage = "County FIPS 44003, source header bounds [-71.789669, 41.598044, -71.358482, 41.76761]; selected road classes only"
+resolution = "official TIGER/Line linear feature geometry; source accuracy varies"
+update_frequency = "annual publication; pinned 2025 snapshot"
+license_id = "US-GOV-PUBLIC-DOMAIN"
+license_url = "https://www2.census.gov/geo/pdfs/maps-data/data/tiger/tgrshp2025/TGRSHP2025_TechDoc.pdf"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "U.S. Census Bureau, 2025 TIGER/Line All Roads; Mappa modifications"
+share_alike = false
+adapter = "us-census-tiger-roads"
+adapter_version = 1
+
+[[source]]
+id = "us-census-tiger-2025-roads-44005"
+name = "2025 TIGER/Line All Roads, county FIPS 44005"
+provider = "U.S. Census Bureau"
+source_version = "2025 TIGER/Line, legal boundaries as of 2025-01-01"
+download_date = "2026-09-24"
+official_url = "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_44005_roads.zip"
+download_page_url = "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html"
+file = "local/ri_roads/tl_2025_44005_roads.zip"
+sha256 = "e1df5b60c1b2afb9fcae67ad9db3472c93dff84c9e3e73f14dc93deebadbf7b5"
+crs = "EPSG:4269 NAD83; numeric degrees retained; WGS84 datum transform and positional accuracy pending"
+format = "ZIP Shapefile, county All Roads"
+coverage = "County FIPS 44005, source header bounds [-71.401339, 41.449247, -71.121203, 41.674912]; selected road classes only"
+resolution = "official TIGER/Line linear feature geometry; source accuracy varies"
+update_frequency = "annual publication; pinned 2025 snapshot"
+license_id = "US-GOV-PUBLIC-DOMAIN"
+license_url = "https://www2.census.gov/geo/pdfs/maps-data/data/tiger/tgrshp2025/TGRSHP2025_TechDoc.pdf"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "U.S. Census Bureau, 2025 TIGER/Line All Roads; Mappa modifications"
+share_alike = false
+adapter = "us-census-tiger-roads"
+adapter_version = 1
+
+[[source]]
+id = "us-census-tiger-2025-roads-44007"
+name = "2025 TIGER/Line All Roads, county FIPS 44007"
+provider = "U.S. Census Bureau"
+source_version = "2025 TIGER/Line, legal boundaries as of 2025-01-01"
+download_date = "2026-09-24"
+official_url = "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_44007_roads.zip"
+download_page_url = "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html"
+file = "local/ri_roads/tl_2025_44007_roads.zip"
+sha256 = "b63543e509a61fa471b52942dad0af94f93f11212a162c973e84126b8ab7abae"
+crs = "EPSG:4269 NAD83; numeric degrees retained; WGS84 datum transform and positional accuracy pending"
+format = "ZIP Shapefile, county All Roads"
+coverage = "County FIPS 44007, source header bounds [-71.798763, 41.725199, -71.324604, 42.018791]; selected road classes only"
+resolution = "official TIGER/Line linear feature geometry; source accuracy varies"
+update_frequency = "annual publication; pinned 2025 snapshot"
+license_id = "US-GOV-PUBLIC-DOMAIN"
+license_url = "https://www2.census.gov/geo/pdfs/maps-data/data/tiger/tgrshp2025/TGRSHP2025_TechDoc.pdf"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "U.S. Census Bureau, 2025 TIGER/Line All Roads; Mappa modifications"
+share_alike = false
+adapter = "us-census-tiger-roads"
+adapter_version = 1
+
+[[source]]
+id = "us-census-tiger-2025-roads-44009"
+name = "2025 TIGER/Line All Roads, county FIPS 44009"
+provider = "U.S. Census Bureau"
+source_version = "2025 TIGER/Line, legal boundaries as of 2025-01-01"
+download_date = "2026-09-24"
+official_url = "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_44009_roads.zip"
+download_page_url = "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html"
+file = "local/ri_roads/tl_2025_44009_roads.zip"
+sha256 = "58692b205af88d66cd74911fe8a0e690c2bd7260ca4d82a78492e03af8bdddcc"
+crs = "EPSG:4269 NAD83; numeric degrees retained; WGS84 datum transform and positional accuracy pending"
+format = "ZIP Shapefile, county All Roads"
+coverage = "County FIPS 44009, source header bounds [-71.861023, 41.147566, -71.401331, 41.652122]; selected road classes only"
+resolution = "official TIGER/Line linear feature geometry; source accuracy varies"
+update_frequency = "annual publication; pinned 2025 snapshot"
+license_id = "US-GOV-PUBLIC-DOMAIN"
+license_url = "https://www2.census.gov/geo/pdfs/maps-data/data/tiger/tgrshp2025/TGRSHP2025_TechDoc.pdf"
+license_status = "APPROVED_WITH_ATTRIBUTION"
+commercial_use = true
+modification = true
+redistribution = true
+attribution_required = true
+attribution_text = "U.S. Census Bureau, 2025 TIGER/Line All Roads; Mappa modifications"
+share_alike = false
+adapter = "us-census-tiger-roads"
+adapter_version = 1

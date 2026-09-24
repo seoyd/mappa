@@ -1,0 +1,1 @@
+artifacts/world-roads/ri-state/state.pmtiles: decoded=4867, absent=0, failures=0, layers (land, green, water, road_surface, building, boundary, waterway, major, collector, local, place)=[0, 0, 0, 0, 0, 0, 0, 1595, 13811, 143690, 0]
