@@ -25,6 +25,12 @@
 
 원시 출력과 후보 좌표 표본은 [KS–MO](../artifacts/world-roads/ks-state/border-endpoints-mo.log), [MO–IA](../artifacts/world-roads/mo-state/border-endpoints-ia.log), [MO–IL](../artifacts/world-roads/mo-state/border-endpoints-il.log), [NE–KS](../artifacts/world-roads/ne-state/border-endpoints-ks.log), [NE–IA](../artifacts/world-roads/ne-state/border-endpoints-ia.log), [KS–OK](../artifacts/world-roads/ok-state/border-endpoints-ks.log)에 기록했다. `--details` 옵션을 적용한 [KS–OK 후보 원본 계보](../artifacts/world-roads/ok-state/border-endpoints-ks-detailed.log)는 후보 끝점 55개의 관련 원본 도로 행 67개와 도로 분류·이름을 기록했다. 67개는 모두 `RoadResidential`이며, 이는 통행 가능성과 실제 연결 여부의 판정이 아니다. `상대 끝점 없음`과 `상대 선 위`의 차이는 두 주 원천이 같은 도로를 다른 지점에서 분할할 수 있음을 보여준다. `후보 공백`에는 강가·주 경계에서 끝나는 정상 도로가 포함될 수 있다. 선을 임의로 이어 붙이지 않았다.
 
+## KS–OK 원본 행 대조
+
+새 Rust [원본 도로 근접 감사](../crates/mappa-map-data/src/bin/audit_tiger_raw_border_candidates.rs)는 후보와 반대편 주의 ZIP 원본 행을 비교한다. 공식 manifest의 ZIP SHA-256과 NAD83 `.prj`를 확인하고 선형에서 후보까지 거리를 계산한다. [OK 후보 47개 대 KS 원본](../artifacts/world-roads/ok-state/raw-kansas-near-ok-candidates.log)은 Kansas ZIP 11개·27,456행을 검사했다. **16개** 후보의 20m 이내에 원본 선이 있었지만 채택된 차량도로 선은 0개였다. 가장 가까운 원본 분류는 `S1500` 10개, `S1740` 5개, `S1750` 1개다. 나머지 **31개** 후보 주변 20m에는 Kansas 원본 선도 없었다. [KS 후보 8개 대 OK 원본](../artifacts/world-roads/ok-state/raw-oklahoma-near-ks-candidates.log)은 Oklahoma ZIP 6개·26,454행을 검사했고 8개 모두 20m 이내 원본 선이 없었다.
+
+[Census MTFCC 정의](https://www2.census.gov/geo/pdfs/maps-data/data/tiger/tgrshp2025/TGRSHP2025_TechDoc.pdf)에 따르면 `S1500`은 4륜구동 차량이 필요한 비포장 길, `S1740`은 대체로 사유지 안의 산업·농장 등 접근로, `S1750`은 Census 내부용 분류다. 따라서 16개 선을 일반 차량도로 레이어로 자동 합치지 않는다. 정상적인 막다른 길인지, 다른 자료에서 누락된 일반 도로가 있는지는 아직 검증되지 않았다. 별도 길 종류를 제공할 때는 접근 제한과 시각 표현을 먼저 정해야 한다.
+
 ## 이 검사로 확인할 수 없는 것
 
 - 폴리곤 경계에서 **정확히 동일한 좌표 선분**만 사용하므로 양쪽 폴리곤의 선분 분할 방식이 다른 구간은 빠질 수 있다. 위 선분 수를 주 경계 전체 길이 또는 전수 검사로 해석하지 않는다.
@@ -43,3 +49,12 @@ cargo run --offline -p mappa-map-data --bin audit_us_state_border_endpoints -- \
 ```
 
 후보 행 추적은 같은 명령의 두 GeoDB 뒤에 `--details`를 추가한다.
+
+```sh
+cargo run --release --offline -p mappa-map-data --bin audit_tiger_raw_border_candidates -- \
+  data/us_tiger_ks_state_roads.toml \
+  artifacts/world-roads/ok-state/border-endpoints-ks-detailed.log 40 20
+cargo run --release --offline -p mappa-map-data --bin audit_tiger_raw_border_candidates -- \
+  data/us_tiger_ok_state_roads.toml \
+  artifacts/world-roads/ok-state/border-endpoints-ks-detailed.log 20 20
+```
