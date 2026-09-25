@@ -23,6 +23,7 @@ mod ie_rmo_roads;
 mod ign_bdtopo;
 mod lambert93;
 mod lu_geobase;
+mod nl_nwb_roads;
 mod nrn;
 mod qld_roads;
 mod tas_roads;
@@ -34,6 +35,7 @@ pub use ie_rmo_roads::adapt_ie_rmo_local_roads;
 pub use ign_bdtopo::{adapt_ign_bdtopo_roads, adapt_ign_bdtopo_stations, adapt_ign_bdtopo_water};
 pub use lambert93::inverse_lambert93;
 pub use lu_geobase::adapt_lu_geobase_roads;
+pub use nl_nwb_roads::{adapt_nl_nwb_roads, nl_nwb_regions};
 pub use nrn::adapt_ca_nrn_roads;
 pub use qld_roads::adapt_au_qld_qrt_roads;
 pub use tas_roads::adapt_au_tas_list_transport_segments;
@@ -218,6 +220,7 @@ impl SourceManifest {
                     | "ign-bdtopo-passenger-station"
                     | "ie-rmo-local-roads"
                     | "lu-geobase-road"
+                    | "nl-nwb-wegen"
                     | "os-open-roads"
             ) || (source.adapter == "os-open-roads" && source.adapter_version != 2)
                 || (source.adapter != "os-open-roads" && source.adapter_version != 1)
