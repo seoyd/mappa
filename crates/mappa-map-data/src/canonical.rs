@@ -19,6 +19,7 @@ use std::{
 use thiserror::Error;
 
 mod act_roads;
+mod ie_rmo_roads;
 mod ign_bdtopo;
 mod lambert93;
 mod lu_geobase;
@@ -29,6 +30,7 @@ mod vic_dtp_roads;
 mod vicmap_roads;
 mod wa_roads;
 pub use act_roads::adapt_au_act_road_centrelines;
+pub use ie_rmo_roads::adapt_ie_rmo_local_roads;
 pub use ign_bdtopo::{adapt_ign_bdtopo_roads, adapt_ign_bdtopo_stations, adapt_ign_bdtopo_water};
 pub use lambert93::inverse_lambert93;
 pub use lu_geobase::adapt_lu_geobase_roads;
@@ -214,6 +216,7 @@ impl SourceManifest {
                     | "ign-bdtopo-road-segment"
                     | "ign-bdtopo-surface-water"
                     | "ign-bdtopo-passenger-station"
+                    | "ie-rmo-local-roads"
                     | "lu-geobase-road"
                     | "os-open-roads"
             ) || (source.adapter == "os-open-roads" && source.adapter_version != 2)
