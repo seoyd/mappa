@@ -42,6 +42,10 @@
 | MT–WY | 1,932 | WY→MT | 161 | 106 | 50 | 1 | 48 |
 | MT–SD | 341 | MT→SD | 19 | 16 | 2 | 0 | 2 |
 | MT–SD | 341 | SD→MT | 18 | 16 | 2 | 1 | 1 |
+| ND–MT | 2,026 | ND→MT | 244 | 147 | 88 | 35 | 51 |
+| ND–MT | 2,026 | MT→ND | 196 | 147 | 39 | 16 | 23 |
+| ND–SD | 3,286 | ND→SD | 376 | 247 | 123 | 82 | 40 |
+| ND–SD | 3,286 | SD→ND | 349 | 247 | 100 | 65 | 35 |
 
 원시 출력과 후보 좌표 표본은 [KS–MO](../artifacts/world-roads/ks-state/border-endpoints-mo.log), [MO–IA](../artifacts/world-roads/mo-state/border-endpoints-ia.log), [MO–IL](../artifacts/world-roads/mo-state/border-endpoints-il.log), [NE–KS](../artifacts/world-roads/ne-state/border-endpoints-ks.log), [NE–IA](../artifacts/world-roads/ne-state/border-endpoints-ia.log), [KS–OK](../artifacts/world-roads/ok-state/border-endpoints-ks.log)에 기록했다. `--details` 옵션을 적용한 [KS–OK 후보 원본 계보](../artifacts/world-roads/ok-state/border-endpoints-ks-detailed.log)는 후보 끝점 55개의 관련 원본 도로 행 67개와 도로 분류·이름을 기록했다. 67개는 모두 `RoadResidential`이며, 이는 통행 가능성과 실제 연결 여부의 판정이 아니다. `상대 끝점 없음`과 `상대 선 위`의 차이는 두 주 원천이 같은 도로를 다른 지점에서 분할할 수 있음을 보여준다. `후보 공백`에는 강가·주 경계에서 끝나는 정상 도로가 포함될 수 있다. 선을 임의로 이어 붙이지 않았다.
 
@@ -96,6 +100,19 @@
 | SD→MT | [Montana 원본](../artifacts/world-roads/mt-state/raw-mt-near-sd-candidates.log) | 1 | 1 | 0 | `S1500` 1 |
 
 방향별 후보 **84개 중 42개**는 반대편 공식 원본 선이 20m 안에 있지만 모두 현재 일반 도로 레이어에서 제외한 종류다. **42개**는 그 거리 안에 원본 선이 없다. 이 수는 실제 통행 가능한 도로 단절 건수가 아니다.
+
+## ND–MT·SD 원본 행 대조
+
+[North Dakota–Montana](../artifacts/world-roads/nd-state/border-endpoints-mt.log)·[North Dakota–South Dakota](../artifacts/world-roads/nd-state/border-endpoints-sd.log) 경계의 방향별 후보도 같은 20m 기준으로 반대편 공식 ZIP 원본과 대조했다.
+
+| 후보 방향 | 반대편 원본 행 감사 | 후보 | 원본 선 ≤20m | 채택 도로 ≤20m | 제외 분류 |
+|---|---|---:|---:|---:|---|
+| ND→MT | [Montana 원본](../artifacts/world-roads/nd-state/raw-mt-near-nd-candidates.log) | 51 | 28 | 0 | `S1500` 28 |
+| MT→ND | [North Dakota 원본](../artifacts/world-roads/nd-state/raw-nd-near-mt-candidates.log) | 23 | 16 | 0 | `S1500` 15, `S1740` 1 |
+| ND→SD | [South Dakota 원본](../artifacts/world-roads/nd-state/raw-sd-near-nd-candidates.log) | 40 | 23 | 0 | `S1500` 22, `S1740` 1 |
+| SD→ND | [North Dakota 원본](../artifacts/world-roads/nd-state/raw-nd-near-sd-candidates.log) | 35 | 29 | 0 | `S1500` 29 |
+
+방향별 후보 **149개 중 96개**는 반대편 공식 원본 선이 20m 안에 있지만 현재 일반 도로 레이어에서 제외한 종류다. **53개**는 그 거리 안에 원본 선이 없다. 이 수는 실제 통행 가능한 도로 단절 건수가 아니다.
 
 ## 이 검사로 확인할 수 없는 것
 
