@@ -1,0 +1,29 @@
+shared_border_segments=3607 first_state=27 second_state=19
+27 endpoints=418 matches_0_1m=236 matches_1m=0 matches_5m=2 matches_20m=4 no_endpoint_20m=176 on_opposite_line_0_1m=163 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=2 no_opposite_line_20m=11 candidate_gap_samples=[-95.875585,43.500237] [-95.794056,43.500166] [-95.516695,43.500094] [-95.514756,43.500048] [-91.815520,43.500740] [-91.798876,43.500688] [-91.445684,43.500633] [-91.391884,43.500777] [-91.331679,43.500731] [-91.331673,43.500752] [-91.282878,43.500873]
+candidate_gap state=27 lon=-95.875585 lat=43.500237 kind=RoadResidential name=Some("Edwards Ave") source_id=us-census-tiger-2025-roads-27105 source_feature_id=110391859734:0
+candidate_gap state=27 lon=-95.794056 lat=43.500166 kind=RoadResidential name=Some("340th St") source_id=us-census-tiger-2025-roads-27105 source_feature_id=110391859242:0
+candidate_gap state=27 lon=-95.794056 lat=43.500166 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-27105 source_feature_id=110391863099:0
+candidate_gap state=27 lon=-95.516695 lat=43.500094 kind=RoadResidential name=Some("Co Rd 53") source_id=us-census-tiger-2025-roads-27105 source_feature_id=110391858132:0
+candidate_gap state=27 lon=-95.516695 lat=43.500094 kind=RoadResidential name=Some("Town Ave") source_id=us-census-tiger-2025-roads-27105 source_feature_id=110391858943:0
+candidate_gap state=27 lon=-95.516695 lat=43.500094 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-27105 source_feature_id=110391863040:0
+candidate_gap state=27 lon=-95.514756 lat=43.500048 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-27105 source_feature_id=110391863081:0
+candidate_gap state=27 lon=-91.815520 lat=43.500740 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-27045 source_feature_id=1102639072751:0
+candidate_gap state=27 lon=-91.798876 lat=43.500688 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-27045 source_feature_id=1103690174836:0
+candidate_gap state=27 lon=-91.445684 lat=43.500633 kind=RoadResidential name=Some("T-15") source_id=us-census-tiger-2025-roads-27055 source_feature_id=1105061361924:0
+candidate_gap state=27 lon=-91.445684 lat=43.500633 kind=RoadResidential name=Some("Fox Farm Rd") source_id=us-census-tiger-2025-roads-27055 source_feature_id=110468101080:0
+candidate_gap state=27 lon=-91.391884 lat=43.500777 kind=RoadResidential name=Some("Minnesota Rd") source_id=us-census-tiger-2025-roads-27055 source_feature_id=110468101359:0
+candidate_gap state=27 lon=-91.391884 lat=43.500777 kind=RoadResidential name=Some("T-189") source_id=us-census-tiger-2025-roads-27055 source_feature_id=1105060248014:0
+candidate_gap state=27 lon=-91.331679 lat=43.500731 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-27055 source_feature_id=110468104732:0
+candidate_gap state=27 lon=-91.331673 lat=43.500752 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-27055 source_feature_id=110468104732:0
+candidate_gap state=27 lon=-91.331673 lat=43.500752 kind=RoadResidential name=Some("County 2") source_id=us-census-tiger-2025-roads-27055 source_feature_id=1103443532708:0
+candidate_gap state=27 lon=-91.331673 lat=43.500752 kind=RoadResidential name=Some("Pool Hill Rd") source_id=us-census-tiger-2025-roads-27055 source_feature_id=1103443532672:0
+candidate_gap state=27 lon=-91.282878 lat=43.500873 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-27055 source_feature_id=110468104676:0
+19 endpoints=381 matches_0_1m=236 matches_1m=0 matches_5m=1 matches_20m=3 no_endpoint_20m=141 on_opposite_line_0_1m=134 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=3 no_opposite_line_20m=4 candidate_gap_samples=[-95.797510,43.499965] [-95.514656,43.499867] [-91.642506,43.500409] [-91.441934,43.500618]
+candidate_gap state=19 lon=-95.797510 lat=43.499965 kind=RoadResidential name=Some("Co Hwy L32") source_id=us-census-tiger-2025-roads-19143 source_feature_id=110454402029:0
+candidate_gap state=19 lon=-95.797510 lat=43.499965 kind=RoadResidential name=Some("100th St") source_id=us-census-tiger-2025-roads-19143 source_feature_id=110391858991:0
+candidate_gap state=19 lon=-95.797510 lat=43.499965 kind=RoadResidential name=Some("Nettle Ave") source_id=us-census-tiger-2025-roads-19143 source_feature_id=110454402254:0
+candidate_gap state=19 lon=-95.797510 lat=43.499965 kind=RoadResidential name=Some("340th St") source_id=us-census-tiger-2025-roads-19143 source_feature_id=110391859238:0
+candidate_gap state=19 lon=-95.514656 lat=43.499867 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-19143 source_feature_id=110454402796:0
+candidate_gap state=19 lon=-91.642506 lat=43.500409 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-19191 source_feature_id=110193562586:0
+candidate_gap state=19 lon=-91.642506 lat=43.500409 kind=RoadResidential name=Some("State Line Rd") source_id=us-census-tiger-2025-roads-19191 source_feature_id=110193561447:0
+candidate_gap state=19 lon=-91.441934 lat=43.500618 kind=RoadResidential name=Some("Fox Farm Rd") source_id=us-census-tiger-2025-roads-19005 source_feature_id=110695782244:0

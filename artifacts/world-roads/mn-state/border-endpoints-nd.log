@@ -1,0 +1,10 @@
+shared_border_segments=26565 first_state=27 second_state=38
+27 endpoints=42 matches_0_1m=38 matches_1m=0 matches_5m=0 matches_20m=1 no_endpoint_20m=3 on_opposite_line_0_1m=0 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=0 no_opposite_line_20m=3 candidate_gap_samples=[-96.742541,46.524897] [-96.571990,46.137811] [-96.563672,45.935245]
+candidate_gap state=27 lon=-96.742541 lat=46.524897 kind=RoadResidential name=Some("170th St") source_id=us-census-tiger-2025-roads-27167 source_feature_id=1103929562942:0
+candidate_gap state=27 lon=-96.571990 lat=46.137811 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-27167 source_feature_id=110421544627:0
+candidate_gap state=27 lon=-96.563672 lat=45.935245 kind=RoadResidential name=Some("Twp Rd 150") source_id=us-census-tiger-2025-roads-27155 source_feature_id=110339890495:0
+38 endpoints=42 matches_0_1m=38 matches_1m=0 matches_5m=0 matches_20m=0 no_endpoint_20m=4 on_opposite_line_0_1m=0 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=0 no_opposite_line_20m=4 candidate_gap_samples=[-96.598219,46.266007] [-96.568418,46.123308] [-96.564624,45.949857] [-96.555721,46.079672]
+candidate_gap state=38 lon=-96.598219 lat=46.266007 kind=RoadResidential name=Some("3rd Ave N Exd") source_id=us-census-tiger-2025-roads-38077 source_feature_id=1103697119648:0
+candidate_gap state=38 lon=-96.568418 lat=46.123308 kind=RoadResidential name=Some("89th St SE") source_id=us-census-tiger-2025-roads-38077 source_feature_id=110688596425:0
+candidate_gap state=38 lon=-96.564624 lat=45.949857 kind=RoadResidential name=Some("101st St SE") source_id=us-census-tiger-2025-roads-38077 source_feature_id=110688596552:0
+candidate_gap state=38 lon=-96.555721 lat=46.079672 kind=RoadResidential name=Some("92nd St SE") source_id=us-census-tiger-2025-roads-38077 source_feature_id=11033564250178:0

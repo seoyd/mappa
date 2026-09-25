@@ -1,0 +1,4 @@
+candidate_points=3 inspected_sources=1 inspected_rows=4381 radius_m=20
+candidate lon=-96.742541 lat=46.524897 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=345.810 nearest_mtfcc=S1400 nearest_name=None source_id=us-census-tiger-2025-roads-38077 source_feature_id=110688598469
+candidate lon=-96.571990 lat=46.137811 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=46.103 nearest_mtfcc=S1400 nearest_name=None source_id=us-census-tiger-2025-roads-38077 source_feature_id=110688598567
+candidate lon=-96.563672 lat=45.935245 raw_within_radius=2 accepted_within_radius=0 excluded_within_radius=2 nearest_m=0.000 nearest_mtfcc=S1500 nearest_name=Some("102nd St SE") source_id=us-census-tiger-2025-roads-38077 source_feature_id=110469958752

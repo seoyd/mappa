@@ -1,0 +1,5 @@
+candidate_points=4 inspected_sources=2 inspected_rows=4273 radius_m=20
+candidate lon=-95.797510 lat=43.499965 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=27.473 nearest_mtfcc=S1400 nearest_name=Some("Jones Ave") source_id=us-census-tiger-2025-roads-27105 source_feature_id=110391859299
+candidate lon=-95.514656 lat=43.499867 raw_within_radius=1 accepted_within_radius=0 excluded_within_radius=1 nearest_m=0.000 nearest_mtfcc=S1740 nearest_name=None source_id=us-census-tiger-2025-roads-27105 source_feature_id=110391865789
+candidate lon=-91.642506 lat=43.500409 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=29.264 nearest_mtfcc=S1400 nearest_name=None source_id=us-census-tiger-2025-roads-27055 source_feature_id=110193562587
+candidate lon=-91.441934 lat=43.500618 raw_within_radius=1 accepted_within_radius=0 excluded_within_radius=1 nearest_m=0.000 nearest_mtfcc=S1740 nearest_name=None source_id=us-census-tiger-2025-roads-27055 source_feature_id=110695783900

@@ -46,6 +46,14 @@
 | ND–MT | 2,026 | MT→ND | 196 | 147 | 39 | 16 | 23 |
 | ND–SD | 3,286 | ND→SD | 376 | 247 | 123 | 82 | 40 |
 | ND–SD | 3,286 | SD→ND | 349 | 247 | 100 | 65 | 35 |
+| MN–IA | 3,607 | MN→IA | 418 | 236 | 176 | 163 | 11 |
+| MN–IA | 3,607 | IA→MN | 381 | 236 | 141 | 134 | 4 |
+| MN–ND | 26,565 | MN→ND | 42 | 38 | 3 | 0 | 3 |
+| MN–ND | 26,565 | ND→MN | 42 | 38 | 4 | 0 | 4 |
+| MN–SD | 2,610 | MN→SD | 183 | 152 | 28 | 19 | 9 |
+| MN–SD | 2,610 | SD→MN | 180 | 152 | 26 | 16 | 10 |
+| MN–WI | 4,846 | MN→WI | 52 | 46 | 6 | 5 | 1 |
+| MN–WI | 4,846 | WI→MN | 54 | 46 | 7 | 4 | 2 |
 
 원시 출력과 후보 좌표 표본은 [KS–MO](../artifacts/world-roads/ks-state/border-endpoints-mo.log), [MO–IA](../artifacts/world-roads/mo-state/border-endpoints-ia.log), [MO–IL](../artifacts/world-roads/mo-state/border-endpoints-il.log), [NE–KS](../artifacts/world-roads/ne-state/border-endpoints-ks.log), [NE–IA](../artifacts/world-roads/ne-state/border-endpoints-ia.log), [KS–OK](../artifacts/world-roads/ok-state/border-endpoints-ks.log)에 기록했다. `--details` 옵션을 적용한 [KS–OK 후보 원본 계보](../artifacts/world-roads/ok-state/border-endpoints-ks-detailed.log)는 후보 끝점 55개의 관련 원본 도로 행 67개와 도로 분류·이름을 기록했다. 67개는 모두 `RoadResidential`이며, 이는 통행 가능성과 실제 연결 여부의 판정이 아니다. `상대 끝점 없음`과 `상대 선 위`의 차이는 두 주 원천이 같은 도로를 다른 지점에서 분할할 수 있음을 보여준다. `후보 공백`에는 강가·주 경계에서 끝나는 정상 도로가 포함될 수 있다. 선을 임의로 이어 붙이지 않았다.
 
@@ -113,6 +121,23 @@
 | SD→ND | [North Dakota 원본](../artifacts/world-roads/nd-state/raw-nd-near-sd-candidates.log) | 35 | 29 | 0 | `S1500` 29 |
 
 방향별 후보 **149개 중 96개**는 반대편 공식 원본 선이 20m 안에 있지만 현재 일반 도로 레이어에서 제외한 종류다. **53개**는 그 거리 안에 원본 선이 없다. 이 수는 실제 통행 가능한 도로 단절 건수가 아니다.
+
+## MN–IA·ND·SD·WI 원본 행 대조
+
+[Minnesota–Iowa](../artifacts/world-roads/mn-state/border-endpoints-ia.log), [Minnesota–North Dakota](../artifacts/world-roads/mn-state/border-endpoints-nd.log), [Minnesota–South Dakota](../artifacts/world-roads/mn-state/border-endpoints-sd.log), [Minnesota–Wisconsin](../artifacts/world-roads/mn-state/border-endpoints-wi.log) 경계의 방향별 후보를 같은 20m 기준으로 반대편 공식 ZIP 원본과 대조했다.
+
+| 후보 방향 | 반대편 원본 행 감사 | 후보 | 원본 선 ≤20m | 채택 도로 ≤20m | 제외 분류 |
+|---|---|---:|---:|---:|---|
+| MN→IA | [Iowa 원본](../artifacts/world-roads/mn-state/raw-ia-near-mn-candidates.log) | 11 | 5 | 0 | `S1740` 5 |
+| IA→MN | [Minnesota 원본](../artifacts/world-roads/mn-state/raw-mn-near-ia-candidates.log) | 4 | 2 | 0 | `S1740` 2 |
+| MN→ND | [North Dakota 원본](../artifacts/world-roads/mn-state/raw-nd-near-mn-candidates.log) | 3 | 1 | 0 | `S1500` 1 |
+| ND→MN | [Minnesota 원본](../artifacts/world-roads/mn-state/raw-mn-near-nd-candidates.log) | 4 | 2 | 0 | `S1500` 2 |
+| MN→SD | [South Dakota 원본](../artifacts/world-roads/mn-state/raw-sd-near-mn-candidates.log) | 9 | 2 | 0 | `S1500` 2 |
+| SD→MN | [Minnesota 원본](../artifacts/world-roads/mn-state/raw-mn-near-sd-candidates.log) | 10 | 0 | 0 | 없음 |
+| MN→WI | [Wisconsin 원본](../artifacts/world-roads/mn-state/raw-wi-near-mn-candidates.log) | 1 | 0 | 0 | 없음 |
+| WI→MN | [Minnesota 원본](../artifacts/world-roads/mn-state/raw-mn-near-wi-candidates.log) | 2 | 0 | 0 | 없음 |
+
+방향별 후보 **44개 중 12개**는 반대편 공식 원본 선이 20m 안에 있지만 현재 일반 도로 레이어에서 제외한 종류다. **32개**는 그 거리 안에 원본 선이 없다. 이 수는 실제 통행 가능한 도로 단절 건수가 아니다.
 
 ## 이 검사로 확인할 수 없는 것
 

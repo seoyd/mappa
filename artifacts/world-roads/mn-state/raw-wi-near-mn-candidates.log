@@ -1,0 +1,2 @@
+candidate_points=1 inspected_sources=1 inspected_rows=3810 radius_m=20
+candidate lon=-92.291954 lat=46.654574 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=35.641 nearest_mtfcc=S1200 nearest_name=Some("State Hwy 23") source_id=us-census-tiger-2025-roads-55031 source_feature_id=1104259292476
