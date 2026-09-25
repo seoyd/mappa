@@ -1,0 +1,11 @@
+shared_border_segments=9804 first_state=46 second_state=19
+46 endpoints=26 matches_0_1m=18 matches_1m=0 matches_5m=0 matches_20m=0 no_endpoint_20m=8 on_opposite_line_0_1m=7 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=0 no_opposite_line_20m=1 candidate_gap_samples=[-96.498436,42.998081]
+candidate_gap state=46 lon=-96.498436 lat=42.998081 kind=RoadResidential name=Some("302nd St") source_id=us-census-tiger-2025-roads-46127 source_feature_id=110224095889:0
+candidate_gap state=46 lon=-96.498436 lat=42.998081 kind=RoadResidential name=Some("Co Rd 13") source_id=us-census-tiger-2025-roads-46127 source_feature_id=110224095684:0
+19 endpoints=27 matches_0_1m=18 matches_1m=0 matches_5m=0 matches_20m=0 no_endpoint_20m=9 on_opposite_line_0_1m=5 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=0 no_opposite_line_20m=4 candidate_gap_samples=[-96.594353,43.500424] [-96.542488,42.661011] [-96.498184,42.998029] [-96.474189,43.199510]
+candidate_gap state=19 lon=-96.594353 lat=43.500424 kind=RoadResidential name=Some("100th St") source_id=us-census-tiger-2025-roads-19119 source_feature_id=1102797064868:0
+candidate_gap state=19 lon=-96.594353 lat=43.500424 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-19119 source_feature_id=110537304158:0
+candidate_gap state=19 lon=-96.594353 lat=43.500424 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-19119 source_feature_id=110537304158:0
+candidate_gap state=19 lon=-96.542488 lat=42.661011 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-19149 source_feature_id=110438604211:0
+candidate_gap state=19 lon=-96.498184 lat=42.998029 kind=RoadResidential name=Some("10th St") source_id=us-census-tiger-2025-roads-19167 source_feature_id=110439298591:0
+candidate_gap state=19 lon=-96.474189 lat=43.199510 kind=RoadResidential name=Some("310th St") source_id=us-census-tiger-2025-roads-19167 source_feature_id=110439299026:0

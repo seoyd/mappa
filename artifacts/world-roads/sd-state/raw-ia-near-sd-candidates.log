@@ -1,0 +1,2 @@
+candidate_points=1 inspected_sources=1 inspected_rows=1388 radius_m=20
+candidate lon=-96.498436 lat=42.998081 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=21.318 nearest_mtfcc=S1400 nearest_name=Some("10th St") source_id=us-census-tiger-2025-roads-19167 source_feature_id=110439298591

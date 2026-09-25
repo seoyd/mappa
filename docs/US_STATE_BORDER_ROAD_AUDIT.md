@@ -28,6 +28,16 @@
 | CO–NE | 1,388 | NE→CO | 197 | 137 | 50 | 26 | 23 |
 | CO–OK | 136 | CO→OK | 21 | 20 | 0 | 0 | 0 |
 | CO–OK | 136 | OK→CO | 41 | 20 | 20 | 3 | 17 |
+| SD–NE | 2,796 | SD→NE | 177 | 140 | 35 | 17 | 18 |
+| SD–NE | 2,796 | NE→SD | 182 | 140 | 37 | 10 | 27 |
+| SD–IA | 9,804 | SD→IA | 26 | 18 | 8 | 7 | 1 |
+| SD–IA | 9,804 | IA→SD | 27 | 18 | 9 | 5 | 4 |
+| WY–CO | 1,868 | WY→CO | 182 | 125 | 48 | 1 | 46 |
+| WY–CO | 1,868 | CO→WY | 159 | 125 | 30 | 1 | 28 |
+| WY–NE | 867 | WY→NE | 120 | 91 | 29 | 10 | 16 |
+| WY–NE | 867 | NE→WY | 154 | 91 | 60 | 19 | 40 |
+| WY–SD | 1,116 | WY→SD | 102 | 69 | 33 | 5 | 28 |
+| WY–SD | 1,116 | SD→WY | 81 | 69 | 10 | 4 | 6 |
 
 원시 출력과 후보 좌표 표본은 [KS–MO](../artifacts/world-roads/ks-state/border-endpoints-mo.log), [MO–IA](../artifacts/world-roads/mo-state/border-endpoints-ia.log), [MO–IL](../artifacts/world-roads/mo-state/border-endpoints-il.log), [NE–KS](../artifacts/world-roads/ne-state/border-endpoints-ks.log), [NE–IA](../artifacts/world-roads/ne-state/border-endpoints-ia.log), [KS–OK](../artifacts/world-roads/ok-state/border-endpoints-ks.log)에 기록했다. `--details` 옵션을 적용한 [KS–OK 후보 원본 계보](../artifacts/world-roads/ok-state/border-endpoints-ks-detailed.log)는 후보 끝점 55개의 관련 원본 도로 행 67개와 도로 분류·이름을 기록했다. 67개는 모두 `RoadResidential`이며, 이는 통행 가능성과 실제 연결 여부의 판정이 아니다. `상대 끝점 없음`과 `상대 선 위`의 차이는 두 주 원천이 같은 도로를 다른 지점에서 분할할 수 있음을 보여준다. `후보 공백`에는 강가·주 경계에서 끝나는 정상 도로가 포함될 수 있다. 선을 임의로 이어 붙이지 않았다.
 
@@ -50,6 +60,25 @@
 | OK→CO | [Colorado 원본](../artifacts/world-roads/co-state/raw-co-near-ok-candidates.log) | 17 | 0 | 0 | 없음 |
 
 검사한 후보 **84개 중 13개**는 반대편에 원본 선이 있었으나 `S1500` 5개·`S1740` 8개로 현재 일반 도로 레이어에서 제외한 종류다. 나머지 **71개**는 반대편 공식 원본 선이 20m 이내에 없었다. 이 결과도 정상적인 막다른 길과 실제 누락을 구별하지 못한다. CO→OK는 후보 0개라 별도 원본 근접 감사를 실행하지 않았다.
+
+## SD–NE·IA 및 WY–CO·NE·SD 원본 행 대조
+
+[South Dakota–Nebraska](../artifacts/world-roads/sd-state/border-endpoints-ne.log), [South Dakota–Iowa](../artifacts/world-roads/sd-state/border-endpoints-ia.log), [Wyoming–Colorado](../artifacts/world-roads/wy-state/border-endpoints-co.log), [Wyoming–Nebraska](../artifacts/world-roads/wy-state/border-endpoints-ne.log), [Wyoming–South Dakota](../artifacts/world-roads/wy-state/border-endpoints-sd.log) 경계의 양방향 후보를 같은 20m 기준으로 각 반대편 공식 ZIP 원본과 대조했다.
+
+| 후보 방향 | 반대편 원본 행 감사 | 후보 | 원본 선 ≤20m | 채택 도로 ≤20m | 제외 분류 |
+|---|---|---:|---:|---:|---|
+| SD→NE | [Nebraska 원본](../artifacts/world-roads/sd-state/raw-ne-near-sd-candidates.log) | 18 | 6 | 0 | `S1500` 4, `S1740` 2 |
+| NE→SD | [South Dakota 원본](../artifacts/world-roads/sd-state/raw-sd-near-ne-candidates.log) | 27 | 7 | 0 | `S1500` 7 |
+| SD→IA | [Iowa 원본](../artifacts/world-roads/sd-state/raw-ia-near-sd-candidates.log) | 1 | 0 | 0 | 없음 |
+| IA→SD | [South Dakota 원본](../artifacts/world-roads/sd-state/raw-sd-near-ia-candidates.log) | 4 | 0 | 0 | 없음 |
+| WY→CO | [Colorado 원본](../artifacts/world-roads/wy-state/raw-co-near-wy-candidates.log) | 46 | 8 | 0 | `S1500` 7, `S1740` 1 |
+| CO→WY | [Wyoming 원본](../artifacts/world-roads/wy-state/raw-wy-near-co-candidates.log) | 28 | 12 | 0 | `S1500` 9, `S1740` 3 |
+| WY→NE | [Nebraska 원본](../artifacts/world-roads/wy-state/raw-ne-near-wy-candidates.log) | 16 | 6 | 0 | `S1500` 6 |
+| NE→WY | [Wyoming 원본](../artifacts/world-roads/wy-state/raw-wy-near-ne-candidates.log) | 40 | 12 | 0 | `S1500` 7, `S1740` 5 |
+| WY→SD | [South Dakota 원본](../artifacts/world-roads/wy-state/raw-sd-near-wy-candidates.log) | 28 | 3 | 0 | `S1500` 3 |
+| SD→WY | [Wyoming 원본](../artifacts/world-roads/wy-state/raw-wy-near-sd-candidates.log) | 6 | 1 | 0 | `S1740` 1 |
+
+방향별 후보 **214개 중 55개**는 반대편 공식 원본 선이 20m 안에 있지만 전부 현재 일반 도로 레이어에서 제외한 종류다. 나머지 **159개**는 그 거리 안에 공식 원본 선도 없다. 같은 좌표의 중복 끝점도 방향별 후보에 포함되므로 이를 독립된 실제 도로 214개로 해석하지 않는다. 정상적인 막다른 길과 실제 원천 누락은 아직 구별하지 못한다.
 
 ## 이 검사로 확인할 수 없는 것
 

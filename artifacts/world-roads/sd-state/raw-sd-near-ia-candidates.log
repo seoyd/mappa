@@ -1,0 +1,5 @@
+candidate_points=4 inspected_sources=3 inspected_rows=9352 radius_m=20
+candidate lon=-96.594353 lat=43.500424 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=228.986 nearest_mtfcc=S1400 nearest_name=Some("481st Ave") source_id=us-census-tiger-2025-roads-46099 source_feature_id=110463101282
+candidate lon=-96.542488 lat=42.661011 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=1242.184 nearest_mtfcc=S1740 nearest_name=None source_id=us-census-tiger-2025-roads-46127 source_feature_id=110224097192
+candidate lon=-96.498184 lat=42.998029 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=21.318 nearest_mtfcc=S1400 nearest_name=Some("302nd St") source_id=us-census-tiger-2025-roads-46127 source_feature_id=110224095889
+candidate lon=-96.474189 lat=43.199510 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=174.151 nearest_mtfcc=S1400 nearest_name=Some("289th St") source_id=us-census-tiger-2025-roads-46083 source_feature_id=110223146472
