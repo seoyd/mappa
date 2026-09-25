@@ -1,11 +1,11 @@
 zoom=15 water_features=7904 bounding_box_tile_candidates=6830815
-candidate_tiles=1585579 source_id=us-census-tiger-2025-areawater-02290 source_feature_id=1102598691448:0 bounds=[-160.215801,61.945942,-142.507315,66.61646]
-candidate_tiles=521100 source_id=us-census-tiger-2025-areawater-02185 source_feature_id=11059307051:0 bounds=[-164.938879,68.889758,-156.476309,71.401264]
-candidate_tiles=278499 source_id=us-census-tiger-2025-areawater-02290 source_feature_id=11036147355438:0 bounds=[-157.724008,64.855424,-151.371783,67.007155]
-candidate_tiles=221508 source_id=us-census-tiger-2025-areawater-02050 source_feature_id=11034690783996:0 bounds=[-162.622987,60.031644,-156.200767,62.032648]
-candidate_tiles=219351 source_id=us-census-tiger-2025-areawater-02013 source_feature_id=11051103257:0 bounds=[-165.036772,54.534984,-158.893471,56.945059]
-candidate_tiles=150660 source_id=us-census-tiger-2025-areawater-02188 source_feature_id=11054231481:0 bounds=[-163.092187,67.010633,-156.980775,68.138555]
-candidate_tiles=133764 source_id=us-census-tiger-2025-areawater-02122 source_feature_id=11034860713772:0 bounds=[-153.742254,58.855033,-150.303394,61.190656]
-candidate_tiles=125664 source_id=us-census-tiger-2025-areawater-02282 source_feature_id=1106081768896:0 bounds=[-143.893329,58.808333,-137.924917,60.094696]
-candidate_tiles=106848 source_id=us-census-tiger-2025-areawater-02013 source_feature_id=1102215472846:0 bounds=[-164.638358,54.33826,-159.111791,55.666837]
-candidate_tiles=90552 source_id=us-census-tiger-2025-areawater-02290 source_feature_id=110869074534:0 bounds=[-147.968276,67.077824,-145.080665,68.500002]
+candidate_tiles=1585579 source_id=us-census-tiger-2025-areawater-02290 source_feature_id=1102598691448:0 bounds=[-160.215801,61.945942,-142.507315,66.61646] vertices=43476 planar_fill_ratio=0.006073
+candidate_tiles=521100 source_id=us-census-tiger-2025-areawater-02185 source_feature_id=11059307051:0 bounds=[-164.938879,68.889758,-156.476309,71.401264] vertices=3908 planar_fill_ratio=0.029320
+candidate_tiles=278499 source_id=us-census-tiger-2025-areawater-02290 source_feature_id=11036147355438:0 bounds=[-157.724008,64.855424,-151.371783,67.007155] vertices=14455 planar_fill_ratio=0.005922
+candidate_tiles=221508 source_id=us-census-tiger-2025-areawater-02050 source_feature_id=11034690783996:0 bounds=[-162.622987,60.031644,-156.200767,62.032648] vertices=24585 planar_fill_ratio=0.010438
+candidate_tiles=219351 source_id=us-census-tiger-2025-areawater-02013 source_feature_id=11051103257:0 bounds=[-165.036772,54.534984,-158.893471,56.945059] vertices=5625 planar_fill_ratio=0.027461
+candidate_tiles=150660 source_id=us-census-tiger-2025-areawater-02188 source_feature_id=11054231481:0 bounds=[-163.092187,67.010633,-156.980775,68.138555] vertices=9098 planar_fill_ratio=0.012786
+candidate_tiles=133764 source_id=us-census-tiger-2025-areawater-02122 source_feature_id=11034860713772:0 bounds=[-153.742254,58.855033,-150.303394,61.190656] vertices=7626 planar_fill_ratio=0.292216
+candidate_tiles=125664 source_id=us-census-tiger-2025-areawater-02282 source_feature_id=1106081768896:0 bounds=[-143.893329,58.808333,-137.924917,60.094696] vertices=2666 planar_fill_ratio=0.039585
+candidate_tiles=106848 source_id=us-census-tiger-2025-areawater-02013 source_feature_id=1102215472846:0 bounds=[-164.638358,54.33826,-159.111791,55.666837] vertices=19707 planar_fill_ratio=0.172717
+candidate_tiles=90552 source_id=us-census-tiger-2025-areawater-02290 source_feature_id=110869074534:0 bounds=[-147.968276,67.077824,-145.080665,68.500002] vertices=8136 planar_fill_ratio=0.006436

@@ -1,7 +1,7 @@
 //! Diagnose the number of tile bounding boxes visited for each canonical feature.
 
 use mappa_map_core::project;
-use mappa_map_data::canonical::{BBox, FeatureKind, GeoDb};
+use mappa_map_data::canonical::{BBox, FeatureKind, GeoDb, Geometry};
 use std::{collections::HashMap, error::Error, path::Path};
 
 type DynError = Box<dyn Error + Send + Sync>;
@@ -49,16 +49,44 @@ fn main() -> Result<(), DynError> {
         let y1 = (southeast.y * n).ceil() as u64;
         let count = (x1 - x0) * (y1 - y0);
         total += count;
-        candidates.push((count, feature.id, feature.bbox));
+        let (vertices, planar_fill_ratio) = match &feature.geometry {
+            Geometry::Polygon(rings) => {
+                let area = rings
+                    .iter()
+                    .enumerate()
+                    .map(|(index, ring)| {
+                        let signed = ring
+                            .windows(2)
+                            .map(|edge| edge[0][0] * edge[1][1] - edge[1][0] * edge[0][1])
+                            .sum::<f64>()
+                            .abs()
+                            / 2.0;
+                        if index == 0 { signed } else { -signed }
+                    })
+                    .sum::<f64>();
+                let bounds_area = (feature.bbox.east - feature.bbox.west)
+                    * (feature.bbox.north - feature.bbox.south);
+                (
+                    rings.iter().map(Vec::len).sum::<usize>(),
+                    if bounds_area > 0.0 {
+                        area / bounds_area
+                    } else {
+                        0.0
+                    },
+                )
+            }
+            _ => (0, 0.0),
+        };
+        candidates.push((count, feature.id, feature.bbox, vertices, planar_fill_ratio));
     }
     candidates.sort_unstable_by(|a, b| b.0.cmp(&a.0).then(a.1.cmp(&b.1)));
     println!(
         "zoom={zoom} water_features={} bounding_box_tile_candidates={total}",
         candidates.len()
     );
-    for (count, id, bbox) in candidates.iter().take(10) {
+    for (count, id, bbox, vertices, planar_fill_ratio) in candidates.iter().take(10) {
         println!(
-            "candidate_tiles={count} source_id={} source_feature_id={} bounds=[{},{},{},{}]",
+            "candidate_tiles={count} source_id={} source_feature_id={} bounds=[{},{},{},{}] vertices={vertices} planar_fill_ratio={planar_fill_ratio:.6}",
             lineage
                 .get(id)
                 .map(|item| item.0.as_str())

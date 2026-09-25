@@ -5,7 +5,7 @@ use super::{
 };
 use crate::PlaceKind;
 use crate::canonical::{BBox, FeatureKind, GeoDb, Geometry as CanonicalGeometry};
-use geo::{BoundingRect, Coord, Geometry, LineString, Point, Polygon, Rect};
+use geo::{BoundingRect, Coord, Geometry, Intersects, LineString, Point, Polygon, Rect};
 use mappa_map_core::{TileKey, project};
 use mvt::Tile;
 use pmtiles::{PmTilesWriter, TileCoord, TileType};
@@ -162,6 +162,7 @@ pub fn build_canonical_tiles(
         .create(File::create(output)?)?;
     let mut tile_total = 0;
     let mut feature_total = 0;
+    let mut polygon_active = vec![Vec::<(u32, u32)>::new(); projected.len()];
     for zoom in min_zoom..=max_zoom {
         let mut buckets: BTreeMap<(u32, u32), Vec<usize>> = BTreeMap::new();
         let (region_x0, region_x1, region_y0, region_y1) = tile_span(region_world, zoom);
@@ -169,31 +170,66 @@ pub fn build_canonical_tiles(
             if !(feature.min_zoom..=feature.max_zoom).contains(&zoom) {
                 continue;
             }
+            if let Geometry::Polygon(polygon) = &feature.geometry {
+                let candidates = if zoom == feature.min_zoom.max(min_zoom) {
+                    let bounds = polygon
+                        .bounding_rect()
+                        .ok_or("canonical polygon has no bounds")?;
+                    let (x0, x1, y0, y1) = tile_span(bounds, zoom);
+                    (y0..=y1)
+                        .flat_map(|y| (x0..=x1).map(move |x| (x, y)))
+                        .collect::<Vec<_>>()
+                } else {
+                    polygon_active[index]
+                        .iter()
+                        .flat_map(|&(x, y)| {
+                            [
+                                (x * 2, y * 2),
+                                (x * 2 + 1, y * 2),
+                                (x * 2, y * 2 + 1),
+                                (x * 2 + 1, y * 2 + 1),
+                            ]
+                        })
+                        .collect::<Vec<_>>()
+                };
+                let mut active = Vec::new();
+                let n = (1u32 << zoom) as f64;
+                for (x, y) in candidates {
+                    if x < region_x0 || x > region_x1 || y < region_y0 || y > region_y1 {
+                        continue;
+                    }
+                    let tile = Rect::new(
+                        Coord {
+                            x: x as f64 / n,
+                            y: y as f64 / n,
+                        },
+                        Coord {
+                            x: (x + 1) as f64 / n,
+                            y: (y + 1) as f64 / n,
+                        },
+                    );
+                    if polygon.intersects(&tile) {
+                        buckets.entry((y, x)).or_default().push(index);
+                        active.push((x, y));
+                    }
+                }
+                polygon_active[index] = active;
+                continue;
+            }
             let Some(bounds) = feature.geometry.bounding_rect() else {
                 continue;
             };
             let buffer_world = ROAD_TILE_BUFFER_UNITS / (4096.0 * (1u32 << zoom) as f64);
-            let bounds = if matches!(
-                feature.kind,
-                FeatureKind::RoadSurface
-                    | FeatureKind::Water
-                    | FeatureKind::Vegetation
-                    | FeatureKind::Park
-                    | FeatureKind::Building
-            ) {
-                bounds
-            } else {
-                Rect::new(
-                    Coord {
-                        x: bounds.min().x - buffer_world,
-                        y: bounds.min().y - buffer_world,
-                    },
-                    Coord {
-                        x: bounds.max().x + buffer_world,
-                        y: bounds.max().y + buffer_world,
-                    },
-                )
-            };
+            let bounds = Rect::new(
+                Coord {
+                    x: bounds.min().x - buffer_world,
+                    y: bounds.min().y - buffer_world,
+                },
+                Coord {
+                    x: bounds.max().x + buffer_world,
+                    y: bounds.max().y + buffer_world,
+                },
+            );
             let (x0, x1, y0, y1) = tile_span(bounds, zoom);
             for y in y0.max(region_y0)..=y1.min(region_y1) {
                 for x in x0.max(region_x0)..=x1.min(region_x1) {
