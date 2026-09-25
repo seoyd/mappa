@@ -1,7 +1,11 @@
 //! Confirm that class/name enrichment preserves every original NVDB road line.
 
 use mappa_map_data::canonical::{BBox, CanonicalFeature, GeoDb};
-use std::{collections::BTreeMap, error::Error, path::Path};
+use std::{
+    collections::{BTreeMap, BTreeSet},
+    error::Error,
+    path::Path,
+};
 
 fn features(path: &Path) -> Result<BTreeMap<String, CanonicalFeature>, Box<dyn Error>> {
     let mut database = GeoDb::open(path)?;
@@ -43,6 +47,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
     let mut reclassified = 0;
     let mut named = 0;
+    let mut distinct_names = BTreeSet::new();
     for (source_id, before) in baseline {
         let after = &enriched[&source_id];
         if before.geometry != after.geometry || before.bbox != after.bbox {
@@ -50,12 +55,16 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
         reclassified += usize::from(before.kind != after.kind);
         named += usize::from(after.name.is_some());
+        if let Some(name) = &after.name {
+            distinct_names.insert(name);
+        }
     }
     println!(
-        "preserved_geometry={} reclassified={} named={}",
+        "preserved_geometry={} reclassified={} named_lines={} distinct_names={}",
         enriched.len(),
         reclassified,
-        named
+        named,
+        distinct_names.len()
     );
     Ok(())
 }

@@ -276,6 +276,8 @@ async fn audit(
         let mut water = 0;
         let mut vegetation = 0;
         let mut districts = 0;
+        let mut road_labels = 0;
+        let mut distinct_road_names = BTreeSet::new();
         let mut edges = BTreeMap::new();
         for &(x, y) in &tile_coords[usize::from(z)] {
             if x < x0 || x > x1 || y < y0 || y > y1 {
@@ -302,6 +304,8 @@ async fn audit(
             water += decoded.water.len();
             vegetation += decoded.green.len();
             districts += decoded.place.len();
+            road_labels += decoded.road_labels.len();
+            distinct_road_names.extend(decoded.road_labels.iter().map(|label| label.name.clone()));
             if edges.insert((x, y), edge_ports(&decoded)).is_some() {
                 return Err("duplicate tile coordinate in archive directory".into());
             }
@@ -399,8 +403,16 @@ async fn audit(
         }
         total_unmatched += unmatched;
         println!(
-            "z={z} tiles={tiles} decoded_mvt_bytes={bytes} road_lines={roads} road_surfaces={surfaces} water={water} tree_cover={vegetation} district_labels={districts} seam_exact={exact} seam_within_1_unit={one_unit} seam_unmatched={unmatched} seam_corner_ambiguous={corner_ambiguous} seam_quantization_ambiguous={quantization_ambiguous} seam_unmatched_max_corner_distance={max_corner_distance}"
+            "z={z} tiles={tiles} decoded_mvt_bytes={bytes} road_lines={roads} road_surfaces={surfaces} water={water} tree_cover={vegetation} district_labels={districts} road_labels={road_labels} distinct_road_names={} seam_exact={exact} seam_within_1_unit={one_unit} seam_unmatched={unmatched} seam_corner_ambiguous={corner_ambiguous} seam_quantization_ambiguous={quantization_ambiguous} seam_unmatched_max_corner_distance={max_corner_distance}",
+            distinct_road_names.len()
         );
+        let expects_named_roads = manifest
+            .source
+            .iter()
+            .any(|source| source.adapter == "no-nvdb-v4-road-links-enriched");
+        if expects_named_roads && ((z >= 14 && road_labels == 0) || (z < 14 && road_labels != 0)) {
+            return Err(format!("z{z} has unexpected NVDB road-label coverage").into());
+        }
         if manifest
             .source
             .iter()

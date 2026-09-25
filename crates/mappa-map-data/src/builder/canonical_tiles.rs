@@ -1,6 +1,6 @@
 //! Runtime tiles built only from MappaGeoDB, never from a raw source or a base map.
 
-use super::{DynError, PlaceSource, add_lines_with_buffer, add_places, add_polygons};
+use super::{DynError, PlaceSource, add_named_lines_with_buffer, add_places, add_polygons};
 use crate::PlaceKind;
 use crate::canonical::{BBox, FeatureKind, GeoDb, Geometry as CanonicalGeometry};
 use geo::{BoundingRect, Coord, Geometry, LineString, Point, Polygon, Rect};
@@ -140,9 +140,9 @@ pub fn build_canonical_tiles(
             {"id": "water", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
             {"id": "green", "fields": {}, "minzoom": green_min_zoom, "maxzoom": max_zoom},
             {"id": "building", "fields": {}, "minzoom": 14, "maxzoom": max_zoom},
-            {"id": "road_major", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
-            {"id": "road_collector", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
-            {"id": "road_local", "fields": {}, "minzoom": min_zoom, "maxzoom": max_zoom},
+            {"id": "road_major", "fields": {"name": "String"}, "minzoom": min_zoom, "maxzoom": max_zoom},
+            {"id": "road_collector", "fields": {"name": "String"}, "minzoom": min_zoom, "maxzoom": max_zoom},
+            {"id": "road_local", "fields": {"name": "String"}, "minzoom": min_zoom, "maxzoom": max_zoom},
             {"id": "place", "fields": {"name": "String", "rank": "Number", "kind": "String"}, "minzoom": 12, "maxzoom": max_zoom}
         ]
     })
@@ -256,13 +256,23 @@ pub fn build_canonical_tiles(
                 (FeatureKind::RoadSecondary, "road_collector"),
                 (FeatureKind::RoadResidential, "road_local"),
             ] {
-                count += add_lines_with_buffer(
+                count += add_named_lines_with_buffer(
                     &mut tile,
                     layer,
                     candidates
                         .iter()
                         .filter(|&&index| projected[index].kind == kind)
-                        .map(|&index| &projected[index].geometry),
+                        .map(|&index| {
+                            let feature = &projected[index];
+                            (
+                                &feature.geometry,
+                                if zoom >= 14 {
+                                    feature.name.as_deref()
+                                } else {
+                                    None
+                                },
+                            )
+                        }),
                     tile_bounds,
                     key,
                     ROAD_TILE_BUFFER_UNITS,

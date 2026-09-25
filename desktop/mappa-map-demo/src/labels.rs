@@ -140,6 +140,7 @@ impl LabelRenderer {
                 let size = match label.kind {
                     LabelKind::Country => 17.0,
                     LabelKind::City => 19.0,
+                    LabelKind::Road => 12.0,
                     LabelKind::Station => 16.0,
                     LabelKind::Civic => 14.0,
                     LabelKind::Attribution => 11.0,
@@ -219,6 +220,7 @@ impl LabelRenderer {
                     default_color: match label.kind {
                         LabelKind::Station | LabelKind::LegendStation => Color::rgb(12, 55, 120),
                         LabelKind::Civic | LabelKind::LegendCivic => Color::rgb(8, 83, 53),
+                        LabelKind::Road => Color::rgb(42, 54, 60),
                         LabelKind::Attribution => Color::rgb(72, 80, 84),
                         LabelKind::Scale => Color::rgb(30, 48, 65),
                         _ => Color::rgb(48, 50, 58),

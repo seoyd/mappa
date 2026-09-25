@@ -589,6 +589,7 @@ fn append_tile(target: &mut DecodedTile, mut source: DecodedTile) {
     append_distinct_roads(&mut target.road_major, source.road_major);
     append_distinct_roads(&mut target.road_collector, source.road_collector);
     append_distinct_roads(&mut target.road_local, source.road_local);
+    target.road_labels.append(&mut source.road_labels);
     target.place.append(&mut source.place);
 }
 
@@ -717,10 +718,11 @@ struct ScreenLabel {
     kind: LabelKind,
 }
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum LabelKind {
     Country,
     City,
+    Road,
     Station,
     Civic,
     Attribution,
@@ -734,6 +736,7 @@ impl ScreenLabel {
         let width = self.text_width(scale);
         match self.kind {
             LabelKind::Country => (self.x - width / 2.0, self.y - 15.0 * scale),
+            LabelKind::Road => (self.x - width / 2.0, self.y - 12.0 * scale),
             LabelKind::Attribution
             | LabelKind::LegendStation
             | LabelKind::LegendCivic
@@ -750,6 +753,31 @@ impl ScreenLabel {
             * scale
             + 8.0 * scale
     }
+}
+
+fn road_screen_label(
+    camera: &MapCamera,
+    placement: VisibleTile,
+    road: &mappa_map_data::MapRoadLabel,
+) -> Option<ScreenLabel> {
+    if camera.zoom < 14.0 {
+        return None;
+    }
+    let n = (1u32 << placement.key.z) as f64;
+    let world = WorldPoint {
+        x: (placement.world_x as f64 + road.point.x() as f64 / 4096.0) / n,
+        y: (placement.key.y as f64 + road.point.y() as f64 / 4096.0) / n,
+    };
+    let (x, y) = camera.unwrapped_to_screen(world);
+    (x >= 0.0 && y >= 0.0 && x < camera.width_px as f64 && y < camera.height_px as f64).then(|| {
+        ScreenLabel {
+            name: road.name.clone(),
+            x: x as f32,
+            y: y as f32,
+            rank: road.rank,
+            kind: LabelKind::Road,
+        }
+    })
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -1006,13 +1034,23 @@ impl TileManager {
                         });
                     }
                 }
+                labels.extend(
+                    tile.decoded
+                        .road_labels
+                        .iter()
+                        .filter_map(|road| road_screen_label(camera, *placement, road)),
+                );
             }
         }
         labels.sort_by(|a, b| a.rank.cmp(&b.rank).then_with(|| a.name.cmp(&b.name)));
         let mut accepted = Vec::new();
         let mut boxes: Vec<[f32; 4]> = Vec::new();
+        let mut shown_roads = BTreeSet::new();
         let scale = camera.scale_factor as f32;
         for label in labels {
+            if label.kind == LabelKind::Road && shown_roads.contains(&label.name) {
+                continue;
+            }
             let (left, top) = label.text_origin(scale);
             let right = left + label.text_width(scale);
             let bottom = top + 26.0 * scale;
@@ -1027,6 +1065,9 @@ impl TileManager {
                 continue;
             }
             boxes.push([left, top, right, bottom]);
+            if label.kind == LabelKind::Road {
+                shown_roads.insert(label.name.clone());
+            }
             accepted.push(label);
             let label_limit = if world_mode() && camera.zoom < 2.5 {
                 20
@@ -2681,6 +2722,27 @@ fn main() -> Result<(), DynError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn road_label_uses_tile_anchor_only_at_street_zoom() {
+        let placement = VisibleTile {
+            key: TileKey::new(0, 0, 0).unwrap(),
+            world_x: 0,
+        };
+        let road = mappa_map_data::MapRoadLabel {
+            point: geo::Point::new(2048.0, 2048.0),
+            name: "Observed Road".into(),
+            rank: 8,
+        };
+        let close = MapCamera::new(0.0, 0.0, 14.5, 800, 600, 1.0).unwrap();
+        let label = road_screen_label(&close, placement, &road).unwrap();
+        assert_eq!(label.name, "Observed Road");
+        assert_eq!(label.kind, LabelKind::Road);
+        assert!((label.x - 400.0).abs() < 1.0);
+        assert!((label.y - 300.0).abs() < 1.0);
+        let far = MapCamera::new(0.0, 0.0, 13.5, 800, 600, 1.0).unwrap();
+        assert!(road_screen_label(&far, placement, &road).is_none());
+    }
 
     #[test]
     fn discovers_new_country_catalog_without_code_change() {

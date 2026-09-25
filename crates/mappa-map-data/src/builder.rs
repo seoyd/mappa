@@ -358,6 +358,24 @@ fn add_lines_with_buffer<'a>(
     key: TileKey,
     buffer_units: f64,
 ) -> Result<usize, DynError> {
+    add_named_lines_with_buffer(
+        tile,
+        name,
+        geoms.into_iter().map(|geom| (geom, None)),
+        rect,
+        key,
+        buffer_units,
+    )
+}
+
+fn add_named_lines_with_buffer<'a>(
+    tile: &mut Tile,
+    name: &str,
+    geoms: impl IntoIterator<Item = (&'a Geometry<f64>, Option<&'a str>)>,
+    rect: Rect<f64>,
+    key: TileKey,
+    buffer_units: f64,
+) -> Result<usize, DynError> {
     let mut layer = tile.create_layer(name);
     let mut count = 0;
     let n = (1u32 << key.z) as f64;
@@ -373,7 +391,7 @@ fn add_lines_with_buffer<'a>(
             y: rect.max().y + buffer_world,
         },
     );
-    for geom in geoms {
+    for (geom, road_name) in geoms {
         for line in lines(geom) {
             if !line.bounding_rect().is_some_and(|r| overlaps(r, rect)) {
                 continue;
@@ -419,7 +437,13 @@ fn add_lines_with_buffer<'a>(
             }
             if has_geometry {
                 encoder.complete_geom()?;
-                layer = layer.into_feature(encoder.encode()?).into_layer();
+                let mut feature = layer.into_feature(encoder.encode()?);
+                if let Some(road_name) =
+                    road_name.filter(|name| !name.is_empty() && name.len() <= 128)
+                {
+                    feature.add_tag_string("name", road_name);
+                }
+                layer = feature.into_layer();
                 count += 1;
             }
         }

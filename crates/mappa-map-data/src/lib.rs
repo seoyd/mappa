@@ -50,6 +50,7 @@ pub struct DecodedTile {
     pub road_major: Vec<LineString<f32>>,
     pub road_collector: Vec<LineString<f32>>,
     pub road_local: Vec<LineString<f32>>,
+    pub road_labels: Vec<MapRoadLabel>,
     pub place: Vec<MapPlace>,
     pub raw_bytes: usize,
 }
@@ -68,6 +69,13 @@ pub struct MapPlace {
     pub name: String,
     pub rank: u8,
     pub kind: PlaceKind,
+}
+
+#[derive(Debug)]
+pub struct MapRoadLabel {
+    pub point: Point<f32>,
+    pub name: String,
+    pub rank: u8,
 }
 
 #[derive(Debug)]
@@ -189,6 +197,12 @@ impl DecodedTile {
                 * std::mem::size_of::<LineString<f32>>()
             + self.place.capacity() * std::mem::size_of::<MapPlace>()
             + self.place.iter().map(|p| p.name.capacity()).sum::<usize>()
+            + self.road_labels.capacity() * std::mem::size_of::<MapRoadLabel>()
+            + self
+                .road_labels
+                .iter()
+                .map(|p| p.name.capacity())
+                .sum::<usize>()
     }
 }
 
@@ -318,6 +332,7 @@ fn decode_inner(bytes: Vec<u8>) -> Result<DecodedTile, MapDataError> {
         raw_bytes,
         ..Default::default()
     };
+    let mut road_labels = std::collections::BTreeMap::<String, (Point<f32>, f32, u8)>::new();
     for layer in metadata {
         if layer.name == "road_major" {
             tile.detailed = true;
@@ -347,6 +362,31 @@ fn decode_inner(bytes: Vec<u8>) -> Result<DecodedTile, MapDataError> {
                 return Err(MapDataError::InvalidGeometry);
             }
             let properties = feature.properties.unwrap_or_default();
+            if let Some(rank) = match layer.name.as_str() {
+                "road_major" => Some(6),
+                "road_collector" => Some(7),
+                "road_local" => Some(8),
+                _ => None,
+            } && let Some(mvt_reader::feature::Value::String(name)) = properties.get("name")
+                && !name.is_empty()
+                && name.len() <= 128
+                && let Some((point, length)) = road_label_anchor(&feature.geometry)
+            {
+                match road_labels.get_mut(name) {
+                    Some((best_point, best_length, best_rank))
+                        if length > *best_length
+                            || (length == *best_length && rank < *best_rank) =>
+                    {
+                        *best_point = point;
+                        *best_length = length;
+                        *best_rank = rank;
+                    }
+                    None => {
+                        road_labels.insert(name.clone(), (point, length, rank));
+                    }
+                    _ => {}
+                }
+            }
             match (layer.name.as_str(), feature.geometry) {
                 ("land", Geometry::Polygon(p)) => tile.land.push(p),
                 ("land", Geometry::MultiPolygon(mp)) => tile.land.extend(mp.0),
@@ -382,7 +422,33 @@ fn decode_inner(bytes: Vec<u8>) -> Result<DecodedTile, MapDataError> {
             }
         }
     }
+    tile.road_labels = road_labels
+        .into_iter()
+        .map(|(name, (point, _, rank))| MapRoadLabel { point, name, rank })
+        .collect();
     Ok(tile)
+}
+
+fn road_label_anchor(geometry: &Geometry<f32>) -> Option<(Point<f32>, f32)> {
+    let mut best = None;
+    let lines: &[LineString<f32>] = match geometry {
+        Geometry::LineString(line) => std::slice::from_ref(line),
+        Geometry::MultiLineString(lines) => &lines.0,
+        _ => return None,
+    };
+    for line in lines {
+        for pair in line.0.windows(2) {
+            let point = Point::new((pair[0].x + pair[1].x) / 2.0, (pair[0].y + pair[1].y) / 2.0);
+            if !(0.0..EXTENT).contains(&point.x()) || !(0.0..EXTENT).contains(&point.y()) {
+                continue;
+            }
+            let length = (pair[1].x - pair[0].x).hypot(pair[1].y - pair[0].y);
+            if length >= 4.0 && best.is_none_or(|(_, previous)| length > previous) {
+                best = Some((point, length));
+            }
+        }
+    }
+    best
 }
 
 fn decode_place(
@@ -424,6 +490,31 @@ fn geometry_finite(geometry: &Geometry<f32>) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn named_road_tile_decodes_one_label_on_the_longest_visible_segment() {
+        use mvt::{GeomEncoder, GeomType, Tile};
+
+        let mut tile = Tile::new(4096);
+        let mut layer = tile.create_layer("road_local");
+        for (start, end) in [(100.0, 120.0), (200.0, 400.0)] {
+            let mut geometry = GeomEncoder::<f64>::new(GeomType::Linestring);
+            geometry.add_point(start, 100.0).unwrap();
+            geometry.add_point(end, 100.0).unwrap();
+            geometry.complete_geom().unwrap();
+            let mut feature = layer.into_feature(geometry.encode().unwrap());
+            feature.add_tag_string("name", "Observed Road");
+            layer = feature.into_layer();
+        }
+        tile.add_layer(layer).unwrap();
+        let decoded = decode_mvt(tile.to_bytes().unwrap()).unwrap();
+        assert_eq!(decoded.road_local.len(), 2);
+        assert_eq!(decoded.road_labels.len(), 1);
+        assert_eq!(decoded.road_labels[0].name, "Observed Road");
+        assert_eq!(decoded.road_labels[0].point, Point::new(300.0, 100.0));
+        assert_eq!(decoded.road_labels[0].rank, 8);
+    }
+
     #[test]
     fn malformed_mvt_is_rejected_without_panic() {
         for bytes in [
