@@ -208,9 +208,6 @@ fn add_polygons<'a>(
             if !polygon.bounding_rect().is_some_and(|r| overlaps(r, rect)) {
                 continue;
             }
-            if polygon.unsigned_area() < min_world_area {
-                continue;
-            }
             let clipped: MultiPolygon<f64> = polygon.intersection(&clip);
             for part in clipped.0 {
                 if part.unsigned_area() < min_world_area {
