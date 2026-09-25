@@ -1,0 +1,84 @@
+shared_border_segments=1467 first_state=49 second_state=08
+49 endpoints=224 matches_0_1m=159 matches_1m=0 matches_5m=2 matches_20m=5 no_endpoint_20m=58 on_opposite_line_0_1m=2 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=0 no_opposite_line_20m=56 candidate_gap_samples=[-109.060322,38.340864] [-109.060278,38.337503] [-109.060276,38.510553] [-109.060245,38.304854] [-109.060170,38.340869] [-109.060163,38.307226] [-109.060138,38.501814] [-109.060039,38.432476] [-109.059267,38.749245] [-109.053568,38.922877] [-109.053278,38.954482] [-109.051487,39.524403]
+candidate_gap state=49 lon=-109.060322 lat=38.340864 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1102339143177:0
+candidate_gap state=49 lon=-109.060322 lat=38.340864 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1102223083912:0
+candidate_gap state=49 lon=-109.060322 lat=38.340864 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1102223083911:0
+candidate_gap state=49 lon=-109.060278 lat=38.337503 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1102223083911:0
+candidate_gap state=49 lon=-109.060276 lat=38.510553 kind=RoadResidential name=Some("Private-Fs") source_id=us-census-tiger-2025-roads-49019 source_feature_id=1102390157399:0
+candidate_gap state=49 lon=-109.060245 lat=38.304854 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1102163608539:0
+candidate_gap state=49 lon=-109.060245 lat=38.304854 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1102379617865:0
+candidate_gap state=49 lon=-109.060245 lat=38.304854 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1102339145774:0
+candidate_gap state=49 lon=-109.060170 lat=38.340869 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1102223083912:0
+candidate_gap state=49 lon=-109.060163 lat=38.307226 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1102359695379:0
+candidate_gap state=49 lon=-109.060138 lat=38.501814 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49019 source_feature_id=110481133909:0
+candidate_gap state=49 lon=-109.060039 lat=38.432476 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1102379617782:0
+candidate_gap state=49 lon=-109.059267 lat=38.749245 kind=RoadResidential name=Some("4 15/100 Rd") source_id=us-census-tiger-2025-roads-49019 source_feature_id=110481129194:0
+candidate_gap state=49 lon=-109.053568 lat=38.922877 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49019 source_feature_id=110481134819:0
+candidate_gap state=49 lon=-109.053278 lat=38.954482 kind=RoadResidential name=Some("Triangle") source_id=us-census-tiger-2025-roads-49019 source_feature_id=1102165979274:0
+candidate_gap state=49 lon=-109.051487 lat=39.524403 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49047 source_feature_id=1102156701439:0
+candidate_gap state=49 lon=-109.051394 lat=39.626015 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49047 source_feature_id=110483190253:0
+candidate_gap state=49 lon=-109.051308 lat=39.603077 kind=RoadResidential name=Some("Tent Canyon") source_id=us-census-tiger-2025-roads-49047 source_feature_id=1102253628351:0
+candidate_gap state=49 lon=-109.051205 lat=39.645428 kind=RoadResidential name=Some("Davis Canyon") source_id=us-census-tiger-2025-roads-49047 source_feature_id=1102253847971:0
+candidate_gap state=49 lon=-109.051141 lat=39.320111 kind=RoadResidential name=Some("Stateline") source_id=us-census-tiger-2025-roads-49019 source_feature_id=1103747167119:0
+candidate_gap state=49 lon=-109.051119 lat=40.110846 kind=RoadResidential name=Some("032504") source_id=us-census-tiger-2025-roads-49047 source_feature_id=1102848988944:0
+candidate_gap state=49 lon=-109.051037 lat=40.200580 kind=RoadResidential name=Some("181925") source_id=us-census-tiger-2025-roads-49047 source_feature_id=1102156631467:0
+candidate_gap state=49 lon=-109.051035 lat=40.221817 kind=RoadResidential name=Some("181920") source_id=us-census-tiger-2025-roads-49047 source_feature_id=1102253659612:0
+candidate_gap state=49 lon=-109.051028 lat=39.415299 kind=RoadResidential name=Some("Prairie Canyon 2") source_id=us-census-tiger-2025-roads-49019 source_feature_id=1102390157837:0
+candidate_gap state=49 lon=-109.051009 lat=39.356027 kind=RoadResidential name=Some("Polar Mesa") source_id=us-census-tiger-2025-roads-49019 source_feature_id=1102165961670:0
+candidate_gap state=49 lon=-109.050999 lat=40.047298 kind=RoadResidential name=Some("182709E") source_id=us-census-tiger-2025-roads-49047 source_feature_id=1106073067786:0
+candidate_gap state=49 lon=-109.050996 lat=40.046486 kind=RoadResidential name=Some("182709") source_id=us-census-tiger-2025-roads-49047 source_feature_id=1106087450619:0
+candidate_gap state=49 lon=-109.050975 lat=40.152194 kind=RoadResidential name=Some("032504C") source_id=us-census-tiger-2025-roads-49047 source_feature_id=1102253761700:0
+candidate_gap state=49 lon=-109.050974 lat=40.257675 kind=RoadResidential name=Some("181909G") source_id=us-census-tiger-2025-roads-49047 source_feature_id=1106039921317:0
+candidate_gap state=49 lon=-109.050970 lat=40.158724 kind=RoadResidential name=Some("032504D") source_id=us-census-tiger-2025-roads-49047 source_feature_id=1102156835434:0
+candidate_gap state=49 lon=-109.050957 lat=40.140475 kind=RoadResidential name=Some("182715F") source_id=us-census-tiger-2025-roads-49047 source_feature_id=1106039898803:0
+candidate_gap state=49 lon=-109.050956 lat=40.140847 kind=RoadResidential name=Some("Desperado") source_id=us-census-tiger-2025-roads-49047 source_feature_id=1106073065088:0
+candidate_gap state=49 lon=-109.050953 lat=40.027517 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49047 source_feature_id=110483189385:0
+candidate_gap state=49 lon=-109.050886 lat=40.341540 kind=RoadResidential name=Some("K Ranch Rd") source_id=us-census-tiger-2025-roads-49047 source_feature_id=1106039562601:0
+candidate_gap state=49 lon=-109.050865 lat=40.364814 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49047 source_feature_id=110483189417:0
+candidate_gap state=49 lon=-109.050861 lat=40.368071 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49047 source_feature_id=110483189416:0
+candidate_gap state=49 lon=-109.050840 lat=40.392053 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49047 source_feature_id=110483188561:0
+candidate_gap state=49 lon=-109.050823 lat=40.384776 kind=RoadResidential name=Some("021619") source_id=us-census-tiger-2025-roads-49047 source_feature_id=1102156635043:0
+candidate_gap state=49 lon=-109.050817 lat=40.382338 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49047 source_feature_id=1102253549599:0
+candidate_gap state=49 lon=-109.050161 lat=41.000514 kind=RoadResidential name=Some("D24A Rd") source_id=us-census-tiger-2025-roads-49009 source_feature_id=1102186716528:0
+candidate_gap state=49 lon=-109.050161 lat=41.000514 kind=RoadResidential name=Some("Three Corners Monument Rd") source_id=us-census-tiger-2025-roads-49009 source_feature_id=1102186716514:0
+candidate_gap state=49 lon=-109.050161 lat=41.000514 kind=RoadResidential name=Some("Co Rd D87") source_id=us-census-tiger-2025-roads-49009 source_feature_id=1106072597483:0
+candidate_gap state=49 lon=-109.050093 lat=40.998898 kind=RoadResidential name=Some("D87 Rd") source_id=us-census-tiger-2025-roads-49009 source_feature_id=1102225202671:0
+candidate_gap state=49 lon=-109.050093 lat=40.998898 kind=RoadResidential name=Some("Co Rd D87") source_id=us-census-tiger-2025-roads-49009 source_feature_id=1106072597483:0
+candidate_gap state=49 lon=-109.049988 lat=40.998878 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49009 source_feature_id=110268950628:0
+candidate_gap state=49 lon=-109.049696 lat=40.963194 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49009 source_feature_id=110268950507:0
+candidate_gap state=49 lon=-109.048707 lat=40.771538 kind=RoadResidential name=Some("Marshal Draw") source_id=us-census-tiger-2025-roads-49009 source_feature_id=110268949426:0
+candidate_gap state=49 lon=-109.048192 lat=40.635206 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49047 source_feature_id=1105074522600:0
+candidate_gap state=49 lon=-109.047918 lat=38.198401 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1104471142011:0
+candidate_gap state=49 lon=-109.045740 lat=37.204469 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1101451884186:0
+candidate_gap state=49 lon=-109.045550 lat=37.208379 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1101451884183:0
+candidate_gap state=49 lon=-109.045399 lat=37.217497 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1102379615423:0
+candidate_gap state=49 lon=-109.045315 lat=37.139628 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1101451889057:0
+candidate_gap state=49 lon=-109.045299 lat=36.998977 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1103944442681:0
+candidate_gap state=49 lon=-109.045199 lat=37.046055 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1101451886752:0
+candidate_gap state=49 lon=-109.045173 lat=37.012092 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1101451891457:0
+candidate_gap state=49 lon=-109.045169 lat=37.010472 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1101451886643:0
+candidate_gap state=49 lon=-109.042699 lat=37.962845 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1102379618017:0
+candidate_gap state=49 lon=-109.042145 lat=37.800047 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1102164062571:0
+candidate_gap state=49 lon=-109.042108 lat=37.930913 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1101451896493:0
+candidate_gap state=49 lon=-109.042048 lat=37.834144 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1102379617532:0
+candidate_gap state=49 lon=-109.042029 lat=37.861916 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1101451888687:0
+candidate_gap state=49 lon=-109.042003 lat=37.872936 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-49037 source_feature_id=1101451888688:0
+08 endpoints=189 matches_0_1m=159 matches_1m=0 matches_5m=3 matches_20m=4 no_endpoint_20m=23 on_opposite_line_0_1m=5 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=0 no_opposite_line_20m=18 candidate_gap_samples=[-109.060126,38.454827] [-109.060098,38.412193] [-109.059318,38.736700] [-109.051438,39.575837] [-109.051256,39.195503] [-109.051096,39.607536] [-109.050950,39.396172] [-109.049014,40.891906] [-109.048970,40.684994] [-109.048969,40.873008] [-109.048892,40.866793] [-109.048891,40.883644]
+candidate_gap state=08 lon=-109.060126 lat=38.454827 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-08085 source_feature_id=110446679577:0
+candidate_gap state=08 lon=-109.060098 lat=38.412193 kind=RoadResidential name=Some("R2 Rd") source_id=us-census-tiger-2025-roads-08085 source_feature_id=110446673732:0
+candidate_gap state=08 lon=-109.059318 lat=38.736700 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-08077 source_feature_id=110453886111:0
+candidate_gap state=08 lon=-109.051438 lat=39.575837 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-08045 source_feature_id=110508616705:0
+candidate_gap state=08 lon=-109.051256 lat=39.195503 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-08077 source_feature_id=1104977742501:0
+candidate_gap state=08 lon=-109.051096 lat=39.607536 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-08045 source_feature_id=110508616720:0
+candidate_gap state=08 lon=-109.050950 lat=39.396172 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-08045 source_feature_id=110508616757:0
+candidate_gap state=08 lon=-109.049014 lat=40.891906 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-08081 source_feature_id=110415313999:0
+candidate_gap state=08 lon=-109.048970 lat=40.684994 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-08081 source_feature_id=110415311425:0
+candidate_gap state=08 lon=-109.048969 lat=40.873008 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-08081 source_feature_id=110415312536:0
+candidate_gap state=08 lon=-109.048892 lat=40.866793 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-08081 source_feature_id=110415312633:0
+candidate_gap state=08 lon=-109.048891 lat=40.883644 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-08081 source_feature_id=110415312535:0
+candidate_gap state=08 lon=-109.048809 lat=40.842647 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-08081 source_feature_id=1102868861425:0
+candidate_gap state=08 lon=-109.045878 lat=37.199143 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-08083 source_feature_id=1102339147369:0
+candidate_gap state=08 lon=-109.045723 lat=37.199587 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-08083 source_feature_id=1102339147364:0
+candidate_gap state=08 lon=-109.044994 lat=36.998979 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-08083 source_feature_id=1103944442683:0
+candidate_gap state=08 lon=-109.044029 lat=37.452442 kind=RoadResidential name=Some("T 1") source_id=us-census-tiger-2025-roads-08083 source_feature_id=1101458827910:0
+candidate_gap state=08 lon=-109.042118 lat=38.066133 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-08113 source_feature_id=1102166022136:0

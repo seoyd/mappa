@@ -54,6 +54,16 @@
 | MN–SD | 2,610 | SD→MN | 180 | 152 | 26 | 16 | 10 |
 | MN–WI | 4,846 | MN→WI | 52 | 46 | 6 | 5 | 1 |
 | MN–WI | 4,846 | WI→MN | 54 | 46 | 7 | 4 | 2 |
+| ID–MT | 21,370 | ID→MT | 436 | 309 | 101 | 1 | 98 |
+| ID–MT | 21,370 | MT→ID | 371 | 309 | 42 | 1 | 39 |
+| ID–UT | 778 | ID→UT | 117 | 87 | 26 | 9 | 16 |
+| ID–UT | 778 | UT→ID | 124 | 87 | 29 | 6 | 23 |
+| ID–WY | 1,290 | ID→WY | 174 | 126 | 42 | 24 | 15 |
+| ID–WY | 1,290 | WY→ID | 167 | 126 | 34 | 17 | 17 |
+| UT–CO | 1,467 | UT→CO | 224 | 159 | 58 | 2 | 56 |
+| UT–CO | 1,467 | CO→UT | 189 | 159 | 23 | 5 | 18 |
+| UT–WY | 1,517 | UT→WY | 146 | 108 | 34 | 2 | 32 |
+| UT–WY | 1,517 | WY→UT | 127 | 108 | 17 | 3 | 12 |
 
 원시 출력과 후보 좌표 표본은 [KS–MO](../artifacts/world-roads/ks-state/border-endpoints-mo.log), [MO–IA](../artifacts/world-roads/mo-state/border-endpoints-ia.log), [MO–IL](../artifacts/world-roads/mo-state/border-endpoints-il.log), [NE–KS](../artifacts/world-roads/ne-state/border-endpoints-ks.log), [NE–IA](../artifacts/world-roads/ne-state/border-endpoints-ia.log), [KS–OK](../artifacts/world-roads/ok-state/border-endpoints-ks.log)에 기록했다. `--details` 옵션을 적용한 [KS–OK 후보 원본 계보](../artifacts/world-roads/ok-state/border-endpoints-ks-detailed.log)는 후보 끝점 55개의 관련 원본 도로 행 67개와 도로 분류·이름을 기록했다. 67개는 모두 `RoadResidential`이며, 이는 통행 가능성과 실제 연결 여부의 판정이 아니다. `상대 끝점 없음`과 `상대 선 위`의 차이는 두 주 원천이 같은 도로를 다른 지점에서 분할할 수 있음을 보여준다. `후보 공백`에는 강가·주 경계에서 끝나는 정상 도로가 포함될 수 있다. 선을 임의로 이어 붙이지 않았다.
 
@@ -138,6 +148,25 @@
 | WI→MN | [Minnesota 원본](../artifacts/world-roads/mn-state/raw-mn-near-wi-candidates.log) | 2 | 0 | 0 | 없음 |
 
 방향별 후보 **44개 중 12개**는 반대편 공식 원본 선이 20m 안에 있지만 현재 일반 도로 레이어에서 제외한 종류다. **32개**는 그 거리 안에 원본 선이 없다. 이 수는 실제 통행 가능한 도로 단절 건수가 아니다.
+
+## ID–MT·UT·WY 및 UT–CO·WY 원본 행 대조
+
+[Idaho–Montana](../artifacts/world-roads/id-state/border-endpoints-mt.log), [Idaho–Utah](../artifacts/world-roads/id-state/border-endpoints-ut.log), [Idaho–Wyoming](../artifacts/world-roads/id-state/border-endpoints-wy.log), [Utah–Colorado](../artifacts/world-roads/ut-state/border-endpoints-co.log), [Utah–Wyoming](../artifacts/world-roads/ut-state/border-endpoints-wy.log) 경계의 방향별 후보를 같은 20m 기준으로 반대편 공식 ZIP 원본과 대조했다. ID–UT 경계는 한 번만 센다.
+
+| 후보 방향 | 반대편 원본 행 감사 | 후보 | 원본 선 ≤20m | 채택 도로 ≤20m | 제외 분류 |
+|---|---|---:|---:|---:|---|
+| ID→MT | [Montana 원본](../artifacts/world-roads/id-state/raw-mt-near-id-candidates.log) | 98 | 12 | 0 | `S1500` 9, `S1740` 3 |
+| MT→ID | [Idaho 원본](../artifacts/world-roads/id-state/raw-id-near-mt-candidates.log) | 39 | 12 | 0 | `S1500` 11, `S1740` 1 |
+| ID→UT | [Utah 원본](../artifacts/world-roads/id-state/raw-ut-near-id-candidates.log) | 16 | 1 | 0 | `S1740` 1 |
+| UT→ID | [Idaho 원본](../artifacts/world-roads/id-state/raw-id-near-ut-candidates.log) | 23 | 5 | 0 | `S1500` 3, `S1740` 2 |
+| ID→WY | [Wyoming 원본](../artifacts/world-roads/id-state/raw-wy-near-id-candidates.log) | 15 | 2 | 0 | `S1500` 2 |
+| WY→ID | [Idaho 원본](../artifacts/world-roads/id-state/raw-id-near-wy-candidates.log) | 17 | 3 | 0 | `S1740` 3 |
+| UT→CO | [Colorado 원본](../artifacts/world-roads/ut-state/raw-co-near-ut-candidates.log) | 56 | 9 | 0 | `S1500` 8, `S1740` 1 |
+| CO→UT | [Utah 원본](../artifacts/world-roads/ut-state/raw-ut-near-co-candidates.log) | 18 | 9 | 0 | `S1500` 3, `S1740` 6 |
+| UT→WY | [Wyoming 원본](../artifacts/world-roads/ut-state/raw-wy-near-ut-candidates.log) | 32 | 9 | 0 | `S1500` 9 |
+| WY→UT | [Utah 원본](../artifacts/world-roads/ut-state/raw-ut-near-wy-candidates.log) | 12 | 5 | 0 | `S1500` 5 |
+
+방향별 후보 **326개 중 67개**는 반대편 공식 원본 선이 20m 안에 있지만 현재 일반 도로 레이어에서 제외한 종류다. **259개**는 그 거리 안에 원본 선이 없다. 같은 좌표의 중복 끝점이 포함될 수 있고, 실제 통행 가능한 도로 단절 건수로 해석하지 않는다.
 
 ## 이 검사로 확인할 수 없는 것
 
