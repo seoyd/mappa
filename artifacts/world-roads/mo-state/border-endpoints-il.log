@@ -1,0 +1,3 @@
+shared_border_segments=3929 first_state=29 second_state=17
+29 endpoints=39 matches_0_1m=35 matches_1m=0 matches_5m=0 matches_20m=1 no_endpoint_20m=3 on_opposite_line_0_1m=0 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=0 no_opposite_line_20m=3 candidate_gap_samples=[-90.175121,38.760179] [-90.153582,38.868432] [-90.153518,38.868392]
+17 endpoints=37 matches_0_1m=35 matches_1m=0 matches_5m=0 matches_20m=1 no_endpoint_20m=1 on_opposite_line_0_1m=0 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=0 no_opposite_line_20m=1 candidate_gap_samples=[-90.053755,38.009225]
