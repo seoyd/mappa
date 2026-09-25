@@ -1,8 +1,8 @@
 //! Deterministic, offline Natural Earth fixture builder.
 
 use geo::{
-    Area, BooleanOps, BoundingRect, Centroid, Coord, Geometry, LineString, MapCoords, MultiPolygon,
-    Polygon, Rect,
+    Area, BooleanOps, BoundingRect, Centroid, Coord, Geometry, Intersects, LineString, MapCoords,
+    MultiPolygon, Polygon, Rect,
 };
 use geojson::GeoJson;
 use mappa_map_core::{TileKey, WorldPoint, project, unproject};
@@ -228,6 +228,9 @@ fn add_polygons_impl<'a>(
     for geom in geoms {
         for polygon in polygons(geom) {
             if !preselected && !polygon.bounding_rect().is_some_and(|r| overlaps(r, rect)) {
+                continue;
+            }
+            if preselected && !polygon.intersects(&rect) {
                 continue;
             }
             let clipped: MultiPolygon<f64> = polygon.intersection(&clip);
