@@ -1,0 +1,6 @@
+shared_border_segments=341 first_state=30 second_state=46
+30 endpoints=19 matches_0_1m=16 matches_1m=0 matches_5m=0 matches_20m=1 no_endpoint_20m=2 on_opposite_line_0_1m=0 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=0 no_opposite_line_20m=2 candidate_gap_samples=[-104.042439,45.661580] [-104.041992,45.593124]
+candidate_gap state=30 lon=-104.042439 lat=45.661580 kind=RoadResidential name=Some("Forest Rd") source_id=us-census-tiger-2025-roads-30011 source_feature_id=110808067269:0
+candidate_gap state=30 lon=-104.041992 lat=45.593124 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-30011 source_feature_id=110808069430:0
+46 endpoints=18 matches_0_1m=16 matches_1m=0 matches_5m=0 matches_20m=0 no_endpoint_20m=2 on_opposite_line_0_1m=1 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=0 no_opposite_line_20m=1 candidate_gap_samples=[-104.039939,45.023448]
+candidate_gap state=46 lon=-104.039939 lat=45.023448 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-46019 source_feature_id=110228216768:0

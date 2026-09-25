@@ -1,0 +1,2 @@
+candidate_points=1 inspected_sources=1 inspected_rows=3257 radius_m=20
+candidate lon=-104.039939 lat=45.023448 raw_within_radius=1 accepted_within_radius=0 excluded_within_radius=1 nearest_m=0.000 nearest_mtfcc=S1500 nearest_name=None source_id=us-census-tiger-2025-roads-30011 source_feature_id=110808072126
