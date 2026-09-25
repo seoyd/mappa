@@ -1,0 +1,21 @@
+shared_border_segments=2647 first_state=48 second_state=05
+48 endpoints=138 matches_0_1m=78 matches_1m=0 matches_5m=2 matches_20m=11 no_endpoint_20m=47 on_opposite_line_0_1m=38 on_opposite_line_1m=0 on_opposite_line_5m=1 on_opposite_line_20m=0 no_opposite_line_20m=8 candidate_gap_samples=[-94.043422,33.494205] [-94.043168,33.372112] [-94.043141,33.392800] [-94.043136,33.393681] [-94.043046,33.067185] [-94.043044,33.137225] [-94.042961,33.280496] [-94.042913,33.287416]
+candidate_gap state=48 lon=-94.043422 lat=33.494205 kind=RoadResidential name=Some("Forest Lake Dr") source_id=us-census-tiger-2025-roads-48037 source_feature_id=110516178742:0
+candidate_gap state=48 lon=-94.043422 lat=33.494205 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-48037 source_feature_id=110516181014:0
+candidate_gap state=48 lon=-94.043168 lat=33.372112 kind=RoadResidential name=Some("S State Line Rd") source_id=us-census-tiger-2025-roads-48037 source_feature_id=1103717613383:0
+candidate_gap state=48 lon=-94.043141 lat=33.392800 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-48037 source_feature_id=110516180792:0
+candidate_gap state=48 lon=-94.043136 lat=33.393681 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-48037 source_feature_id=110516180794:0
+candidate_gap state=48 lon=-94.043046 lat=33.067185 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-48067 source_feature_id=110169573632:0
+candidate_gap state=48 lon=-94.043044 lat=33.137225 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-48067 source_feature_id=110169574093:0
+candidate_gap state=48 lon=-94.042961 lat=33.280496 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-48037 source_feature_id=110516181594:0
+candidate_gap state=48 lon=-94.042913 lat=33.287416 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-48037 source_feature_id=110516181597:0
+05 endpoints=124 matches_0_1m=78 matches_1m=0 matches_5m=0 matches_20m=10 no_endpoint_20m=36 on_opposite_line_0_1m=28 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=0 no_opposite_line_20m=8 candidate_gap_samples=[-94.462137,33.631138] [-94.384294,33.544906] [-94.182220,33.593486] [-94.181822,33.593395] [-94.146925,33.581582] [-94.043001,33.065527] [-94.042982,33.141855] [-94.042896,33.424965]
+candidate_gap state=05 lon=-94.462137 lat=33.631138 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-05081 source_feature_id=110445057559:0
+candidate_gap state=05 lon=-94.384294 lat=33.544906 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-05081 source_feature_id=110445057447:0
+candidate_gap state=05 lon=-94.182220 lat=33.593486 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-05081 source_feature_id=110445057298:0
+candidate_gap state=05 lon=-94.181822 lat=33.593395 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-05081 source_feature_id=110445057298:0
+candidate_gap state=05 lon=-94.146925 lat=33.581582 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-05081 source_feature_id=110445057472:0
+candidate_gap state=05 lon=-94.043001 lat=33.065527 kind=RoadResidential name=Some("Co Rd 172") source_id=us-census-tiger-2025-roads-05091 source_feature_id=110511508668:0
+candidate_gap state=05 lon=-94.042982 lat=33.141855 kind=RoadResidential name=Some("Mc 155") source_id=us-census-tiger-2025-roads-05091 source_feature_id=11015864785562:0
+candidate_gap state=05 lon=-94.042896 lat=33.424965 kind=RoadResidential name=Some("E 5th St") source_id=us-census-tiger-2025-roads-05091 source_feature_id=1102679817598:0
+candidate_gap state=05 lon=-94.042896 lat=33.424965 kind=RoadResidential name=Some("W 5th St") source_id=us-census-tiger-2025-roads-05091 source_feature_id=110511509258:0

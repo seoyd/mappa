@@ -1,0 +1,26 @@
+shared_border_segments=2553 first_state=41 second_state=53
+41 endpoints=96 matches_0_1m=75 matches_1m=0 matches_5m=0 matches_20m=2 no_endpoint_20m=19 on_opposite_line_0_1m=15 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=0 no_opposite_line_20m=4 candidate_gap_samples=[-118.653692,46.001049] [-118.574976,46.000795] [-117.354886,45.996565] [-117.337909,45.998575]
+candidate_gap state=41 lon=-118.653692 lat=46.001049 kind=RoadResidential name=Some("Butler Grade Rd") source_id=us-census-tiger-2025-roads-41059 source_feature_id=110459039548:0
+candidate_gap state=41 lon=-118.574976 lat=46.000795 kind=RoadResidential name=Some("Co 700 Rd") source_id=us-census-tiger-2025-roads-41059 source_feature_id=1105598908993:0
+candidate_gap state=41 lon=-118.574976 lat=46.000795 kind=RoadResidential name=Some("Umapine-Stateline Rd") source_id=us-census-tiger-2025-roads-41059 source_feature_id=1105598909300:0
+candidate_gap state=41 lon=-118.574976 lat=46.000795 kind=RoadResidential name=Some("Stateline Rd") source_id=us-census-tiger-2025-roads-41059 source_feature_id=110459039190:0
+candidate_gap state=41 lon=-117.354886 lat=45.996565 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-41063 source_feature_id=1102213855292:0
+candidate_gap state=41 lon=-117.337909 lat=45.998575 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-41063 source_feature_id=1102664947566:0
+53 endpoints=109 matches_0_1m=75 matches_1m=0 matches_5m=0 matches_20m=3 no_endpoint_20m=31 on_opposite_line_0_1m=20 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=0 no_opposite_line_20m=11 candidate_gap_samples=[-118.777756,46.001133] [-118.773342,46.001095] [-118.703645,46.001083] [-118.367519,46.000755] [-118.287371,46.000680] [-118.116492,46.000694] [-118.081324,46.000685] [-117.431072,45.998609] [-117.420794,45.998617] [-117.401007,45.998405] [-117.295046,45.998385]
+candidate_gap state=53 lon=-118.777756 lat=46.001133 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-53071 source_feature_id=110344249083:0
+candidate_gap state=53 lon=-118.773342 lat=46.001095 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-53071 source_feature_id=110344248283:0
+candidate_gap state=53 lon=-118.703645 lat=46.001083 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-53071 source_feature_id=11015490140213:0
+candidate_gap state=53 lon=-118.367519 lat=46.000755 kind=RoadResidential name=Some("Larson Rd") source_id=us-census-tiger-2025-roads-53071 source_feature_id=110344244129:0
+candidate_gap state=53 lon=-118.367519 lat=46.000755 kind=RoadResidential name=Some("J B George Rd") source_id=us-census-tiger-2025-roads-53071 source_feature_id=1106087324125:0
+candidate_gap state=53 lon=-118.367519 lat=46.000755 kind=RoadResidential name=Some("State Ln Rd") source_id=us-census-tiger-2025-roads-53071 source_feature_id=1105059521088:0
+candidate_gap state=53 lon=-118.367519 lat=46.000755 kind=RoadResidential name=Some("Stateline Rd") source_id=us-census-tiger-2025-roads-53071 source_feature_id=1105598909298:0
+candidate_gap state=53 lon=-118.287371 lat=46.000680 kind=RoadResidential name=Some("Hood Rd") source_id=us-census-tiger-2025-roads-53071 source_feature_id=1105598909712:0
+candidate_gap state=53 lon=-118.287371 lat=46.000680 kind=RoadResidential name=Some("Lone Fir Rd") source_id=us-census-tiger-2025-roads-53071 source_feature_id=1106087909566:0
+candidate_gap state=53 lon=-118.116492 lat=46.000694 kind=RoadResidential name=Some("Kooskooskie Rd") source_id=us-census-tiger-2025-roads-53071 source_feature_id=110344245668:0
+candidate_gap state=53 lon=-118.081324 lat=46.000685 kind=RoadResidential name=Some("Blacksnake Ridge Rd") source_id=us-census-tiger-2025-roads-53071 source_feature_id=110344246070:0
+candidate_gap state=53 lon=-118.081324 lat=46.000685 kind=RoadResidential name=Some("Klicker Mtn Rd") source_id=us-census-tiger-2025-roads-53071 source_feature_id=110344245663:0
+candidate_gap state=53 lon=-118.081324 lat=46.000685 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-53071 source_feature_id=110344248733:0
+candidate_gap state=53 lon=-117.431072 lat=45.998609 kind=RoadResidential name=Some("Grouse Creek Ln") source_id=us-census-tiger-2025-roads-53003 source_feature_id=1106073476609:0
+candidate_gap state=53 lon=-117.420794 lat=45.998617 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-53003 source_feature_id=1102390135817:0
+candidate_gap state=53 lon=-117.401007 lat=45.998405 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-53003 source_feature_id=110482792482:0
+candidate_gap state=53 lon=-117.295046 lat=45.998385 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-53003 source_feature_id=110482792093:0

@@ -1,0 +1,5 @@
+candidate_points=4 inspected_sources=3 inspected_rows=6300 radius_m=20
+candidate lon=-118.653692 lat=46.001049 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=280.200 nearest_mtfcc=S1400 nearest_name=Some("Lovers Ln") source_id=us-census-tiger-2025-roads-53071 source_feature_id=110344244158
+candidate lon=-118.574976 lat=46.000795 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=230.806 nearest_mtfcc=S1400 nearest_name=Some("Umapine-Stateline Rd") source_id=us-census-tiger-2025-roads-53071 source_feature_id=1105598909299
+candidate lon=-117.354886 lat=45.996565 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest=none
+candidate lon=-117.337909 lat=45.998575 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=1395.185 nearest_mtfcc=S1400 nearest_name=Some("Grande Ronde Rd") source_id=us-census-tiger-2025-roads-53003 source_feature_id=110482791272

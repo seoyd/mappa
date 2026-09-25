@@ -78,6 +78,28 @@
 | NV–ID | 1,071 | ID→NV | 106 | 90 | 15 | 0 | 15 |
 | NV–UT | 1,972 | NV→UT | 198 | 175 | 13 | 2 | 10 |
 | NV–UT | 1,972 | UT→NV | 228 | 175 | 43 | 4 | 38 |
+| OR–WA | 2,553 | OR→WA | 96 | 75 | 19 | 15 | 4 |
+| OR–WA | 2,553 | WA→OR | 109 | 75 | 31 | 20 | 11 |
+| OR–ID | 7,500 | OR→ID | 95 | 67 | 15 | 5 | 10 |
+| OR–ID | 7,500 | ID→OR | 98 | 67 | 17 | 8 | 7 |
+| OR–NV | 1,076 | OR→NV | 81 | 61 | 20 | 1 | 19 |
+| OR–NV | 1,076 | NV→OR | 83 | 61 | 14 | 1 | 13 |
+| WA–ID | 2,998 | WA→ID | 218 | 182 | 24 | 7 | 11 |
+| WA–ID | 2,998 | ID→WA | 257 | 182 | 60 | 11 | 49 |
+| CA–AZ | 2,557 | CA→AZ | 64 | 60 | 3 | 1 | 2 |
+| CA–AZ | 2,557 | AZ→CA | 74 | 60 | 12 | 3 | 9 |
+| CA–NV | 3,244 | CA→NV | 313 | 225 | 82 | 16 | 64 |
+| CA–NV | 3,244 | NV→CA | 271 | 225 | 38 | 13 | 24 |
+| CA–OR | 2,299 | CA→OR | 190 | 155 | 28 | 10 | 18 |
+| CA–OR | 2,299 | OR→CA | 212 | 155 | 44 | 13 | 31 |
+| TX–NM | 2,996 | TX→NM | 564 | 360 | 177 | 113 | 56 |
+| TX–NM | 2,996 | NM→TX | 550 | 360 | 162 | 98 | 59 |
+| TX–OK | 14,656 | TX→OK | 310 | 244 | 55 | 9 | 43 |
+| TX–OK | 14,656 | OK→TX | 366 | 244 | 100 | 13 | 82 |
+| TX–AR | 2,647 | TX→AR | 138 | 78 | 47 | 38 | 8 |
+| TX–AR | 2,647 | AR→TX | 124 | 78 | 36 | 28 | 8 |
+| TX–LA | 7,387 | TX→LA | 137 | 93 | 38 | 19 | 19 |
+| TX–LA | 7,387 | LA→TX | 139 | 93 | 40 | 14 | 26 |
 
 원시 출력과 후보 좌표 표본은 [KS–MO](../artifacts/world-roads/ks-state/border-endpoints-mo.log), [MO–IA](../artifacts/world-roads/mo-state/border-endpoints-ia.log), [MO–IL](../artifacts/world-roads/mo-state/border-endpoints-il.log), [NE–KS](../artifacts/world-roads/ne-state/border-endpoints-ks.log), [NE–IA](../artifacts/world-roads/ne-state/border-endpoints-ia.log), [KS–OK](../artifacts/world-roads/ok-state/border-endpoints-ks.log)에 기록했다. `--details` 옵션을 적용한 [KS–OK 후보 원본 계보](../artifacts/world-roads/ok-state/border-endpoints-ks-detailed.log)는 후보 끝점 55개의 관련 원본 도로 행 67개와 도로 분류·이름을 기록했다. 67개는 모두 `RoadResidential`이며, 이는 통행 가능성과 실제 연결 여부의 판정이 아니다. `상대 끝점 없음`과 `상대 선 위`의 차이는 두 주 원천이 같은 도로를 다른 지점에서 분할할 수 있음을 보여준다. `후보 공백`에는 강가·주 경계에서 끝나는 정상 도로가 포함될 수 있다. 선을 임의로 이어 붙이지 않았다.
 
@@ -204,6 +226,37 @@
 | OK→NM | [New Mexico 원본](../artifacts/world-roads/nm-state/raw-nm-near-ok-candidates.log) | 1 | 0 | 0 | 없음 |
 
 방향별 후보 **323개 중 104개**는 반대편 공식 원본 선이 20m 안에 있지만 현재 일반 차량도로에서 제외한 종류다. **219개**는 그 거리 안에 원본 선이 없었다. 이 수는 중복 좌표가 포함될 수 있는 진단 후보 수이며 실제 통행 가능한 도로 단절 건수가 아니다. 도로 종류를 임의로 승격하거나 선을 이어 붙이지 않았다.
+
+## OR–WA·ID·NV, WA–ID, CA–AZ·NV·OR 및 TX–NM·OK·AR·LA 원본 행 대조
+
+새 경계의 방향별 후보를 반대편 공식 ZIP 원본과 20m 기준으로 대조했다. Texas는 GeoDB 파일의 100만 피처 상한 때문에 [공식 원천에서 파생한 서쪽·동쪽 두 GeoDB](TX_STATE_PROGRESS.md)를 [감사 도구](../crates/mappa-map-data/src/bin/audit_us_state_border_endpoints.rs)에 함께 입력했다. 따라서 Texas 경계의 반대편 비교에는 두 묶음 모두 포함된다. Arkansas·Louisiana 기존 도로 GeoDB는 원본 manifest에서 감사용으로 다시 만들었다. 원시 경계 출력은 [OR–WA](../artifacts/world-roads/or-state/border-endpoints-wa.log), [OR–ID](../artifacts/world-roads/or-state/border-endpoints-id.log), [OR–NV](../artifacts/world-roads/or-state/border-endpoints-nv.log), [WA–ID](../artifacts/world-roads/wa-state/border-endpoints-id.log), [CA–AZ](../artifacts/world-roads/ca-state/border-endpoints-az.log), [CA–NV](../artifacts/world-roads/ca-state/border-endpoints-nv.log), [CA–OR](../artifacts/world-roads/ca-state/border-endpoints-or.log), [TX–NM](../artifacts/world-roads/tx-state/border-endpoints-nm.log), [TX–OK](../artifacts/world-roads/tx-state/border-endpoints-ok.log), [TX–AR](../artifacts/world-roads/tx-state/border-endpoints-ar.log), [TX–LA](../artifacts/world-roads/tx-state/border-endpoints-la.log)에 있다.
+
+| 후보 방향 | 반대편 원본 행 감사 | 후보 | 원본 선 ≤20m | 채택 도로 ≤20m | 가장 가까운 원본 제외 분류 |
+|---|---|---:|---:|---:|---|
+| OR→WA | [Washington 원본](../artifacts/world-roads/or-state/raw-wa-near-or-candidates.log) | 4 | 0 | 0 | 없음 |
+| WA→OR | [Oregon 원본](../artifacts/world-roads/or-state/raw-or-near-wa-candidates.log) | 11 | 2 | 0 | `S1500` 1, `S1740` 1 |
+| OR→ID | [Idaho 원본](../artifacts/world-roads/or-state/raw-id-near-or-candidates.log) | 10 | 5 | 0 | `S1500` 4, `S1740` 1 |
+| ID→OR | [Oregon 원본](../artifacts/world-roads/or-state/raw-or-near-id-candidates.log) | 7 | 1 | 0 | `S1500` 1 |
+| OR→NV | [Nevada 원본](../artifacts/world-roads/or-state/raw-nv-near-or-candidates.log) | 19 | 9 | 0 | `S1500` 9 |
+| NV→OR | [Oregon 원본](../artifacts/world-roads/or-state/raw-or-near-nv-candidates.log) | 13 | 2 | 0 | `S1500` 2 |
+| WA→ID | [Idaho 원본](../artifacts/world-roads/wa-state/raw-id-near-wa-candidates.log) | 11 | 3 | 0 | `S1500` 2, `S1710` 1 |
+| ID→WA | [Washington 원본](../artifacts/world-roads/wa-state/raw-wa-near-id-candidates.log) | 49 | 23 | 0 | `S1500` 22, `S1740` 1 |
+| CA→AZ | [Arizona 원본](../artifacts/world-roads/ca-state/raw-az-near-ca-candidates.log) | 2 | 0 | 0 | 없음 |
+| AZ→CA | [California 원본](../artifacts/world-roads/ca-state/raw-ca-near-az-candidates.log) | 9 | 0 | 0 | 없음 |
+| CA→NV | [Nevada 원본](../artifacts/world-roads/ca-state/raw-nv-near-ca-candidates.log) | 64 | 12 | 0 | `S1500` 11, `S1740` 1 |
+| NV→CA | [California 원본](../artifacts/world-roads/ca-state/raw-ca-near-nv-candidates.log) | 24 | 5 | 0 | `S1500` 4, `S1740` 1 |
+| CA→OR | [Oregon 원본](../artifacts/world-roads/ca-state/raw-or-near-ca-candidates.log) | 18 | 0 | 0 | 없음 |
+| OR→CA | [California 원본](../artifacts/world-roads/ca-state/raw-ca-near-or-candidates.log) | 31 | 4 | 0 | `S1500` 3, `S1740` 1 |
+| TX→NM | [New Mexico 원본](../artifacts/world-roads/tx-state/raw-nm-near-tx-candidates.log) | 56 | 9 | 0 | `S1500` 9 |
+| NM→TX | [Texas 원본](../artifacts/world-roads/tx-state/raw-tx-near-nm-candidates.log) | 59 | 1 | 0 | `S1740` 1 |
+| TX→OK | [Oklahoma 원본](../artifacts/world-roads/tx-state/raw-ok-near-tx-candidates.log) | 43 | 4 | 0 | `S1500` 2, `S1740` 2 |
+| OK→TX | [Texas 원본](../artifacts/world-roads/tx-state/raw-tx-near-ok-candidates.log) | 82 | 18 | 0 | `S1500` 9, `S1740` 9 |
+| TX→AR | [Arkansas 원본](../artifacts/world-roads/tx-state/raw-ar-near-tx-candidates.log) | 8 | 0 | 0 | 없음 |
+| AR→TX | [Texas 원본](../artifacts/world-roads/tx-state/raw-tx-near-ar-candidates.log) | 8 | 4 | 0 | `S1500` 1, `S1740` 3 |
+| TX→LA | [Louisiana 원본](../artifacts/world-roads/tx-state/raw-la-near-tx-candidates.log) | 19 | 7 | 0 | `S1740` 7 |
+| LA→TX | [Texas 원본](../artifacts/world-roads/tx-state/raw-tx-near-la-candidates.log) | 26 | 7 | 0 | `S1740` 7 |
+
+11개 경계의 양방향 후보 **573개 중 116개**는 반대편 공식 원본 선이 20m 안에 있지만 현재 일반 도로 레이어에서 제외한 종류다. **457개**는 그 거리 안에 원본 선이 없었다. 중복 좌표가 포함될 수 있는 진단 후보 수이며 실제 통행 가능한 도로 단절 건수가 아니다.
 
 ## 이 검사로 확인할 수 없는 것
 

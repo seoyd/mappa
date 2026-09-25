@@ -134,40 +134,38 @@ struct RoadSample {
 }
 
 fn border_roads(
-    path: &Path,
+    paths: &[&Path],
     border: &RTree<Border>,
     bounds: BBox,
 ) -> Result<RoadSample, Box<dyn Error>> {
-    let mut db = GeoDb::open(path)?;
     let mut unique = HashSet::new();
     let mut endpoint_features: HashMap<(u64, u64), Vec<u128>> = HashMap::new();
-    let mut feature_fields = HashMap::new();
+    let mut feature_details = HashMap::new();
     let mut segments = Vec::new();
-    for feature in db.query(bounds)? {
-        let Geometry::Line(line) = feature.geometry else {
-            return Err("road GeoDB contains non-line geometry".into());
-        };
-        segments.extend(line.windows(2).map(|pair| Border((pair[0], pair[1]))));
-        for point in [line[0], *line.last().ok_or("empty road line")?] {
-            if border
-                .locate_in_envelope_intersecting(&square(point, SEARCH_DEGREES))
-                .any(|edge| segment_distance_m(point, edge.0) <= BORDER_METERS)
-            {
-                let key = (point[0].to_bits(), point[1].to_bits());
-                unique.insert(key);
-                endpoint_features.entry(key).or_default().push(feature.id);
-                feature_fields.insert(feature.id, (feature.kind, feature.name.clone()));
+    for path in paths {
+        let mut db = GeoDb::open(path)?;
+        let mut feature_fields = HashMap::new();
+        for feature in db.query(bounds)? {
+            let Geometry::Line(line) = feature.geometry else {
+                return Err("road GeoDB contains non-line geometry".into());
+            };
+            segments.extend(line.windows(2).map(|pair| Border((pair[0], pair[1]))));
+            for point in [line[0], *line.last().ok_or("empty road line")?] {
+                if border
+                    .locate_in_envelope_intersecting(&square(point, SEARCH_DEGREES))
+                    .any(|edge| segment_distance_m(point, edge.0) <= BORDER_METERS)
+                {
+                    let key = (point[0].to_bits(), point[1].to_bits());
+                    unique.insert(key);
+                    endpoint_features.entry(key).or_default().push(feature.id);
+                    feature_fields.insert(feature.id, (feature.kind, feature.name.clone()));
+                }
             }
         }
-    }
-    let feature_details: HashMap<_, _> = db
-        .provenance
-        .iter()
-        .filter_map(|provenance| {
-            feature_fields
-                .get(&provenance.feature_id)
-                .map(|(kind, name)| {
-                    (
+        for provenance in &db.provenance {
+            if let Some((kind, name)) = feature_fields.get(&provenance.feature_id)
+                && feature_details
+                    .insert(
                         provenance.feature_id,
                         (
                             *kind,
@@ -176,11 +174,17 @@ fn border_roads(
                             provenance.source_feature_id.clone(),
                         ),
                     )
-                })
-        })
-        .collect();
-    if feature_details.len() != feature_fields.len() {
-        return Err("border road feature lacks GeoDB provenance".into());
+                    .is_some()
+            {
+                return Err("duplicate border road feature ID across GeoDB shards".into());
+            }
+        }
+        if !feature_fields
+            .keys()
+            .all(|feature_id| feature_details.contains_key(feature_id))
+        {
+            return Err("border road feature lacks GeoDB provenance".into());
+        }
     }
     let mut points: Vec<_> = unique
         .into_iter()
@@ -284,8 +288,29 @@ fn report(
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<_> = std::env::args().collect();
-    if args.len() != 7 && (args.len() != 8 || args[7] != "--details") {
-        return Err("usage: audit_us_state_border_endpoints STATE.zip SHA256 FIRST_STATEFP FIRST.mgeodb SECOND_STATEFP SECOND.mgeodb [--details]".into());
+    if args.len() < 7 {
+        return Err("usage: audit_us_state_border_endpoints STATE.zip SHA256 FIRST_STATEFP FIRST.mgeodb SECOND_STATEFP SECOND.mgeodb [--first-extra PATH] [--second-extra PATH] [--details]".into());
+    }
+    let mut first_paths = vec![Path::new(&args[4])];
+    let mut second_paths = vec![Path::new(&args[6])];
+    let mut details = false;
+    let mut index = 7;
+    while index < args.len() {
+        match args[index].as_str() {
+            "--first-extra" if index + 1 < args.len() => {
+                first_paths.push(Path::new(&args[index + 1]));
+                index += 2;
+            }
+            "--second-extra" if index + 1 < args.len() => {
+                second_paths.push(Path::new(&args[index + 1]));
+                index += 2;
+            }
+            "--details" if !details => {
+                details = true;
+                index += 1;
+            }
+            _ => return Err("invalid border audit option".into()),
+        }
     }
     let [first, second] = state_edges(Path::new(&args[1]), &args[2], [&args[3], &args[5]])?;
     let first: HashSet<_> = first.into_iter().map(edge_key).collect();
@@ -317,8 +342,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     bounds.east += SEARCH_DEGREES;
     bounds.north += SEARCH_DEGREES;
     let border = RTree::bulk_load(common.iter().copied().map(Border).collect());
-    let a = border_roads(Path::new(&args[4]), &border, bounds)?;
-    let b = border_roads(Path::new(&args[6]), &border, bounds)?;
+    let a = border_roads(&first_paths, &border, bounds)?;
+    let b = border_roads(&second_paths, &border, bounds)?;
     println!(
         "shared_border_segments={} first_state={} second_state={}",
         common.len(),
@@ -330,14 +355,14 @@ fn main() -> Result<(), Box<dyn Error>> {
         &a,
         &RTree::bulk_load(b.endpoints.clone()),
         &b.segments,
-        args.len() == 8,
+        details,
     );
     report(
         &args[5],
         &b,
         &RTree::bulk_load(a.endpoints.clone()),
         &a.segments,
-        args.len() == 8,
+        details,
     );
     Ok(())
 }

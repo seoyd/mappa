@@ -1,0 +1,23 @@
+shared_border_segments=7500 first_state=41 second_state=16
+41 endpoints=95 matches_0_1m=67 matches_1m=0 matches_5m=6 matches_20m=7 no_endpoint_20m=15 on_opposite_line_0_1m=5 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=0 no_opposite_line_20m=10 candidate_gap_samples=[-117.031930,43.833972] [-117.026958,43.306636] [-117.026708,43.572920] [-117.026677,43.745635] [-117.026672,43.041554] [-117.026658,43.025441] [-117.026571,42.288868] [-117.026563,43.803449] [-117.026562,42.278317] [-117.026557,43.805718]
+candidate_gap state=41 lon=-117.031930 lat=43.833972 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-41045 source_feature_id=110456753470:0
+candidate_gap state=41 lon=-117.026958 lat=43.306636 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-41045 source_feature_id=110456758716:0
+candidate_gap state=41 lon=-117.026708 lat=43.572920 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-41045 source_feature_id=110456757870:0
+candidate_gap state=41 lon=-117.026677 lat=43.745635 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-41045 source_feature_id=110456756003:0
+candidate_gap state=41 lon=-117.026672 lat=43.041554 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-41045 source_feature_id=110456753602:0
+candidate_gap state=41 lon=-117.026658 lat=43.025441 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-41045 source_feature_id=1102805620571:0
+candidate_gap state=41 lon=-117.026571 lat=42.288868 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-41045 source_feature_id=110456758226:0
+candidate_gap state=41 lon=-117.026563 lat=43.803449 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-41045 source_feature_id=110456757621:0
+candidate_gap state=41 lon=-117.026562 lat=42.278317 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-41045 source_feature_id=110456754648:0
+candidate_gap state=41 lon=-117.026557 lat=43.805718 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-41045 source_feature_id=110456757621:0
+16 endpoints=98 matches_0_1m=67 matches_1m=0 matches_5m=5 matches_20m=9 no_endpoint_20m=17 on_opposite_line_0_1m=8 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=2 no_opposite_line_20m=7 candidate_gap_samples=[-117.026668,43.025024] [-117.026651,43.600396] [-117.026561,42.609506] [-117.026546,43.610641] [-117.026527,43.025242] [-117.026254,42.808147] [-117.026072,42.850107]
+candidate_gap state=16 lon=-117.026668 lat=43.025024 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-16073 source_feature_id=110502302513:0
+candidate_gap state=16 lon=-117.026651 lat=43.600396 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-16073 source_feature_id=110502307897:0
+candidate_gap state=16 lon=-117.026561 lat=42.609506 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-16073 source_feature_id=110502304342:0
+candidate_gap state=16 lon=-117.026546 lat=43.610641 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-16073 source_feature_id=110502302473:0
+candidate_gap state=16 lon=-117.026546 lat=43.610641 kind=RoadResidential name=Some("S Side Rd") source_id=us-census-tiger-2025-roads-16073 source_feature_id=1105598229544:0
+candidate_gap state=16 lon=-117.026546 lat=43.610641 kind=RoadResidential name=Some("E Canyon Loop Rd") source_id=us-census-tiger-2025-roads-16073 source_feature_id=110543014578:0
+candidate_gap state=16 lon=-117.026527 lat=43.025242 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-16073 source_feature_id=110502302513:0
+candidate_gap state=16 lon=-117.026254 lat=42.808147 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-16073 source_feature_id=110502298127:0
+candidate_gap state=16 lon=-117.026254 lat=42.808147 kind=RoadResidential name=Some("Chicken Creek Rd") source_id=us-census-tiger-2025-roads-16073 source_feature_id=110502252305:0
+candidate_gap state=16 lon=-117.026072 lat=42.850107 kind=RoadResidential name=Some("Pleasant Valley Rd") source_id=us-census-tiger-2025-roads-16073 source_feature_id=1106087386231:0

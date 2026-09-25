@@ -1,0 +1,3 @@
+candidate_points=2 inspected_sources=2 inspected_rows=35694 radius_m=20
+candidate lon=-114.488010 lat=34.717346 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=25.581 nearest_mtfcc=S1100 nearest_name=Some("I- 40") source_id=us-census-tiger-2025-roads-04015 source_feature_id=1104469115519
+candidate lon=-114.400587 lat=34.111574 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=125.670 nearest_mtfcc=S1400 nearest_name=Some("Levee Rd") source_id=us-census-tiger-2025-roads-04012 source_feature_id=1101221470192
