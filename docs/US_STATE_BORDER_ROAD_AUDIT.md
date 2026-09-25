@@ -20,8 +20,10 @@
 | NE–KS | 4,210 | KS→NE | 580 | 387 | 177 | 160 | 7 |
 | NE–IA | 4,050 | NE→IA | 43 | 39 | 4 | 0 | 4 |
 | NE–IA | 4,050 | IA→NE | 42 | 39 | 1 | 0 | 0 |
+| KS–OK | 3,706 | KS→OK | 546 | 353 | 178 | 167 | 8 |
+| KS–OK | 3,706 | OK→KS | 595 | 353 | 226 | 169 | 47 |
 
-원시 출력과 후보 좌표 표본은 [KS–MO](../artifacts/world-roads/ks-state/border-endpoints-mo.log), [MO–IA](../artifacts/world-roads/mo-state/border-endpoints-ia.log), [MO–IL](../artifacts/world-roads/mo-state/border-endpoints-il.log), [NE–KS](../artifacts/world-roads/ne-state/border-endpoints-ks.log), [NE–IA](../artifacts/world-roads/ne-state/border-endpoints-ia.log)에 기록했다. `상대 끝점 없음`과 `상대 선 위`의 차이는 두 주 원천이 같은 도로를 다른 지점에서 분할할 수 있음을 보여준다. `후보 공백`에는 강가·주 경계에서 끝나는 정상 도로가 포함될 수 있다. 선을 임의로 이어 붙이지 않았다.
+원시 출력과 후보 좌표 표본은 [KS–MO](../artifacts/world-roads/ks-state/border-endpoints-mo.log), [MO–IA](../artifacts/world-roads/mo-state/border-endpoints-ia.log), [MO–IL](../artifacts/world-roads/mo-state/border-endpoints-il.log), [NE–KS](../artifacts/world-roads/ne-state/border-endpoints-ks.log), [NE–IA](../artifacts/world-roads/ne-state/border-endpoints-ia.log), [KS–OK](../artifacts/world-roads/ok-state/border-endpoints-ks.log)에 기록했다. `--details` 옵션을 적용한 [KS–OK 후보 원본 계보](../artifacts/world-roads/ok-state/border-endpoints-ks-detailed.log)는 후보 끝점 55개의 관련 원본 도로 행 67개와 도로 분류·이름을 기록했다. 67개는 모두 `RoadResidential`이며, 이는 통행 가능성과 실제 연결 여부의 판정이 아니다. `상대 끝점 없음`과 `상대 선 위`의 차이는 두 주 원천이 같은 도로를 다른 지점에서 분할할 수 있음을 보여준다. `후보 공백`에는 강가·주 경계에서 끝나는 정상 도로가 포함될 수 있다. 선을 임의로 이어 붙이지 않았다.
 
 ## 이 검사로 확인할 수 없는 것
 
@@ -39,3 +41,5 @@ cargo run --offline -p mappa-map-data --bin audit_us_state_border_endpoints -- \
   20 artifacts/world-roads/ks-state/roads.mgeodb \
   29 artifacts/world-roads/mo-state/roads.mgeodb
 ```
+
+후보 행 추적은 같은 명령의 두 GeoDB 뒤에 `--details`를 추가한다.

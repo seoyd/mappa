@@ -1,10 +1,16 @@
 //! Measure road endpoint agreement near a boundary shared by two official states.
 //! This is a diagnostic: coincident endpoints do not prove routable connectivity.
 
-use mappa_map_data::canonical::{BBox, GeoDb, Geometry};
+use mappa_map_data::canonical::{BBox, FeatureKind, GeoDb, Geometry};
 use rstar::{AABB, RTree, RTreeObject};
 use sha2::{Digest, Sha256};
-use std::{collections::HashSet, error::Error, fs::File, io::Read, path::Path};
+use std::{
+    collections::{HashMap, HashSet},
+    error::Error,
+    fs::File,
+    io::Read,
+    path::Path,
+};
 
 type Point = [f64; 2];
 type Edge = (Point, Point);
@@ -122,6 +128,8 @@ fn state_edges(
 
 struct RoadSample {
     endpoints: Vec<Point>,
+    endpoint_features: HashMap<(u64, u64), Vec<u128>>,
+    feature_details: HashMap<u128, (FeatureKind, Option<String>, String, String)>,
     segments: RTree<Border>,
 }
 
@@ -132,6 +140,8 @@ fn border_roads(
 ) -> Result<RoadSample, Box<dyn Error>> {
     let mut db = GeoDb::open(path)?;
     let mut unique = HashSet::new();
+    let mut endpoint_features: HashMap<(u64, u64), Vec<u128>> = HashMap::new();
+    let mut feature_fields = HashMap::new();
     let mut segments = Vec::new();
     for feature in db.query(bounds)? {
         let Geometry::Line(line) = feature.geometry else {
@@ -143,9 +153,34 @@ fn border_roads(
                 .locate_in_envelope_intersecting(&square(point, SEARCH_DEGREES))
                 .any(|edge| segment_distance_m(point, edge.0) <= BORDER_METERS)
             {
-                unique.insert((point[0].to_bits(), point[1].to_bits()));
+                let key = (point[0].to_bits(), point[1].to_bits());
+                unique.insert(key);
+                endpoint_features.entry(key).or_default().push(feature.id);
+                feature_fields.insert(feature.id, (feature.kind, feature.name.clone()));
             }
         }
+    }
+    let feature_details: HashMap<_, _> = db
+        .provenance
+        .iter()
+        .filter_map(|provenance| {
+            feature_fields
+                .get(&provenance.feature_id)
+                .map(|(kind, name)| {
+                    (
+                        provenance.feature_id,
+                        (
+                            *kind,
+                            name.clone(),
+                            provenance.source_id.clone(),
+                            provenance.source_feature_id.clone(),
+                        ),
+                    )
+                })
+        })
+        .collect();
+    if feature_details.len() != feature_fields.len() {
+        return Err("border road feature lacks GeoDB provenance".into());
     }
     let mut points: Vec<_> = unique
         .into_iter()
@@ -154,15 +189,24 @@ fn border_roads(
     points.sort_by(|a, b| a.partial_cmp(b).unwrap());
     Ok(RoadSample {
         endpoints: points,
+        endpoint_features,
+        feature_details,
         segments: RTree::bulk_load(segments),
     })
 }
 
-fn report(label: &str, points: &[Point], opposite: &RTree<Point>, lines: &RTree<Border>) {
+fn report(
+    label: &str,
+    sample: &RoadSample,
+    opposite: &RTree<Point>,
+    lines: &RTree<Border>,
+    details: bool,
+) {
     let mut bins = [0usize; 5];
     let mut line_bins = [0usize; 5];
     let mut samples = Vec::new();
-    for &point in points {
+    let mut candidate_points = Vec::new();
+    for &point in &sample.endpoints {
         let nearest = opposite
             .locate_in_envelope_intersecting(&square(point, SEARCH_DEGREES))
             .map(|&other| segment_distance_m(point, (other, other)))
@@ -196,14 +240,17 @@ fn report(label: &str, points: &[Point], opposite: &RTree<Point>, lines: &RTree<
                 4
             };
             line_bins[line_bin] += 1;
-            if line_bin == 4 && samples.len() < 12 {
-                samples.push(format!("[{:.6},{:.6}]", point[0], point[1]));
+            if line_bin == 4 {
+                candidate_points.push(point);
+                if samples.len() < 12 {
+                    samples.push(format!("[{:.6},{:.6}]", point[0], point[1]));
+                }
             }
         }
     }
     println!(
         "{label} endpoints={} matches_0_1m={} matches_1m={} matches_5m={} matches_20m={} no_endpoint_20m={} on_opposite_line_0_1m={} on_opposite_line_1m={} on_opposite_line_5m={} on_opposite_line_20m={} no_opposite_line_20m={} candidate_gap_samples={}",
-        points.len(),
+        sample.endpoints.len(),
         bins[0],
         bins[1],
         bins[2],
@@ -216,12 +263,29 @@ fn report(label: &str, points: &[Point], opposite: &RTree<Point>, lines: &RTree<
         line_bins[4],
         samples.join(" ")
     );
+    if details {
+        for point in candidate_points {
+            let key = (point[0].to_bits(), point[1].to_bits());
+            if let Some(ids) = sample.endpoint_features.get(&key) {
+                for id in ids {
+                    if let Some((kind, name, source_id, source_feature_id)) =
+                        sample.feature_details.get(id)
+                    {
+                        println!(
+                            "candidate_gap state={label} lon={:.6} lat={:.6} kind={kind:?} name={name:?} source_id={source_id} source_feature_id={source_feature_id}",
+                            point[0], point[1]
+                        );
+                    }
+                }
+            }
+        }
+    }
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<_> = std::env::args().collect();
-    if args.len() != 7 {
-        return Err("usage: audit_us_state_border_endpoints STATE.zip SHA256 FIRST_STATEFP FIRST.mgeodb SECOND_STATEFP SECOND.mgeodb".into());
+    if args.len() != 7 && (args.len() != 8 || args[7] != "--details") {
+        return Err("usage: audit_us_state_border_endpoints STATE.zip SHA256 FIRST_STATEFP FIRST.mgeodb SECOND_STATEFP SECOND.mgeodb [--details]".into());
     }
     let [first, second] = state_edges(Path::new(&args[1]), &args[2], [&args[3], &args[5]])?;
     let first: HashSet<_> = first.into_iter().map(edge_key).collect();
@@ -263,15 +327,17 @@ fn main() -> Result<(), Box<dyn Error>> {
     );
     report(
         &args[3],
-        &a.endpoints,
+        &a,
         &RTree::bulk_load(b.endpoints.clone()),
         &b.segments,
+        args.len() == 8,
     );
     report(
         &args[5],
-        &b.endpoints,
-        &RTree::bulk_load(a.endpoints),
+        &b,
+        &RTree::bulk_load(a.endpoints.clone()),
         &a.segments,
+        args.len() == 8,
     );
     Ok(())
 }
