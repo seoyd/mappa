@@ -22,6 +22,12 @@
 | NE–IA | 4,050 | IA→NE | 42 | 39 | 1 | 0 | 0 |
 | KS–OK | 3,706 | KS→OK | 546 | 353 | 178 | 167 | 8 |
 | KS–OK | 3,706 | OK→KS | 595 | 353 | 226 | 169 | 47 |
+| CO–KS | 1,075 | CO→KS | 155 | 135 | 17 | 7 | 10 |
+| CO–KS | 1,075 | KS→CO | 179 | 135 | 36 | 19 | 17 |
+| CO–NE | 1,388 | CO→NE | 203 | 137 | 58 | 39 | 17 |
+| CO–NE | 1,388 | NE→CO | 197 | 137 | 50 | 26 | 23 |
+| CO–OK | 136 | CO→OK | 21 | 20 | 0 | 0 | 0 |
+| CO–OK | 136 | OK→CO | 41 | 20 | 20 | 3 | 17 |
 
 원시 출력과 후보 좌표 표본은 [KS–MO](../artifacts/world-roads/ks-state/border-endpoints-mo.log), [MO–IA](../artifacts/world-roads/mo-state/border-endpoints-ia.log), [MO–IL](../artifacts/world-roads/mo-state/border-endpoints-il.log), [NE–KS](../artifacts/world-roads/ne-state/border-endpoints-ks.log), [NE–IA](../artifacts/world-roads/ne-state/border-endpoints-ia.log), [KS–OK](../artifacts/world-roads/ok-state/border-endpoints-ks.log)에 기록했다. `--details` 옵션을 적용한 [KS–OK 후보 원본 계보](../artifacts/world-roads/ok-state/border-endpoints-ks-detailed.log)는 후보 끝점 55개의 관련 원본 도로 행 67개와 도로 분류·이름을 기록했다. 67개는 모두 `RoadResidential`이며, 이는 통행 가능성과 실제 연결 여부의 판정이 아니다. `상대 끝점 없음`과 `상대 선 위`의 차이는 두 주 원천이 같은 도로를 다른 지점에서 분할할 수 있음을 보여준다. `후보 공백`에는 강가·주 경계에서 끝나는 정상 도로가 포함될 수 있다. 선을 임의로 이어 붙이지 않았다.
 
@@ -30,6 +36,20 @@
 새 Rust [원본 도로 근접 감사](../crates/mappa-map-data/src/bin/audit_tiger_raw_border_candidates.rs)는 후보와 반대편 주의 ZIP 원본 행을 비교한다. 공식 manifest의 ZIP SHA-256과 NAD83 `.prj`를 확인하고 선형에서 후보까지 거리를 계산한다. [OK 후보 47개 대 KS 원본](../artifacts/world-roads/ok-state/raw-kansas-near-ok-candidates.log)은 Kansas ZIP 11개·27,456행을 검사했다. **16개** 후보의 20m 이내에 원본 선이 있었지만 채택된 차량도로 선은 0개였다. 가장 가까운 원본 분류는 `S1500` 10개, `S1740` 5개, `S1750` 1개다. 나머지 **31개** 후보 주변 20m에는 Kansas 원본 선도 없었다. [KS 후보 8개 대 OK 원본](../artifacts/world-roads/ok-state/raw-oklahoma-near-ks-candidates.log)은 Oklahoma ZIP 6개·26,454행을 검사했고 8개 모두 20m 이내 원본 선이 없었다.
 
 [Census MTFCC 정의](https://www2.census.gov/geo/pdfs/maps-data/data/tiger/tgrshp2025/TGRSHP2025_TechDoc.pdf)에 따르면 `S1500`은 4륜구동 차량이 필요한 비포장 길, `S1740`은 대체로 사유지 안의 산업·농장 등 접근로, `S1750`은 Census 내부용 분류다. 따라서 16개 선을 일반 차량도로 레이어로 자동 합치지 않는다. 정상적인 막다른 길인지, 다른 자료에서 누락된 일반 도로가 있는지는 아직 검증되지 않았다. 별도 길 종류를 제공할 때는 접근 제한과 시각 표현을 먼저 정해야 한다.
+
+## CO–KS·NE·OK 원본 행 대조
+
+[CO–KS 끝점](../artifacts/world-roads/co-state/border-endpoints-ks.log), [CO–NE 끝점](../artifacts/world-roads/co-state/border-endpoints-ne.log), [CO–OK 끝점](../artifacts/world-roads/co-state/border-endpoints-ok.log)의 방향별 후보는 각각 27·40·17개, 합계 84개다. 공식 반대편 ZIP 원본을 같은 20m 기준으로 검사했다.
+
+| 후보 방향 | 반대편 원본 행 감사 | 후보 | 원본 선 ≤20m | 채택 도로 ≤20m | 제외 분류 |
+|---|---|---:|---:|---:|---|
+| CO→KS | [Kansas 원본](../artifacts/world-roads/co-state/raw-ks-near-co-candidates.log) | 10 | 1 | 0 | `S1740` 1 |
+| KS→CO | [Colorado 원본](../artifacts/world-roads/co-state/raw-co-near-ks-candidates.log) | 17 | 1 | 0 | `S1740` 1 |
+| CO→NE | [Nebraska 원본](../artifacts/world-roads/co-state/raw-ne-near-co-candidates.log) | 17 | 4 | 0 | `S1500` 4 |
+| NE→CO | [Colorado 원본](../artifacts/world-roads/co-state/raw-co-near-ne-candidates.log) | 23 | 7 | 0 | `S1740` 6, `S1500` 1 |
+| OK→CO | [Colorado 원본](../artifacts/world-roads/co-state/raw-co-near-ok-candidates.log) | 17 | 0 | 0 | 없음 |
+
+검사한 후보 **84개 중 13개**는 반대편에 원본 선이 있었으나 `S1500` 5개·`S1740` 8개로 현재 일반 도로 레이어에서 제외한 종류다. 나머지 **71개**는 반대편 공식 원본 선이 20m 이내에 없었다. 이 결과도 정상적인 막다른 길과 실제 누락을 구별하지 못한다. CO→OK는 후보 0개라 별도 원본 근접 감사를 실행하지 않았다.
 
 ## 이 검사로 확인할 수 없는 것
 
