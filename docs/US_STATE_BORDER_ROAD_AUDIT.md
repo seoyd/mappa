@@ -64,6 +64,20 @@
 | UT–CO | 1,467 | CO→UT | 189 | 159 | 23 | 5 | 18 |
 | UT–WY | 1,517 | UT→WY | 146 | 108 | 34 | 2 | 32 |
 | UT–WY | 1,517 | WY→UT | 127 | 108 | 17 | 3 | 12 |
+| AZ–NM | 2,116 | AZ→NM | 282 | 201 | 51 | 8 | 42 |
+| AZ–NM | 2,116 | NM→AZ | 278 | 201 | 52 | 16 | 35 |
+| AZ–NV | 2,174 | AZ→NV | 30 | 23 | 6 | 0 | 6 |
+| AZ–NV | 2,174 | NV→AZ | 25 | 23 | 1 | 0 | 1 |
+| AZ–UT | 1,760 | AZ→UT | 172 | 125 | 34 | 11 | 22 |
+| AZ–UT | 1,760 | UT→AZ | 176 | 125 | 41 | 14 | 27 |
+| NM–CO | 1,584 | NM→CO | 259 | 167 | 86 | 0 | 84 |
+| NM–CO | 1,584 | CO→NM | 206 | 167 | 32 | 3 | 29 |
+| NM–OK | 231 | NM→OK | 29 | 10 | 18 | 12 | 5 |
+| NM–OK | 231 | OK→NM | 21 | 10 | 10 | 9 | 1 |
+| NV–ID | 1,071 | NV→ID | 107 | 90 | 11 | 3 | 8 |
+| NV–ID | 1,071 | ID→NV | 106 | 90 | 15 | 0 | 15 |
+| NV–UT | 1,972 | NV→UT | 198 | 175 | 13 | 2 | 10 |
+| NV–UT | 1,972 | UT→NV | 228 | 175 | 43 | 4 | 38 |
 
 원시 출력과 후보 좌표 표본은 [KS–MO](../artifacts/world-roads/ks-state/border-endpoints-mo.log), [MO–IA](../artifacts/world-roads/mo-state/border-endpoints-ia.log), [MO–IL](../artifacts/world-roads/mo-state/border-endpoints-il.log), [NE–KS](../artifacts/world-roads/ne-state/border-endpoints-ks.log), [NE–IA](../artifacts/world-roads/ne-state/border-endpoints-ia.log), [KS–OK](../artifacts/world-roads/ok-state/border-endpoints-ks.log)에 기록했다. `--details` 옵션을 적용한 [KS–OK 후보 원본 계보](../artifacts/world-roads/ok-state/border-endpoints-ks-detailed.log)는 후보 끝점 55개의 관련 원본 도로 행 67개와 도로 분류·이름을 기록했다. 67개는 모두 `RoadResidential`이며, 이는 통행 가능성과 실제 연결 여부의 판정이 아니다. `상대 끝점 없음`과 `상대 선 위`의 차이는 두 주 원천이 같은 도로를 다른 지점에서 분할할 수 있음을 보여준다. `후보 공백`에는 강가·주 경계에서 끝나는 정상 도로가 포함될 수 있다. 선을 임의로 이어 붙이지 않았다.
 
@@ -167,6 +181,29 @@
 | WY→UT | [Utah 원본](../artifacts/world-roads/ut-state/raw-ut-near-wy-candidates.log) | 12 | 5 | 0 | `S1500` 5 |
 
 방향별 후보 **326개 중 67개**는 반대편 공식 원본 선이 20m 안에 있지만 현재 일반 도로 레이어에서 제외한 종류다. **259개**는 그 거리 안에 원본 선이 없다. 같은 좌표의 중복 끝점이 포함될 수 있고, 실제 통행 가능한 도로 단절 건수로 해석하지 않는다.
+
+## AZ–UT·NM·NV, NV–UT·ID 및 NM–CO·OK 원본 행 대조
+
+[Arizona–Utah](../artifacts/world-roads/az-state/border-endpoints-ut.log), [Arizona–New Mexico](../artifacts/world-roads/az-state/border-endpoints-nm.log), [Arizona–Nevada](../artifacts/world-roads/az-state/border-endpoints-nv.log), [Nevada–Utah](../artifacts/world-roads/nv-state/border-endpoints-ut.log), [Nevada–Idaho](../artifacts/world-roads/nv-state/border-endpoints-id.log), [New Mexico–Colorado](../artifacts/world-roads/nm-state/border-endpoints-co.log), [New Mexico–Oklahoma](../artifacts/world-roads/nm-state/border-endpoints-ok.log)의 방향별 후보를 반대편 공식 ZIP 원본과 20m 기준으로 대조했다. 7개 경계는 각각 한 번만 센다.
+
+| 후보 방향 | 반대편 원본 행 감사 | 후보 | 원본 선 ≤20m | 채택 도로 ≤20m | 가장 가까운 원본 제외 분류 |
+|---|---|---:|---:|---:|---|
+| AZ→UT | [Utah 원본](../artifacts/world-roads/az-state/raw-ut-near-az-candidates.log) | 22 | 3 | 0 | `S1500` 2, `S1740` 1 |
+| UT→AZ | [Arizona 원본](../artifacts/world-roads/az-state/raw-az-near-ut-candidates.log) | 27 | 0 | 0 | 없음 |
+| AZ→NM | [New Mexico 원본](../artifacts/world-roads/az-state/raw-nm-near-az-candidates.log) | 42 | 10 | 0 | `S1500` 6, `S1740` 3, `S1750` 1 |
+| NM→AZ | [Arizona 원본](../artifacts/world-roads/az-state/raw-az-near-nm-candidates.log) | 35 | 15 | 0 | `S1500` 8, `S1740` 7 |
+| AZ→NV | [Nevada 원본](../artifacts/world-roads/az-state/raw-nv-near-az-candidates.log) | 6 | 0 | 0 | 없음 |
+| NV→AZ | [Arizona 원본](../artifacts/world-roads/az-state/raw-az-near-nv-candidates.log) | 1 | 0 | 0 | 없음 |
+| NV→UT | [Utah 원본](../artifacts/world-roads/nv-state/raw-ut-near-nv-candidates.log) | 10 | 1 | 0 | `S1500` 1 |
+| UT→NV | [Nevada 원본](../artifacts/world-roads/nv-state/raw-nv-near-ut-candidates.log) | 38 | 8 | 0 | `S1500` 8 |
+| NV→ID | [Idaho 원본](../artifacts/world-roads/nv-state/raw-id-near-nv-candidates.log) | 8 | 3 | 0 | `S1500` 2, `S1740` 1 |
+| ID→NV | [Nevada 원본](../artifacts/world-roads/nv-state/raw-nv-near-id-candidates.log) | 15 | 12 | 0 | `S1500` 10, `S1740` 2 |
+| NM→CO | [Colorado 원본](../artifacts/world-roads/nm-state/raw-co-near-nm-candidates.log) | 84 | 37 | 0 | `S1500` 36, `S1740` 1 |
+| CO→NM | [New Mexico 원본](../artifacts/world-roads/nm-state/raw-nm-near-co-candidates.log) | 29 | 12 | 0 | `S1500` 2, `S1740` 9, `S1750` 1 |
+| NM→OK | [Oklahoma 원본](../artifacts/world-roads/nm-state/raw-ok-near-nm-candidates.log) | 5 | 3 | 0 | `S1740` 3 |
+| OK→NM | [New Mexico 원본](../artifacts/world-roads/nm-state/raw-nm-near-ok-candidates.log) | 1 | 0 | 0 | 없음 |
+
+방향별 후보 **323개 중 104개**는 반대편 공식 원본 선이 20m 안에 있지만 현재 일반 차량도로에서 제외한 종류다. **219개**는 그 거리 안에 원본 선이 없었다. 이 수는 중복 좌표가 포함될 수 있는 진단 후보 수이며 실제 통행 가능한 도로 단절 건수가 아니다. 도로 종류를 임의로 승격하거나 선을 이어 붙이지 않았다.
 
 ## 이 검사로 확인할 수 없는 것
 

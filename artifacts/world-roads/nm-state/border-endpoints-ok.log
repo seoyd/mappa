@@ -1,0 +1,10 @@
+shared_border_segments=231 first_state=35 second_state=40
+35 endpoints=29 matches_0_1m=10 matches_1m=0 matches_5m=0 matches_20m=1 no_endpoint_20m=18 on_opposite_line_0_1m=12 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=1 no_opposite_line_20m=5 candidate_gap_samples=[-103.002379,36.970494] [-103.002371,36.964733] [-103.002349,36.949535] [-103.002327,36.933670] [-103.002254,36.909398]
+candidate_gap state=35 lon=-103.002379 lat=36.970494 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-35059 source_feature_id=110450391917:0
+candidate_gap state=35 lon=-103.002371 lat=36.964733 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-35059 source_feature_id=110450392157:0
+candidate_gap state=35 lon=-103.002349 lat=36.949535 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-35059 source_feature_id=110450392875:0
+candidate_gap state=35 lon=-103.002327 lat=36.933670 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-35059 source_feature_id=110450392147:0
+candidate_gap state=35 lon=-103.002254 lat=36.909398 kind=RoadResidential name=Some("Spur Rd") source_id=us-census-tiger-2025-roads-35059 source_feature_id=1103668402681:0
+candidate_gap state=35 lon=-103.002254 lat=36.909398 kind=RoadResidential name=Some("Co Rd B089") source_id=us-census-tiger-2025-roads-35059 source_feature_id=110450362469:0
+40 endpoints=21 matches_0_1m=10 matches_1m=0 matches_5m=0 matches_20m=1 no_endpoint_20m=10 on_opposite_line_0_1m=9 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=0 no_opposite_line_20m=1 candidate_gap_samples=[-103.002148,37.000141]
+candidate_gap state=40 lon=-103.002148 lat=37.000141 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-40025 source_feature_id=110471819101:0

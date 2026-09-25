@@ -1,0 +1,13 @@
+shared_border_segments=2174 first_state=04 second_state=32
+04 endpoints=30 matches_0_1m=23 matches_1m=0 matches_5m=1 matches_20m=0 no_endpoint_20m=6 on_opposite_line_0_1m=0 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=0 no_opposite_line_20m=6 candidate_gap_samples=[-114.050502,36.895232] [-114.050423,36.903154] [-114.047488,36.607626] [-114.047281,36.600322] [-114.046673,36.578038] [-114.046492,36.577951]
+candidate_gap state=04 lon=-114.050502 lat=36.895232 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-04015 source_feature_id=1101273214225:0
+candidate_gap state=04 lon=-114.050423 lat=36.903154 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-04015 source_feature_id=1101273214226:0
+candidate_gap state=04 lon=-114.047488 lat=36.607626 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-04015 source_feature_id=1102659273246:0
+candidate_gap state=04 lon=-114.047281 lat=36.600322 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-04015 source_feature_id=1102652707957:0
+candidate_gap state=04 lon=-114.046673 lat=36.578038 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-04015 source_feature_id=1102658293579:0
+candidate_gap state=04 lon=-114.046492 lat=36.577951 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-04015 source_feature_id=1102658293579:0
+candidate_gap state=04 lon=-114.046492 lat=36.577951 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-04015 source_feature_id=1102658293569:0
+candidate_gap state=04 lon=-114.046492 lat=36.577951 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-04015 source_feature_id=1102658293545:0
+candidate_gap state=04 lon=-114.046492 lat=36.577951 kind=RoadResidential name=None source_id=us-census-tiger-2025-roads-04015 source_feature_id=1102658293562:0
+32 endpoints=25 matches_0_1m=23 matches_1m=0 matches_5m=0 matches_20m=1 no_endpoint_20m=1 on_opposite_line_0_1m=0 on_opposite_line_1m=0 on_opposite_line_5m=0 on_opposite_line_20m=0 no_opposite_line_20m=1 candidate_gap_samples=[-114.050131,36.819799]
+candidate_gap state=32 lon=-114.050131 lat=36.819799 kind=RoadResidential name=Some("Mesa Blvd") source_id=us-census-tiger-2025-roads-32003 source_feature_id=110686690986:0

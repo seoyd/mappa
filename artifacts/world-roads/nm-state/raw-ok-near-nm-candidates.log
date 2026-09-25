@@ -1,0 +1,6 @@
+candidate_points=5 inspected_sources=1 inspected_rows=3179 radius_m=20
+candidate lon=-103.002379 lat=36.970494 raw_within_radius=1 accepted_within_radius=0 excluded_within_radius=1 nearest_m=0.000 nearest_mtfcc=S1740 nearest_name=None source_id=us-census-tiger-2025-roads-40025 source_feature_id=1105533811323
+candidate lon=-103.002371 lat=36.964733 raw_within_radius=1 accepted_within_radius=0 excluded_within_radius=1 nearest_m=0.000 nearest_mtfcc=S1740 nearest_name=None source_id=us-census-tiger-2025-roads-40025 source_feature_id=110471820397
+candidate lon=-103.002349 lat=36.949535 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=191.693 nearest_mtfcc=S1400 nearest_name=None source_id=us-census-tiger-2025-roads-40025 source_feature_id=110471818790
+candidate lon=-103.002327 lat=36.933670 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=453.117 nearest_mtfcc=S1400 nearest_name=None source_id=us-census-tiger-2025-roads-40025 source_feature_id=1108476043548
+candidate lon=-103.002254 lat=36.909398 raw_within_radius=1 accepted_within_radius=0 excluded_within_radius=1 nearest_m=0.000 nearest_mtfcc=S1740 nearest_name=None source_id=us-census-tiger-2025-roads-40025 source_feature_id=110471820405

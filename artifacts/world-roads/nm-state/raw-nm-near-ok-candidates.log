@@ -1,0 +1,2 @@
+candidate_points=1 inspected_sources=1 inspected_rows=5920 radius_m=20
+candidate lon=-103.002148 lat=37.000141 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=67.945 nearest_mtfcc=S1400 nearest_name=Some("Co Rd B076") source_id=us-census-tiger-2025-roads-35059 source_feature_id=110450359305

@@ -1,0 +1,2 @@
+candidate_points=1 inspected_sources=1 inspected_rows=28577 radius_m=20
+candidate lon=-114.050131 lat=36.819799 raw_within_radius=0 accepted_within_radius=0 excluded_within_radius=0 nearest_m=202.668 nearest_mtfcc=S1100 nearest_name=Some("I- 15") source_id=us-census-tiger-2025-roads-04015 source_feature_id=1104260224042
