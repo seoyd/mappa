@@ -172,6 +172,28 @@ fn add_polygons<'a>(
     rect: Rect<f64>,
     key: TileKey,
 ) -> Result<usize, DynError> {
+    add_polygons_impl(tile, name, geoms, rect, key, false)
+}
+
+fn add_preselected_polygons<'a>(
+    tile: &mut Tile,
+    name: &str,
+    geoms: impl IntoIterator<Item = &'a Geometry<f64>>,
+    rect: Rect<f64>,
+    key: TileKey,
+) -> Result<usize, DynError> {
+    // Canonical tile buckets were already selected from each geometry's bounds.
+    add_polygons_impl(tile, name, geoms, rect, key, true)
+}
+
+fn add_polygons_impl<'a>(
+    tile: &mut Tile,
+    name: &str,
+    geoms: impl IntoIterator<Item = &'a Geometry<f64>>,
+    rect: Rect<f64>,
+    key: TileKey,
+    preselected: bool,
+) -> Result<usize, DynError> {
     let mut layer = tile.create_layer(name);
     let mut count = 0;
     let clip = rect.to_polygon();
@@ -205,7 +227,7 @@ fn add_polygons<'a>(
     let min_world_area = min_area_px / pixels_per_world.powi(2);
     for geom in geoms {
         for polygon in polygons(geom) {
-            if !polygon.bounding_rect().is_some_and(|r| overlaps(r, rect)) {
+            if !preselected && !polygon.bounding_rect().is_some_and(|r| overlaps(r, rect)) {
                 continue;
             }
             let clipped: MultiPolygon<f64> = polygon.intersection(&clip);

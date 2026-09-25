@@ -1,6 +1,8 @@
 //! Runtime tiles built only from MappaGeoDB, never from a raw source or a base map.
 
-use super::{DynError, PlaceSource, add_named_lines_with_buffer, add_places, add_polygons};
+use super::{
+    DynError, PlaceSource, add_named_lines_with_buffer, add_places, add_preselected_polygons,
+};
 use crate::PlaceKind;
 use crate::canonical::{BBox, FeatureKind, GeoDb, Geometry as CanonicalGeometry};
 use geo::{BoundingRect, Coord, Geometry, LineString, Point, Polygon, Rect};
@@ -171,7 +173,14 @@ pub fn build_canonical_tiles(
                 continue;
             };
             let buffer_world = ROAD_TILE_BUFFER_UNITS / (4096.0 * (1u32 << zoom) as f64);
-            let bounds = if feature.kind == FeatureKind::RoadSurface {
+            let bounds = if matches!(
+                feature.kind,
+                FeatureKind::RoadSurface
+                    | FeatureKind::Water
+                    | FeatureKind::Vegetation
+                    | FeatureKind::Park
+                    | FeatureKind::Building
+            ) {
                 bounds
             } else {
                 Rect::new(
@@ -206,7 +215,7 @@ pub fn build_canonical_tiles(
                 },
             );
             let mut tile = Tile::new(4096);
-            let mut count = add_polygons(
+            let mut count = add_preselected_polygons(
                 &mut tile,
                 "water",
                 candidates
@@ -216,7 +225,7 @@ pub fn build_canonical_tiles(
                 tile_bounds,
                 key,
             )?;
-            count += add_polygons(
+            count += add_preselected_polygons(
                 &mut tile,
                 "green",
                 candidates
@@ -231,7 +240,7 @@ pub fn build_canonical_tiles(
                 tile_bounds,
                 key,
             )?;
-            count += add_polygons(
+            count += add_preselected_polygons(
                 &mut tile,
                 "road_surface",
                 candidates
@@ -241,7 +250,7 @@ pub fn build_canonical_tiles(
                 tile_bounds,
                 key,
             )?;
-            count += add_polygons(
+            count += add_preselected_polygons(
                 &mut tile,
                 "building",
                 candidates
