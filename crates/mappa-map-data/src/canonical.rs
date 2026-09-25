@@ -21,6 +21,7 @@ use thiserror::Error;
 mod act_roads;
 mod ign_bdtopo;
 mod lambert93;
+mod lu_geobase;
 mod nrn;
 mod qld_roads;
 mod tas_roads;
@@ -30,6 +31,7 @@ mod wa_roads;
 pub use act_roads::adapt_au_act_road_centrelines;
 pub use ign_bdtopo::{adapt_ign_bdtopo_roads, adapt_ign_bdtopo_stations, adapt_ign_bdtopo_water};
 pub use lambert93::inverse_lambert93;
+pub use lu_geobase::adapt_lu_geobase_roads;
 pub use nrn::adapt_ca_nrn_roads;
 pub use qld_roads::adapt_au_qld_qrt_roads;
 pub use tas_roads::adapt_au_tas_list_transport_segments;
@@ -212,6 +214,7 @@ impl SourceManifest {
                     | "ign-bdtopo-road-segment"
                     | "ign-bdtopo-surface-water"
                     | "ign-bdtopo-passenger-station"
+                    | "lu-geobase-road"
                     | "os-open-roads"
             ) || (source.adapter == "os-open-roads" && source.adapter_version != 2)
                 || (source.adapter != "os-open-roads" && source.adapter_version != 1)

@@ -26,6 +26,8 @@ flate2 = "1.1.10"
 shapefile = { version = "0.9.0", features = ["encoding_rs"] }
 zip = { version = "1.1.4", default-features = false, features = ["deflate"] }
 tempfile = "3.23.0"
+rusqlite = { version = "0.37.0", default-features = false }
+proj4rs = { version = "0.2.0", default-features = false }
 lonlat_bng = { version = "0.9.0", optional = true }
 md-5 = { version = "0.11", optional = true }
 
